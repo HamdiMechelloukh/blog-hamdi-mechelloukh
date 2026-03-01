@@ -1,0 +1,16 @@
+{
+  "style": "flat geometric vector",
+  "assets": {
+    "hamdi_avatar": "assets/hamdi_avatar.svg",
+    "home_icon": "assets/home_icon.svg",
+    "about_icon": "assets/about_icon.svg",
+    "portfolio_icon": "assets/portfolio_icon.svg",
+    "blog_icon": "assets/blog_icon.svg",
+    "contact_icon": "assets/contact_icon.svg",
+    "github_icon": "assets/github_icon.svg",
+    "linkedin_icon": "assets/linkedin_icon.svg",
+    "project_placeholder": "assets/project_placeholder.svg",
+    "article_placeholder": "assets/article_placeholder.svg",
+    "fullstack_icon": "assets/fullstack_icon.svg"
+  }
+}
