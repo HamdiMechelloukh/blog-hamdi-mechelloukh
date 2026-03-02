@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="container navbar-content">
         <NavLink to="/" className="nav-logo">
           <img src={assetPaths.fullstack} alt="Logo" style={{ width: '32px', height: '32px' }} />
-          Hamdi.dev
+          Hamdi
         </NavLink>
         <div className="nav-links">
           <NavLink 

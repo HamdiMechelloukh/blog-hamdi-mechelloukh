@@ -26,11 +26,11 @@ const About = () => {
             </p>
             <h3>Mon parcours</h3>
             <p className="card-text">
-              Après un diplôme d'ingénieur à HEI Lille et une reconversion via l'AFPA,
+              Après une reconversion via l'AFPA,
               j'ai évolué du développement Node.js/Java vers la data engineering, en passant
-              par des missions chez Leansys, Boulanger et PROMOD. Depuis 2022, je suis chez
+              par des missions chez Boulanger et PROMOD en prestation de services. Depuis 2022, je suis chez
               Decathlon Digital où j'ai assuré la stabilité des données de performance économique
-              avant de rejoindre l'équipe Data Engineering.
+              avant de rejoindre l'équipe des données de prix.
             </p>
           </div>
         </div>

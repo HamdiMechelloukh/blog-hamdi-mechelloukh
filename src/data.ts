@@ -55,7 +55,7 @@ export const experiences: Experience[] = [
     role: "Data Engineer",
     period: "Juil. 2024 – Aujourd'hui",
     location: "Lille, Hybride",
-    description: "Développement de jobs Scala/Python Spark sur environnement AWS/Databricks.",
+    description: "Développement de jobs Scala/Python Spark sur environnement AWS/Databricks pour l'équipe des données de prix",
     technologies: ["Scala", "Python", "Apache Spark", "AWS", "Databricks"]
   },
   {
@@ -91,7 +91,7 @@ export const experiences: Experience[] = [
     role: "Data Engineer",
     period: "Nov. 2019 – Mars 2021",
     location: "Lille",
-    description: "Développement de jobs PySpark dans Azure HDInsight (environnement Hadoop) pour des besoins BI et DataScience.",
+    description: "Développement de jobs PySpark dans Azure HDInsight (environnement Hadoop) via Cloudera pour des besoins BI et DataScience.",
     technologies: ["Python", "PySpark", "Apache Spark", "Apache Hadoop", "Apache Hive", "Cloudera Impala", "Microsoft Azure", "Apache Oozie"]
   },
   {
