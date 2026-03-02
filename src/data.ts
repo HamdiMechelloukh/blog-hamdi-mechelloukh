@@ -2,15 +2,6 @@ import { Project, Article, Experience, Education, RssFeed } from './types';
 
 export const projects: Project[] = [
   {
-    id: 2,
-    title: "Pipeline Data Spark",
-    description: "Jobs PySpark de traitement de données pour des besoins BI/DataScience sur environnement cloud.",
-    technologies: ["Python", "PySpark", "Apache Spark", "Azure HDInsight", "Apache Hive"],
-    imageUrl: "/assets/project_placeholder.svg",
-    githubUrl: "#",
-    demoUrl: "#"
-  },
-  {
     id: 3,
     title: "Portfolio Personnel",
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
