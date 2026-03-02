@@ -175,7 +175,7 @@ export const rssFeeds: RssFeed[] = [
 export const socialLinks = {
   github: "https://github.com/HamdiMechelloukh",
   linkedin: "https://linkedin.com/in/hamdimechelloukh",
-  email: import.meta.env.VITE_CONTACT_EMAIL as string
+  email: ""
 };
 
 export const assetPaths = {
