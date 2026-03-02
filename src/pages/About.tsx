@@ -69,6 +69,32 @@ const About = () => {
       </section>
 
       <section className="section">
+        <h2 className="section-title">Centres d'intérêt</h2>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <div className="card-grid">
+            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3>Karaté Kyokushinkai</h3>
+              <p className="card-text">
+                Pratiquant depuis mai 2013, 2ème Dan. Également professeur depuis 2025.
+              </p>
+            </div>
+            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3>Jeux vidéo</h3>
+              <p className="card-text">
+                Passionné de RPGs et de culture geek en général.
+              </p>
+            </div>
+            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3>Culture pop</h3>
+              <p className="card-text">
+                Manga, BD, mèmes et tout ce qui fait partie de la culture geek.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
         <h2 className="section-title">Formation</h2>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           {education.map((edu) => (
