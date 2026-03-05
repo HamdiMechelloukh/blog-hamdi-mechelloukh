@@ -170,7 +170,7 @@ export const socialLinks = {
 };
 
 export const assetPaths = {
-  avatar: "/assets/hamdi_avatar.svg",
+  avatar: "/assets/PXL_20251202_194539824.jpg",
   home: "/assets/home_icon.svg",
   about: "/assets/about_icon.svg",
   portfolio: "/assets/portfolio_icon.svg",
