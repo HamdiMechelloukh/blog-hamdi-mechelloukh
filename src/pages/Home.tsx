@@ -22,7 +22,6 @@ const Home = () => {
 
       <section className="section">
         <h2 className="section-title">
-          <img src={assetPaths.fullstack} alt="" />
           {t('home.skills_title')}
         </h2>
         <div className="card-grid" style={{ maxWidth: '900px', margin: '0 auto' }}>
