@@ -211,6 +211,7 @@ ul {
   border-radius: 50%;
   margin-bottom: 1.5rem;
   border: 4px solid var(--primary);
+  object-fit: cover;
 }
 
 .hero-title {
