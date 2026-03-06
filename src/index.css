@@ -275,6 +275,8 @@ ul {
 .hero {
   text-align: center;
   padding: 6rem 0 4rem;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, #fff3e8 0%, transparent 70%);
+  position: relative;
 }
 
 .hero-avatar {
