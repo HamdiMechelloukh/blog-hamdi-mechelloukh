@@ -49,7 +49,7 @@ const Navbar = () => {
             fontWeight: 600,
             fontSize: '0.85rem'
           }}>
-            {i18n.language === 'fr' ? 'EN' : 'FR'}
+            {i18n.language === 'fr' ? 'FR' : 'EN'}
           </button>
         </div>
       </div>
