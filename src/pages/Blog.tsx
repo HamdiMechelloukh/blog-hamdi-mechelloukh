@@ -26,7 +26,7 @@ const Blog = () => {
         )}
 
         {!loading && articles.length > 0 && (
-          <div className="card-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
+          <div className="card-grid">
             {articles.map((article, i) => (
               <a
                 key={i}
