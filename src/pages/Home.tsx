@@ -16,7 +16,7 @@ const Home = () => {
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
           <Link to="/portfolio" className="btn">{t('home.cta_projects')}</Link>
-          <Link to="/contact" className="btn" style={{ backgroundColor: 'var(--secondary)' }}>{t('home.cta_contact')}</Link>
+          <Link to="/contact" className="btn btn-outline">{t('home.cta_contact')}</Link>
         </div>
       </section>
 
