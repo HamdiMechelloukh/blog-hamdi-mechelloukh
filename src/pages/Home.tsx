@@ -11,7 +11,7 @@ const Home = () => {
         <img src={assetPaths.avatar} alt="Hamdi Mechelloukh" className="hero-avatar" />
         <h1 className="hero-title">Hamdi Mechelloukh</h1>
         <p className="hero-subtitle">{t('home.subtitle')}</p>
-        <p style={{ maxWidth: '600px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>
+        <p style={{ maxWidth: '720px', margin: '0 auto 2rem', fontSize: '1.1rem' }}>
           {t('home.description')}
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
