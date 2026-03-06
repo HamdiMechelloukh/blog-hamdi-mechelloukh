@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "projects": "Projets",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "home": {
+    "subtitle": "Data Engineer @ Decathlon Digital",
+    "description": "Ingénieur passionné par la data, basé à Lille. Spécialisé dans le traitement de données à grande échelle avec Spark, et le développement backend Java/Node.js.",
+    "cta_projects": "Voir mes projets",
+    "cta_contact": "Me contacter",
+    "skills_title": "Compétences",
+    "skill_data": "Data Engineering",
+    "skill_backend": "Backend",
+    "skill_db": "Bases de données",
+    "skill_cloud": "Cloud & Outils"
+  },
+  "about": {
+    "title": "À propos",
+    "who_title": "Qui suis-je ?",
+    "who_text": "Bonjour ! Je suis Hamdi Mechelloukh, Data Engineer chez Decathlon Digital à Lille. Ingénieur de formation (HEI Lille), j'ai commencé ma carrière dans le développement backend avant de me spécialiser dans la data engineering. Je conçois et maintiens des pipelines de données à grande échelle avec Spark, AWS et Databricks.",
+    "journey_title": "Mon parcours",
+    "journey_text": "Après une reconversion via l'AFPA, j'ai évolué du développement Node.js/Java vers la data engineering, en passant par des missions chez Boulanger et PROMOD en prestation de services. Depuis 2022, je suis chez Decathlon Digital où j'ai assuré la stabilité des données de performance économique avant de rejoindre l'équipe des données de prix.",
+    "interests_title": "Centres d'intérêt",
+    "interest_karate_title": "Karaté Kyokushinkai",
+    "interest_karate_text": "Pratiquant depuis mai 2013, 2ème Dan. Également professeur depuis 2025.",
+    "interest_gaming_title": "Jeux vidéo",
+    "interest_gaming_text": "Passionné de RPGs et de culture geek en général.",
+    "interest_pop_title": "Culture pop",
+    "interest_pop_text": "Manga, BD, mèmes et tout ce qui fait partie de la culture geek.",
+    "experience_title": "Expériences",
+    "education_title": "Formation"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "description": "Une sélection de mes réalisations récentes.",
+    "code": "Code",
+    "demo": "Demo"
+  },
+  "blog": {
+    "title": "Veille technologique",
+    "description": "Les derniers articles data engineering, cloud et architecture que je suis.",
+    "loading": "Chargement des articles…"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Vous avez un projet en tête ou vous souhaitez simplement discuter ? N'hésitez pas à me contacter via le formulaire ci-dessous.",
+    "name": "Nom",
+    "email": "Email",
+    "message": "Message",
+    "send": "Envoyer",
+    "sending": "Envoi en cours…",
+    "success": "Message envoyé, merci !",
+    "error": "Une erreur est survenue, réessaie plus tard."
+  }
+}

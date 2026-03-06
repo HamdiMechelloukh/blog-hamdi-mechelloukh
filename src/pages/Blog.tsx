@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { assetPaths, rssFeeds } from '../data';
 import { useRssFeeds } from '../hooks/useRssFeeds';
 
 const Blog = () => {
+  const { t } = useTranslation();
   const { articles, loading, error } = useRssFeeds(rssFeeds);
 
   return (
@@ -9,14 +11,14 @@ const Blog = () => {
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.blog} alt="" />
-          Veille technologique
+          {t('blog.title')}
         </h1>
         <p className="card-text" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          Les derniers articles data engineering, cloud et architecture que je suis.
+          {t('blog.description')}
         </p>
 
         {loading && (
-          <p style={{ textAlign: 'center', color: 'var(--secondary)' }}>Chargement des articles…</p>
+          <p style={{ textAlign: 'center', color: 'var(--secondary)' }}>{t('blog.loading')}</p>
         )}
 
         {error && (
@@ -44,7 +46,7 @@ const Blog = () => {
                     <h3 className="card-title" style={{ fontSize: '1rem' }}>{article.title}</h3>
                     <p className="card-text" style={{ fontSize: '0.9rem' }}>{article.description}</p>
                     <span style={{ fontSize: '0.8rem', color: 'var(--secondary)' }}>
-                      {new Date(article.pubDate).toLocaleDateString('fr-FR')}
+                      {new Date(article.pubDate).toLocaleDateString(t('blog.title') === 'Tech watch' ? 'en-GB' : 'fr-FR')}
                     </span>
                   </div>
                 </article>

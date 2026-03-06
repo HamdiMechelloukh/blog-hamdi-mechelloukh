@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { assetPaths } from '../data';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<Status>('idle');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,37 +34,32 @@ const Contact = () => {
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.contact} alt="" />
-          Contact
+          {t('contact.title')}
         </h1>
         <p className="card-text" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          Vous avez un projet en tête ou vous souhaitez simplement discuter ?
-          N'hésitez pas à me contacter via le formulaire ci-dessous.
+          {t('contact.description')}
         </p>
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Nom</label>
+            <label htmlFor="name">{t('contact.name')}</label>
             <input type="text" id="name" name="name" className="form-control" required />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('contact.email')}</label>
             <input type="email" id="email" name="email" className="form-control" required />
           </div>
           <div className="form-group">
-            <label htmlFor="message">Message</label>
+            <label htmlFor="message">{t('contact.message')}</label>
             <textarea id="message" name="message" rows={5} className="form-control" required></textarea>
           </div>
           <button type="submit" className="btn" style={{ width: '100%', marginTop: '1rem' }} disabled={status === 'sending'}>
-            {status === 'sending' ? 'Envoi en cours…' : 'Envoyer'}
+            {status === 'sending' ? t('contact.sending') : t('contact.send')}
           </button>
           {status === 'success' && (
-            <p style={{ marginTop: '1rem', textAlign: 'center', color: 'var(--primary)' }}>
-              Message envoyé, merci !
-            </p>
+            <p style={{ marginTop: '1rem', textAlign: 'center', color: 'var(--primary)' }}>{t('contact.success')}</p>
           )}
           {status === 'error' && (
-            <p style={{ marginTop: '1rem', textAlign: 'center', color: 'red' }}>
-              Une erreur est survenue, réessaie plus tard.
-            </p>
+            <p style={{ marginTop: '1rem', textAlign: 'center', color: 'red' }}>{t('contact.error')}</p>
           )}
         </form>
       </section>
