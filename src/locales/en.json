@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "home": {
+    "subtitle": "Data Engineer @ Decathlon Digital",
+    "description": "Engineer passionate about data, based in Lille. Specialized in large-scale data processing with Spark, and backend development in Java/Node.js.",
+    "cta_projects": "View my projects",
+    "cta_contact": "Contact me",
+    "skills_title": "Skills",
+    "skill_data": "Data Engineering",
+    "skill_backend": "Backend",
+    "skill_db": "Databases",
+    "skill_cloud": "Cloud & Tools"
+  },
+  "about": {
+    "title": "About",
+    "who_title": "Who am I?",
+    "who_text": "Hi! I'm Hamdi Mechelloukh, Data Engineer at Decathlon Digital in Lille. With an engineering degree from HEI Lille, I started my career in backend development before specializing in data engineering. I design and maintain large-scale data pipelines using Spark, AWS and Databricks.",
+    "journey_title": "My journey",
+    "journey_text": "After retraining through AFPA, I moved from Node.js/Java development to data engineering, working at Boulanger and PROMOD as a contractor. Since 2022, I've been at Decathlon Digital where I ensured the stability of economic performance data before joining the pricing data team.",
+    "interests_title": "Interests",
+    "interest_karate_title": "Kyokushinkai Karate",
+    "interest_karate_text": "Practitioner since May 2013, 2nd Dan. Also teaching since 2025.",
+    "interest_gaming_title": "Video games",
+    "interest_gaming_text": "Passionate about RPGs and geek culture in general.",
+    "interest_pop_title": "Pop culture",
+    "interest_pop_text": "Manga, comics, memes and everything geek.",
+    "experience_title": "Experience",
+    "education_title": "Education"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "description": "A selection of my recent work.",
+    "code": "Code",
+    "demo": "Demo"
+  },
+  "blog": {
+    "title": "Tech watch",
+    "description": "The latest data engineering, cloud and architecture articles I follow.",
+    "loading": "Loading articles…"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Have a project in mind or just want to chat? Feel free to reach out via the form below.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Message sent, thank you!",
+    "error": "An error occurred, please try again later."
+  }
+}

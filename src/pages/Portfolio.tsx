@@ -1,17 +1,19 @@
+import { useTranslation } from 'react-i18next';
 import { projects, assetPaths } from '../data';
 import ProjectCard from '../components/ProjectCard';
 
 const Portfolio = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="container">
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.portfolio} alt="" />
-          Portfolio
+          {t('portfolio.title')}
         </h1>
         <p className="card-text" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          Une sélection de mes réalisations récentes, allant d'applications web complexes 
-          à des outils simples mais efficaces.
+          {t('portfolio.description')}
         </p>
         <div className="card-grid">
           {projects.map((project) => (

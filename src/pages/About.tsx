@@ -1,12 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import { assetPaths, experiences, education } from '../data';
 
 const About = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="container">
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.about} alt="" />
-          À propos
+          {t('about.title')}
         </h1>
         <div className="about-content">
           <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
@@ -17,27 +20,38 @@ const About = () => {
             />
           </div>
           <div style={{ flex: 2 }}>
-            <h2>Qui suis-je ?</h2>
+            <h2>{t('about.who_title')}</h2>
             <p className="card-text" style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}>
-              Bonjour ! Je suis Hamdi Mechelloukh, Data Engineer chez Decathlon Digital à Lille.
-              Ingénieur de formation (HEI Lille), j'ai commencé ma carrière dans le développement
-              backend avant de me spécialiser dans la data engineering. Je conçois et maintiens
-              des pipelines de données à grande échelle avec Spark, AWS et Databricks.
+              {t('about.who_text')}
             </p>
-            <h3>Mon parcours</h3>
-            <p className="card-text">
-              Après une reconversion via l'AFPA,
-              j'ai évolué du développement Node.js/Java vers la data engineering, en passant
-              par des missions chez Boulanger et PROMOD en prestation de services. Depuis 2022, je suis chez
-              Decathlon Digital où j'ai assuré la stabilité des données de performance économique
-              avant de rejoindre l'équipe des données de prix.
-            </p>
+            <h3>{t('about.journey_title')}</h3>
+            <p className="card-text">{t('about.journey_text')}</p>
           </div>
         </div>
       </section>
 
       <section className="section">
-        <h2 className="section-title">Expériences</h2>
+        <h2 className="section-title">{t('about.interests_title')}</h2>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <div className="card-grid">
+            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3>{t('about.interest_karate_title')}</h3>
+              <p className="card-text">{t('about.interest_karate_text')}</p>
+            </div>
+            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3>{t('about.interest_gaming_title')}</h3>
+              <p className="card-text">{t('about.interest_gaming_text')}</p>
+            </div>
+            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
+              <h3>{t('about.interest_pop_title')}</h3>
+              <p className="card-text">{t('about.interest_pop_text')}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <h2 className="section-title">{t('about.experience_title')}</h2>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           {experiences.map((exp) => (
             <div key={exp.id} className="card" style={{ marginBottom: '1.5rem', padding: '1.5rem' }}>
@@ -69,33 +83,7 @@ const About = () => {
       </section>
 
       <section className="section">
-        <h2 className="section-title">Centres d'intérêt</h2>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-          <div className="card-grid">
-            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
-              <h3>Karaté Kyokushinkai</h3>
-              <p className="card-text">
-                Pratiquant depuis mai 2013, 2ème Dan. Également professeur depuis 2025.
-              </p>
-            </div>
-            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
-              <h3>Jeux vidéo</h3>
-              <p className="card-text">
-                Passionné de RPGs et de culture geek en général.
-              </p>
-            </div>
-            <div className="card" style={{ padding: '1.5rem', textAlign: 'center' }}>
-              <h3>Culture pop</h3>
-              <p className="card-text">
-                Manga, BD, mèmes et tout ce qui fait partie de la culture geek.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <h2 className="section-title">Formation</h2>
+        <h2 className="section-title">{t('about.education_title')}</h2>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           {education.map((edu) => (
             <div key={edu.id} className="card" style={{ marginBottom: '1.5rem', padding: '1.5rem' }}>
