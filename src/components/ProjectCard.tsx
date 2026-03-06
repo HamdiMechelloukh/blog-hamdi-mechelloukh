@@ -13,8 +13,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
     <article className="card">
       <img src={project.imageUrl} alt={project.title} className="card-img" />
       <div className="card-body">
-        <h3 className="card-title">{project.title}</h3>
-        <p className="card-text">{project.description}</p>
+        <h3 className="card-title">{t(`portfolio.project_${project.id}_title`, project.title)}</h3>
+        <p className="card-text">{t(`portfolio.project_${project.id}_description`, project.description)}</p>
         <div className="tag-list">
           {project.technologies.map((tech) => (
             <span key={tech} className="tag">{tech}</span>

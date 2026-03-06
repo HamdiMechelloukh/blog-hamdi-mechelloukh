@@ -37,7 +37,9 @@
     "title": "Portfolio",
     "description": "A selection of my recent work.",
     "code": "Code",
-    "demo": "Demo"
+    "demo": "Demo",
+    "project_3_title": "Personal Portfolio",
+    "project_3_description": "The site you are currently browsing, built with React and Vite."
   },
   "blog": {
     "title": "Tech watch",
