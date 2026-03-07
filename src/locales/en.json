@@ -20,7 +20,7 @@
   "about": {
     "title": "About",
     "who_title": "Who am I?",
-    "who_text": "Hi! I'm Hamdi Mechelloukh, Data Engineer at Decathlon Digital in Lille. With an engineering degree from HEI Lille, I started my career in backend development before specializing in data engineering. I design and maintain large-scale data pipelines using Spark, AWS and Databricks.",
+    "who_text": "Hi! I'm Hamdi Mechelloukh, Data Engineer at Decathlon Digital in Lille. I started my career in backend development before specializing in data engineering. I design and maintain large-scale data pipelines using Spark, AWS and Databricks.",
     "journey_title": "My journey",
     "journey_text": "After retraining through AFPA, I moved from Node.js/Java development to data engineering, working at Boulanger and PROMOD as a contractor. Since 2022, I've been at Decathlon Digital where I ensured the stability of economic performance data before joining the pricing data team.",
     "interests_title": "Interests",
