@@ -109,7 +109,7 @@ export const education: Education[] = [
   {
     id: 1,
     school: "HEI Lille",
-    degree: "Diplôme d'Ingénieur",
+    degree: "Cycle Ingénieur",
     period: "2012 – 2014",
     description: "Grande école d'ingénieurs. Activités : AS Kickboxing, Association Aparté (Bande dessinée)."
   },
