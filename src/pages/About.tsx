@@ -1,11 +1,27 @@
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import { assetPaths, experiences, education } from '../data';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? '';
+
 const About = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isFr = i18n.language.startsWith('fr');
 
   return (
     <div className="container">
+      <Helmet>
+        <title>{isFr ? 'À propos – Hamdi Mechelloukh' : 'About – Hamdi Mechelloukh'}</title>
+        <meta name="description" content={isFr
+          ? 'Parcours, expériences et centres d\'intérêt de Hamdi Mechelloukh, Data Engineer chez Decathlon Digital à Lille.'
+          : 'Career path, experience and interests of Hamdi Mechelloukh, Data Engineer at Decathlon Digital in Lille.'} />
+        <link rel="canonical" href={BASE_URL + '/about'} />
+        <meta property="og:url" content={BASE_URL + '/about'} />
+        <meta property="og:title" content={isFr ? 'À propos – Hamdi Mechelloukh' : 'About – Hamdi Mechelloukh'} />
+        <meta property="og:description" content={isFr
+          ? 'Parcours, expériences et centres d\'intérêt de Hamdi Mechelloukh, Data Engineer chez Decathlon Digital.'
+          : 'Career path, experience and interests of Hamdi Mechelloukh, Data Engineer at Decathlon Digital.'} />
+      </Helmet>
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.about} alt="" />

@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import { assetPaths } from '../data';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? '';
 
 type Status = 'idle' | 'sending' | 'success' | 'error';
 
 const Contact = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isFr = i18n.language.startsWith('fr');
   const [status, setStatus] = useState<Status>('idle');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,6 +35,15 @@ const Contact = () => {
 
   return (
     <div className="container">
+      <Helmet>
+        <title>{isFr ? 'Contact – Hamdi Mechelloukh' : 'Contact – Hamdi Mechelloukh'}</title>
+        <meta name="description" content={isFr
+          ? 'Contactez Hamdi Mechelloukh, Data Engineer à Lille, pour discuter d\'un projet ou d\'une opportunité.'
+          : 'Contact Hamdi Mechelloukh, Data Engineer in Lille, to discuss a project or opportunity.'} />
+        <link rel="canonical" href={BASE_URL + '/contact'} />
+        <meta property="og:url" content={BASE_URL + '/contact'} />
+        <meta property="og:title" content={isFr ? 'Contact – Hamdi Mechelloukh' : 'Contact – Hamdi Mechelloukh'} />
+      </Helmet>
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.contact} alt="" />
