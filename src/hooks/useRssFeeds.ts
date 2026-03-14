@@ -40,18 +40,23 @@ export function useRssFeeds(feeds: RssFeed[]): FeedState {
     let cancelled = false;
 
     const fetchAll = async () => {
-      const articles: RssArticle[] = [];
       for (const feed of feeds) {
         if (cancelled) return;
         try {
           const items = await fetchFeed(feed);
-          articles.push(...items);
+          if (!cancelled) {
+            setState((prev) => ({
+              articles: [...prev.articles, ...items],
+              loading: true,
+              error: null,
+            }));
+          }
         } catch {
           // skip failing feeds silently
         }
         await new Promise((r) => setTimeout(r, 400)); // respect rss2json rate limit
       }
-      if (!cancelled) setState({ articles, loading: false, error: null });
+      if (!cancelled) setState((prev) => ({ ...prev, loading: false }));
     };
 
     fetchAll();
