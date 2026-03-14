@@ -33,17 +33,12 @@ const Blog = () => {
           {t('blog.description')}
         </p>
 
-        {loading && (
-          <p style={{ textAlign: 'center', color: 'var(--secondary)' }}>{t('blog.loading')}</p>
-        )}
-
         {error && (
           <p style={{ textAlign: 'center', color: 'red' }}>{error}</p>
         )}
 
-        {!loading && articles.length > 0 && (
-          <div className="card-grid">
-            {articles.map((article, i) => (
+        <div className="card-grid">
+          {articles.map((article, i) => (
               <a
                 key={i}
                 href={article.link}
@@ -68,8 +63,18 @@ const Blog = () => {
                 </article>
               </a>
             ))}
-          </div>
-        )}
+          {loading && Array.from({ length: articles.length === 0 ? 6 : 2 }).map((_, i) => (
+            <div key={`sk-${i}`} className="card skeleton-card">
+              <div className="skeleton skeleton-img" />
+              <div className="card-body">
+                <div className="skeleton skeleton-tag" />
+                <div className="skeleton skeleton-title" />
+                <div className="skeleton skeleton-text" />
+                <div className="skeleton skeleton-text skeleton-text--short" />
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     </div>
   );
