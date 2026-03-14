@@ -16,7 +16,7 @@ export const projects: Project[] = [
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
     technologies: ["React", "TypeScript", "Vite"],
     imageUrl: "/assets/project_placeholder.svg",
-    githubUrl: "#",
+    githubUrl: "https://github.com/HamdiMechelloukh/blog-hamdi-mechelloukh",
     demoUrl: "#"
   }
 ];
