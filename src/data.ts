@@ -2,6 +2,15 @@ import { Project, Article, Experience, Education, RssFeed } from './types';
 
 export const projects: Project[] = [
   {
+    id: 1,
+    title: "Olist Data Lakehouse",
+    description: "Lakehouse de données vendor-neutral end-to-end : ingestion Kafka → Spark → Iceberg (bronze/silver/gold) avec Airflow, Great Expectations, Terraform IaC (AWS) et un dashboard Streamlit.",
+    technologies: ["Python", "PySpark", "Apache Kafka", "Apache Spark", "Apache Iceberg", "Apache Airflow", "MinIO", "Great Expectations", "Streamlit", "Docker", "Terraform", "AWS"],
+    imageUrl: "/assets/project_placeholder.svg",
+    githubUrl: "https://github.com/HamdiMechelloukh/olist-lakehouse",
+    demoUrl: "#"
+  },
+  {
     id: 3,
     title: "Portfolio Personnel",
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
