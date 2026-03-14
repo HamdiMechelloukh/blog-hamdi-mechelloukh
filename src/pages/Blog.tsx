@@ -1,13 +1,29 @@
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import { assetPaths, rssFeeds } from '../data';
 import { useRssFeeds } from '../hooks/useRssFeeds';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? '';
+
 const Blog = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isFr = i18n.language.startsWith('fr');
   const { articles, loading, error } = useRssFeeds(rssFeeds);
 
   return (
     <div className="container">
+      <Helmet>
+        <title>{isFr ? 'Veille – Hamdi Mechelloukh' : 'Tech watch – Hamdi Mechelloukh'}</title>
+        <meta name="description" content={isFr
+          ? 'Veille technologique de Hamdi Mechelloukh : data engineering, cloud, architecture. Articles issus de Towards Data Science, AWS Blog, Databricks et plus.'
+          : 'Tech watch by Hamdi Mechelloukh: data engineering, cloud and architecture articles from Towards Data Science, AWS Blog, Databricks and more.'} />
+        <link rel="canonical" href={BASE_URL + '/blog'} />
+        <meta property="og:url" content={BASE_URL + '/blog'} />
+        <meta property="og:title" content={isFr ? 'Veille – Hamdi Mechelloukh' : 'Tech watch – Hamdi Mechelloukh'} />
+        <meta property="og:description" content={isFr
+          ? 'Veille technologique data engineering, cloud et architecture.'
+          : 'Tech watch on data engineering, cloud and architecture.'} />
+      </Helmet>
       <section className="section">
         <h1 className="section-title">
           <img src={assetPaths.blog} alt="" />

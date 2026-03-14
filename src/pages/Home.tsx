@@ -1,12 +1,29 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import { assetPaths } from '../data';
 
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? '';
+
 const Home = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isFr = i18n.language.startsWith('fr');
 
   return (
     <div className="container">
+      <Helmet>
+        <html lang={isFr ? 'fr' : 'en'} />
+        <title>Hamdi Mechelloukh – Data Engineer</title>
+        <meta name="description" content={isFr
+          ? 'Portfolio de Hamdi Mechelloukh, Data Engineer avec 8 ans d\'expérience. Spécialisé en Apache Spark, AWS, Databricks et pipelines de données à grande échelle.'
+          : 'Portfolio of Hamdi Mechelloukh, Data Engineer with 8 years of experience. Specialist in Apache Spark, AWS, Databricks and large-scale data pipelines.'} />
+        <link rel="canonical" href={BASE_URL + '/'} />
+        <meta property="og:url" content={BASE_URL + '/'} />
+        <meta property="og:title" content="Hamdi Mechelloukh – Data Engineer" />
+        <meta property="og:description" content={isFr
+          ? 'Portfolio de Hamdi Mechelloukh, Data Engineer avec 8 ans d\'expérience.'
+          : 'Portfolio of Hamdi Mechelloukh, Data Engineer with 8 years of experience.'} />
+      </Helmet>
       <section className="hero">
         <img src={assetPaths.avatar} alt="Hamdi Mechelloukh" className="hero-avatar" />
         <h1 className="hero-title">Hamdi Mechelloukh</h1>
