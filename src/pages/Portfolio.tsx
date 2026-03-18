@@ -14,14 +14,14 @@ const Portfolio = () => {
       <Helmet>
         <title>{isFr ? 'Portfolio – Hamdi Mechelloukh' : 'Portfolio – Hamdi Mechelloukh'}</title>
         <meta name="description" content={isFr
-          ? 'Projets data engineering de Hamdi Mechelloukh : lakehouse Olist avec Kafka, Spark, Iceberg et Airflow, portfolio React/TypeScript.'
-          : 'Data engineering projects by Hamdi Mechelloukh: Olist lakehouse with Kafka, Spark, Iceberg and Airflow, React/TypeScript portfolio.'} />
+          ? 'Projets data engineering de Hamdi Mechelloukh : lakehouse Olist (Kafka, Spark, Iceberg), pipeline MLOps (XGBoost, MLflow, Airflow), portfolio React/TypeScript.'
+          : 'Data engineering projects by Hamdi Mechelloukh: Olist lakehouse (Kafka, Spark, Iceberg), MLOps pipeline (XGBoost, MLflow, Airflow), React/TypeScript portfolio.'} />
         <link rel="canonical" href={BASE_URL + '/portfolio'} />
         <meta property="og:url" content={BASE_URL + '/portfolio'} />
         <meta property="og:title" content={isFr ? 'Portfolio – Hamdi Mechelloukh' : 'Portfolio – Hamdi Mechelloukh'} />
         <meta property="og:description" content={isFr
-          ? 'Projets data engineering : Olist lakehouse, Kafka, Spark, Iceberg, Airflow.'
-          : 'Data engineering projects: Olist lakehouse, Kafka, Spark, Iceberg, Airflow.'} />
+          ? 'Projets data engineering : Olist lakehouse, MLOps pipeline, Kafka, Spark, XGBoost, Airflow.'
+          : 'Data engineering projects: Olist lakehouse, MLOps pipeline, Kafka, Spark, XGBoost, Airflow.'} />
       </Helmet>
       <section className="section">
         <h1 className="section-title">

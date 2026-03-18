@@ -11,6 +11,15 @@ export const projects: Project[] = [
     demoUrl: "#"
   },
   {
+    id: 2,
+    title: "Olist MLOps",
+    description: "Pipeline MLOps end-to-end : feature engineering → XGBoost → FastAPI serving, avec MLflow tracking, Evidently drift detection, Airflow orchestration, Prometheus metrics et déploiement multi-cloud (Terraform AWS/GCP/Azure + Helm K8s).",
+    technologies: ["Python", "XGBoost", "FastAPI", "MLflow", "Airflow", "Evidently", "Prometheus", "Docker", "Terraform", "Kubernetes"],
+    imageUrl: "/assets/project_placeholder.svg",
+    githubUrl: "https://github.com/HamdiMechelloukh/olist-mlops",
+    demoUrl: "#"
+  },
+  {
     id: 3,
     title: "Portfolio Personnel",
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
