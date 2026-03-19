@@ -8,9 +8,10 @@ const BASE_URL = import.meta.env.VITE_BASE_URL ?? '';
 const ArticlesListing = () => {
   const { t, i18n } = useTranslation();
   const isFr = i18n.language.startsWith('fr');
-  const sorted = [...blogArticles].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  const currentLang = isFr ? 'fr' : 'en';
+  const sorted = blogArticles
+    .filter((a) => a.lang === currentLang)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="container">

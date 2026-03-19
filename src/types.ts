@@ -51,6 +51,7 @@ export interface RssArticle {
 
 export interface BlogArticle {
   slug: string;
+  lang: 'fr' | 'en';
   title: string;
   summary: string;
   date: string;

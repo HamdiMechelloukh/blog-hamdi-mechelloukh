@@ -49,6 +49,7 @@ export const articles: Article[] = [];
 export const blogArticles: BlogArticle[] = [
   {
     slug: "framework-multi-llm-agenticdev",
+    lang: "fr",
     title: "AgenticDev : un framework multi-LLM pour générer du code testé",
     summary: "Comment j'ai conçu un pipeline de 4 agents LLM spécialisés avec LangGraph, prompt caching et boucle de correction automatique.",
     date: "2026-03-19",
@@ -57,6 +58,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "multi-llm-framework-agenticdev",
+    lang: "en",
     title: "AgenticDev: a multi-LLM framework for generating tested code",
     summary: "How I designed a pipeline of 4 specialized LLM agents with LangGraph, prompt caching and automatic fix loop.",
     date: "2026-03-19",
