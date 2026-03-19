@@ -3,6 +3,7 @@
     "home": "Accueil",
     "about": "À propos",
     "projects": "Projets",
+    "articles": "Blog",
     "blog": "Veille",
     "contact": "Contact"
   },
@@ -46,6 +47,17 @@
     "project_4_description": "Démineur multijoueur temps réel : deux joueurs s'affrontent sur des grilles identiques via WebSocket, avec un solveur par propagation de contraintes garantissant des grilles toujours résolvables, un leaderboard PostgreSQL et une PWA installable.",
     "project_5_title": "Portfolio Personnel",
     "project_5_description": "Le site sur lequel vous naviguez actuellement, construit avec React et Vite."
+  },
+  "articles": {
+    "title": "Blog",
+    "description": "Mes articles sur le data engineering, le cloud et l'architecture logicielle.",
+    "readingTime": "min de lecture",
+    "backToList": "Retour aux articles",
+    "publishedOn": "Publié le",
+    "loading": "Chargement…",
+    "empty": "Aucun article pour le moment. Revenez bientôt !",
+    "notFound": "Article introuvable",
+    "contentNotFound": "Le contenu de cet article n'est pas disponible."
   },
   "blog": {
     "title": "Veille technologique",

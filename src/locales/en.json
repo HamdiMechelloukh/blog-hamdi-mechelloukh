@@ -3,6 +3,7 @@
     "home": "Home",
     "about": "About",
     "projects": "Projects",
+    "articles": "Blog",
     "blog": "Tech watch",
     "contact": "Contact"
   },
@@ -46,6 +47,17 @@
     "project_4_description": "Real-time multiplayer Minesweeper: two players compete on identical grids via WebSocket, with a constraint-propagation solver ensuring always-solvable boards, a PostgreSQL leaderboard and an installable PWA.",
     "project_5_title": "Personal Portfolio",
     "project_5_description": "The site you are currently browsing, built with React and Vite."
+  },
+  "articles": {
+    "title": "Blog",
+    "description": "My articles on data engineering, cloud and software architecture.",
+    "readingTime": "min read",
+    "backToList": "Back to articles",
+    "publishedOn": "Published on",
+    "loading": "Loading…",
+    "empty": "No articles yet. Come back soon!",
+    "notFound": "Article not found",
+    "contentNotFound": "The content of this article is not available."
   },
   "blog": {
     "title": "Tech watch",

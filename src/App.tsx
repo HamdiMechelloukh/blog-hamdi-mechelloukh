@@ -4,6 +4,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Portfolio from './pages/Portfolio';
 import Blog from './pages/Blog';
+import ArticlesListing from './pages/ArticlesListing';
+import ArticlePage from './pages/ArticlePage';
 import Contact from './pages/Contact';
 
 function App() {
@@ -13,7 +15,9 @@ function App() {
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="portfolio" element={<Portfolio />} />
-        <Route path="blog" element={<Blog />} />
+        <Route path="blog" element={<ArticlesListing />} />
+        <Route path="blog/:slug" element={<ArticlePage />} />
+        <Route path="veille" element={<Blog />} />
         <Route path="contact" element={<Contact />} />
       </Route>
     </Routes>

@@ -48,3 +48,12 @@ export interface RssArticle {
   thumbnail?: string;
   source: string;
 }
+
+export interface BlogArticle {
+  slug: string;
+  title: string;
+  summary: string;
+  date: string;
+  tags: string[];
+  readingTimeMinutes: number;
+}

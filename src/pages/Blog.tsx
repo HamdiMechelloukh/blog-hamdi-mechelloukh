@@ -17,8 +17,8 @@ const Blog = () => {
         <meta name="description" content={isFr
           ? 'Veille technologique de Hamdi Mechelloukh : data engineering, cloud, architecture. Articles issus de Towards Data Science, AWS Blog, Databricks et plus.'
           : 'Tech watch by Hamdi Mechelloukh: data engineering, cloud and architecture articles from Towards Data Science, AWS Blog, Databricks and more.'} />
-        <link rel="canonical" href={BASE_URL + '/blog'} />
-        <meta property="og:url" content={BASE_URL + '/blog'} />
+        <link rel="canonical" href={BASE_URL + '/veille'} />
+        <meta property="og:url" content={BASE_URL + '/veille'} />
         <meta property="og:title" content={isFr ? 'Veille – Hamdi Mechelloukh' : 'Tech watch – Hamdi Mechelloukh'} />
         <meta property="og:description" content={isFr
           ? 'Veille technologique data engineering, cloud et architecture.'

@@ -32,6 +32,10 @@ const Navbar = () => {
           </NavLink>
           <NavLink to="/blog" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
             <img src={assetPaths.blog} alt="Blog" />
+            <span>{t('nav.articles')}</span>
+          </NavLink>
+          <NavLink to="/veille" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
+            <img src={assetPaths.blog} alt="Veille" />
             <span>{t('nav.blog')}</span>
           </NavLink>
           <NavLink to="/contact" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>

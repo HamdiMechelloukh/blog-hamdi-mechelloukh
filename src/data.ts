@@ -1,4 +1,4 @@
-import { Project, Article, Experience, Education, RssFeed } from './types';
+import { Project, Article, BlogArticle, Experience, Education, RssFeed } from './types';
 
 export const projects: Project[] = [
   {
@@ -44,31 +44,25 @@ export const projects: Project[] = [
   }
 ];
 
-export const articles: Article[] = [
+export const articles: Article[] = [];
+
+export const blogArticles: BlogArticle[] = [
   {
-    id: 1,
-    title: "Comprendre TypeScript en 2024",
-    summary: "Pourquoi TypeScript est devenu incontournable pour les développeurs JavaScript modernes.",
-    date: "2023-10-15",
-    imageUrl: "/assets/article_placeholder.svg",
-    slug: "comprendre-typescript"
+    slug: "framework-multi-llm-agenticdev",
+    title: "AgenticDev : un framework multi-LLM pour générer du code testé",
+    summary: "Comment j'ai conçu un pipeline de 4 agents LLM spécialisés avec LangGraph, prompt caching et boucle de correction automatique.",
+    date: "2026-03-19",
+    tags: ["LLM", "Agents", "LangGraph", "Python", "Gemini", "Claude"],
+    readingTimeMinutes: 10,
   },
   {
-    id: 2,
-    title: "Optimiser les performances React",
-    summary: "Techniques avancées pour rendre vos applications React plus rapides et réactives.",
-    date: "2023-11-02",
-    imageUrl: "/assets/article_placeholder.svg",
-    slug: "optimiser-react"
+    slug: "multi-llm-framework-agenticdev",
+    title: "AgenticDev: a multi-LLM framework for generating tested code",
+    summary: "How I designed a pipeline of 4 specialized LLM agents with LangGraph, prompt caching and automatic fix loop.",
+    date: "2026-03-19",
+    tags: ["LLM", "Agents", "LangGraph", "Python", "Gemini", "Claude"],
+    readingTimeMinutes: 10,
   },
-  {
-    id: 3,
-    title: "Docker pour les débutants",
-    summary: "Introduction à la conteneurisation et comment démarrer avec Docker.",
-    date: "2023-12-10",
-    imageUrl: "/assets/article_placeholder.svg",
-    slug: "docker-debutant"
-  }
 ];
 
 export const experiences: Experience[] = [
