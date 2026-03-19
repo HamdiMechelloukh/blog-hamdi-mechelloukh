@@ -65,6 +65,24 @@ export const blogArticles: BlogArticle[] = [
     tags: ["LLM", "Agents", "LangGraph", "Python", "Gemini", "Claude"],
     readingTimeMinutes: 10,
   },
+  {
+    slug: "retour-experience-production-manager",
+    lang: "fr",
+    title: "Retour d'expérience : 2 ans Production Manager chez Decathlon Digital",
+    summary: "Ce que j'ai appris en quittant le code pour gérer la production des données de ventes — alerting, postmortems, communication de crise, et pourquoi je suis revenu côté technique.",
+    date: "2026-03-19",
+    tags: ["Production", "Data Engineering", "Retour d'expérience", "Decathlon"],
+    readingTimeMinutes: 8,
+  },
+  {
+    slug: "production-manager-lessons-learned",
+    lang: "en",
+    title: "Lessons from 2 years as Production Manager at Decathlon Digital",
+    summary: "What I learned stepping away from code to manage sales data production — alerting, postmortems, crisis communication, and why I went back to engineering.",
+    date: "2026-03-19",
+    tags: ["Production", "Data Engineering", "Lessons Learned", "Decathlon"],
+    readingTimeMinutes: 8,
+  },
 ];
 
 export const experiences: Experience[] = [
