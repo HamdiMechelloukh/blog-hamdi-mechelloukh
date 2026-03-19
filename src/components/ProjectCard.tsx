@@ -25,9 +25,11 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             <img src={assetPaths.github} alt="" style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '0.5rem' }} />
             {t('portfolio.code')}
           </a>
-          <a href={project.demoUrl} className="btn" style={{ backgroundColor: 'var(--secondary)' }} target="_blank" rel="noopener noreferrer">
-            {t('portfolio.demo')}
-          </a>
+          {project.demoUrl && (
+            <a href={project.demoUrl} className="btn" style={{ backgroundColor: 'var(--secondary)' }} target="_blank" rel="noopener noreferrer">
+              {t('portfolio.demo')}
+            </a>
+          )}
         </div>
       </div>
     </article>

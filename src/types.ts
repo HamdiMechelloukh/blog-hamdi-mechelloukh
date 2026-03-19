@@ -5,7 +5,7 @@ export interface Project {
   technologies: string[];
   imageUrl: string; // Path to SVG or placeholder
   githubUrl: string;
-  demoUrl: string;
+  demoUrl?: string;
 }
 
 export interface Article {

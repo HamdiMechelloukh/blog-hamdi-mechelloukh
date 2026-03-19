@@ -7,8 +7,7 @@ export const projects: Project[] = [
     description: "Lakehouse de données vendor-neutral end-to-end : ingestion Kafka → Spark → Iceberg (bronze/silver/gold) avec Airflow, Great Expectations, Terraform IaC (AWS) et un dashboard Streamlit.",
     technologies: ["Python", "PySpark", "Apache Kafka", "Apache Spark", "Apache Iceberg", "Apache Airflow", "MinIO", "Great Expectations", "Streamlit", "Docker", "Terraform", "AWS"],
     imageUrl: "/assets/project_placeholder.svg",
-    githubUrl: "https://github.com/HamdiMechelloukh/olist-lakehouse",
-    demoUrl: "#"
+    githubUrl: "https://github.com/HamdiMechelloukh/olist-lakehouse"
   },
   {
     id: 2,
@@ -16,17 +15,32 @@ export const projects: Project[] = [
     description: "Pipeline MLOps end-to-end : feature engineering → XGBoost → FastAPI serving, avec MLflow tracking, Evidently drift detection, Airflow orchestration, Prometheus metrics et déploiement multi-cloud (Terraform AWS/GCP/Azure + Helm K8s).",
     technologies: ["Python", "XGBoost", "FastAPI", "MLflow", "Airflow", "Evidently", "Prometheus", "Docker", "Terraform", "Kubernetes"],
     imageUrl: "/assets/project_placeholder.svg",
-    githubUrl: "https://github.com/HamdiMechelloukh/olist-mlops",
-    demoUrl: "#"
+    githubUrl: "https://github.com/HamdiMechelloukh/olist-mlops"
   },
   {
     id: 3,
+    title: "AgenticDev",
+    description: "Framework multi-LLM agentique : un pipeline LangGraph orchestre 4 agents spécialisés (Architect, Designer, Developer, Tester) pour transformer une demande en texte libre en code testé et documenté, avec génération d'assets SVG et boucle de correction automatique.",
+    technologies: ["Python", "LangGraph", "Gemini", "Claude", "Multi-LLM", "Prompt Caching"],
+    imageUrl: "/assets/project_placeholder.svg",
+    githubUrl: "https://github.com/HamdiMechelloukh/AgenticDev"
+  },
+  {
+    id: 4,
+    title: "Minesweeper 1v1",
+    description: "Démineur multijoueur temps réel : deux joueurs s'affrontent sur des grilles identiques via WebSocket, avec un solveur par propagation de contraintes garantissant des grilles toujours résolvables, un leaderboard PostgreSQL et une PWA installable.",
+    technologies: ["React", "TypeScript", "Node.js", "WebSocket", "PostgreSQL", "PWA"],
+    imageUrl: "/assets/project_placeholder.svg",
+    githubUrl: "https://github.com/HamdiMechelloukh/minesweeper-1v1",
+    demoUrl: "https://client-six-woad-40.vercel.app/"
+  },
+  {
+    id: 5,
     title: "Portfolio Personnel",
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
     technologies: ["React", "TypeScript", "Vite"],
     imageUrl: "/assets/project_placeholder.svg",
-    githubUrl: "https://github.com/HamdiMechelloukh/blog-hamdi-mechelloukh",
-    demoUrl: "#"
+    githubUrl: "https://github.com/HamdiMechelloukh/blog-hamdi-mechelloukh"
   }
 ];
 
