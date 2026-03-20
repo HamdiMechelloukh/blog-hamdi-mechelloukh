@@ -83,6 +83,24 @@ export const blogArticles: BlogArticle[] = [
     tags: ["Production", "Data Engineering", "Lessons Learned", "Decathlon"],
     readingTimeMinutes: 8,
   },
+  {
+    slug: "lakehouse-opensource-vendor-neutral",
+    lang: "fr",
+    title: "Construire un lakehouse open-source vendor-neutral",
+    summary: "Pourquoi et comment j'ai conçu un lakehouse sans lock-in vendor : Kafka, Spark, Iceberg, MinIO, Great Expectations et Terraform.",
+    date: "2026-03-20",
+    tags: ["Data Engineering", "Lakehouse", "Iceberg", "Kafka", "Spark", "Open Source"],
+    readingTimeMinutes: 9,
+  },
+  {
+    slug: "open-source-vendor-neutral-lakehouse",
+    lang: "en",
+    title: "Building an open-source vendor-neutral lakehouse",
+    summary: "Why and how I designed a lakehouse with no vendor lock-in: Kafka, Spark, Iceberg, MinIO, Great Expectations and Terraform.",
+    date: "2026-03-20",
+    tags: ["Data Engineering", "Lakehouse", "Iceberg", "Kafka", "Spark", "Open Source"],
+    readingTimeMinutes: 9,
+  },
 ];
 
 export const experiences: Experience[] = [
