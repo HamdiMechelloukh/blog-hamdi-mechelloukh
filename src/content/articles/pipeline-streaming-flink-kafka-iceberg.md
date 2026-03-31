@@ -32,7 +32,7 @@ Le choix de Flink s'est imposé pour deux raisons.
 
 **Le CEP (Complex Event Processing).** Détecter "3 commandes du même client en moins de 5 minutes" n'est pas une agrégation. C'est une corrélation temporelle entre événements. Flink CEP gère ça nativement avec un DSL de patterns. Dans Kafka Streams, ça nécessite de maintenir un état manuel et d'écrire la logique temporelle à la main.
 
-**Flink 2.0.** La version 2.0 venait de sortir avec un support natif Java 21. C'était l'occasion de travailler sur la version courante plutôt qu'une version en fin de vie.
+**Flink 2.0.** La version 2.0 apporte un support natif Java 21. Travailler sur la version courante plutôt qu'une version en fin de vie était un choix délibéré.
 
 ## L'architecture
 
