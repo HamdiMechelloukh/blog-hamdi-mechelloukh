@@ -2,7 +2,7 @@ It's 2:03 PM. A flash sale just started.
 
 In the warehouse, an operator is entering incoming orders into the management system. He types a quantity, makes a mistake, corrects it immediately. Two events, one reality. Thirty seconds apart.
 
-The batch job that runs at 2 AM will see both. It won't know which one is right. Depending on how the reconciliation logic is written — if it exists at all — it picks one of the two, often non-deterministically. And if the correction falls into the next batch window, the problem doesn't surface right away: the morning's numbers are wrong, cleanly, with no technical error in sight.
+The batch job that runs at 2 AM will see both. It won't know which one is right. Depending on how the reconciliation logic is written, if it exists at all, it picks one of the two, often non-deterministically. And if the correction falls into the next batch window, the problem doesn't surface right away: the morning's numbers are wrong, cleanly, with no technical error in sight.
 
 This is a real and recurring source of data quality problems in data teams.
 
@@ -30,7 +30,7 @@ The question is worth asking. There are other options for streaming in Java:
 
 Flink was the natural choice for two reasons.
 
-**CEP (Complex Event Processing).** Detecting "3 orders from the same customer within 5 minutes" is not an aggregation — it's a temporal correlation between events. Flink CEP handles this natively with a pattern DSL. In Kafka Streams, it requires maintaining manual state and writing the temporal logic by hand.
+**CEP (Complex Event Processing).** Detecting "3 orders from the same customer within 5 minutes" is not an aggregation, it's a temporal correlation between events. Flink CEP handles this natively with a pattern DSL. In Kafka Streams, it requires maintaining manual state and writing the temporal logic by hand.
 
 **Flink 2.0.** Version 2.0 had just been released with native Java 21 support. It was an opportunity to work on the current version rather than an end-of-life one.
 
@@ -68,7 +68,7 @@ orders → filter nulls → map to RevenueByCategory → keyBy(category)
 
 A few details that matter.
 
-**Watermark strategy.** The pipeline uses event time — the event timestamp in the Kafka message, not the arrival time. The strategy is `forBoundedOutOfOrderness(10 seconds)` with a 5-second idleness timeout.
+**Watermark strategy.** The pipeline uses event time, meaning the event timestamp in the Kafka message, not the arrival time. The strategy is `forBoundedOutOfOrderness(10 seconds)` with a 5-second idleness timeout.
 
 Why idleness? If a stream is empty for several minutes (the simulator is stopped, for example), Flink can no longer advance its watermark. Without `withIdleness`, windows never close. With `withIdleness(5s)`, Flink ignores silent partitions and advances anyway.
 
@@ -112,7 +112,7 @@ This pattern says: if the same customer places 3 or more orders within a 5-minut
 
 The key is `keyBy(customerId)`. Without it, Flink would compare orders from different customers. With `keyBy`, each customer has their own independent CEP state.
 
-Both streams — price alerts and frequency alerts — are then merged with `union()` before being sent to the Kafka output topic.
+Both streams, price alerts and frequency alerts, are then merged with `union()` before being sent to the Kafka output topic.
 
 ## Job 3: RealtimeKpiJob
 
@@ -148,7 +148,7 @@ public synchronized void update(long value) {
 }
 ```
 
-Simple, thread-safe, bounded memory. It allows Grafana to show the distribution of average order values — not just the latest single value.
+Simple, thread-safe, bounded memory. It allows Grafana to show the distribution of average order values, not just the latest single value.
 
 ## Iceberg integration: what I didn't anticipate
 
@@ -221,7 +221,7 @@ These metrics land in Prometheus every 15 seconds and are visualized in Grafana.
 
 ## Testing
 
-The tests use Flink's `MiniCluster` — an embedded Flink cluster that runs in the test process, with no external infrastructure.
+The tests use Flink's `MiniCluster`, an embedded Flink cluster that runs in the test process, with no external infrastructure.
 
 This choice has a cost: tests are slower (a few seconds each). But they test the actual behavior of Flink operators, not a mock. The `AnomalyDetectionJobTest` specifically validates CEP edge cases:
 
@@ -237,7 +237,7 @@ Back to the opening scene.
 
 Streaming is often perceived as expensive: the cluster runs continuously, the infrastructure never shuts down. That's true. But this comparison is incomplete.
 
-A batch pipeline that handles events which correct themselves over time accumulates its own debt. Timeline reconciliation logic. Re-processing when an event arrives late. Alerts, manual interventions, data engineers spending time explaining why numbers are inconsistent across two windows. This cost is diffuse — it doesn't appear on any cloud bill, but it accumulates in sprints, in support, in technical debt.
+A batch pipeline that handles events which correct themselves over time accumulates its own debt. Timeline reconciliation logic. Re-processing when an event arrives late. Alerts, manual interventions, data engineers spending time explaining why numbers are inconsistent across two windows. This cost is diffuse: it doesn't appear on any cloud bill, but it accumulates in sprints, in support, in technical debt.
 
 **Nobody actually does this calculation in practice — because it's too costly to conduct seriously.**
 

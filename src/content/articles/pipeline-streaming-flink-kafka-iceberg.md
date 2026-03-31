@@ -30,7 +30,7 @@ La question mérite d'être posée. Il existe d'autres options pour du streaming
 
 Le choix de Flink s'est imposé pour deux raisons.
 
-**Le CEP (Complex Event Processing).** Détecter "3 commandes du même client en moins de 5 minutes" n'est pas une agrégation, c'est une corrélation temporelle entre événements. Flink CEP gère ça nativement avec un DSL de patterns. Dans Kafka Streams, ça nécessite de maintenir un état manuel et d'écrire la logique temporelle à la main.
+**Le CEP (Complex Event Processing).** Détecter "3 commandes du même client en moins de 5 minutes" n'est pas une agrégation. C'est une corrélation temporelle entre événements. Flink CEP gère ça nativement avec un DSL de patterns. Dans Kafka Streams, ça nécessite de maintenir un état manuel et d'écrire la logique temporelle à la main.
 
 **Flink 2.0.** La version 2.0 venait de sortir avec un support natif Java 21. C'était l'occasion de travailler sur la version courante plutôt qu'une version en fin de vie.
 
@@ -68,7 +68,7 @@ orders → filter nulls → map to RevenueByCategory → keyBy(category)
 
 Quelques détails qui comptent.
 
-**Watermark strategy.** Le pipeline utilise le temps événementiel, c'est-à-dire la date de l'événement dans le message Kafka, pas l'heure d'arrivée. La stratégie est `forBoundedOutOfOrderness(10 secondes)` avec un délai d'inactivité de 5 secondes.
+**Watermark strategy.** Le pipeline utilise le temps événementiel : la date de l'événement dans le message Kafka, pas l'heure d'arrivée. La stratégie est `forBoundedOutOfOrderness(10 secondes)` avec un délai d'inactivité de 5 secondes.
 
 Pourquoi l'inactivité ? Si un flux est vide pendant plusieurs minutes (le simulateur est arrêté, par exemple), Flink ne peut plus faire avancer son watermark. Sans `withIdleness`, les fenêtres ne se ferment jamais. Avec `withIdleness(5s)`, Flink ignore les partitions silencieuses et avance quand même.
 
@@ -112,7 +112,7 @@ Ce pattern dit : si un même client passe 3 commandes ou plus dans une fenêtre 
 
 La clé est le `keyBy(customerId)`. Sans ça, Flink comparerait des commandes de clients différents. Avec `keyBy`, chaque client a son propre état CEP indépendant.
 
-Les deux flux, alertes de prix et alertes de fréquence, sont ensuite fusionnés avec `union()` avant d'être envoyés vers le topic Kafka de sortie.
+Les deux flux (alertes de prix et alertes de fréquence) sont ensuite fusionnés avec `union()` avant d'être envoyés vers le topic Kafka de sortie.
 
 ## Job 3 : RealtimeKpiJob
 
@@ -148,7 +148,7 @@ public synchronized void update(long value) {
 }
 ```
 
-Simple, thread-safe, mémoire bornée. Ça permet d'avoir dans Grafana la distribution des valeurs moyennes de commandes, pas juste la dernière valeur ponctuelle.
+Simple, thread-safe, mémoire bornée. Ça permet d'avoir dans Grafana la distribution des valeurs moyennes de commandes et pas juste la dernière valeur ponctuelle.
 
 ## L'intégration Iceberg : ce que je n'avais pas anticipé
 
@@ -237,7 +237,7 @@ Revenons à la scène du début.
 
 Le streaming est souvent perçu comme cher : le cluster tourne en permanence, l'infrastructure ne s'éteint jamais. C'est vrai. Mais cette comparaison est incomplète.
 
-Un pipeline batch qui gère des événements qui se corrigent dans le temps accumule sa propre dette. De la logique de réconciliation des timelines. Des re-traitements quand un événement arrive en retard. Des alertes, des interventions manuelles, des data engineers qui passent du temps à expliquer pourquoi les chiffres ne sont pas cohérents entre deux fenêtres. Ce coût est diffus : il ne s'affiche sur aucune facture cloud, mais il s'accumule dans les sprints, dans le support, dans la dette technique.
+Un pipeline batch qui gère des événements qui se corrigent dans le temps accumule sa propre dette. De la logique de réconciliation des timelines. Des re-traitements quand un événement arrive en retard. Des alertes, des interventions manuelles, des data engineers qui passent du temps à expliquer pourquoi les chiffres ne sont pas cohérents entre deux fenêtres. Ce coût est diffus. Il ne s'affiche sur aucune facture cloud, mais il s'accumule dans les sprints, dans le support, dans la dette technique.
 
 **Personne ne fait vraiment ce calcul en entreprise — parce qu'il est lui-même trop coûteux à conduire.**
 
