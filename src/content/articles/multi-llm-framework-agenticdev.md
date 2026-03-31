@@ -1,4 +1,4 @@
-In late 2025, after spending hours prompting LLMs one by one to generate code, a question kept nagging me: **what if multiple LLM agents could collaborate to produce a complete project?** Not a single agent doing everything, but a specialized team — an architect, a developer, a tester — each with its own role, tools, and constraints.
+In late 2025, after spending hours prompting LLMs one by one to generate code, a question kept nagging me: **what if multiple LLM agents could collaborate to produce a complete project?** Not a single agent doing everything, but a specialized team (an architect, a developer, a tester), each with its own role, tools, and constraints.
 
 That's how **AgenticDev** was born, a Python framework that orchestrates 4 LLM agents to turn a plain-text request into tested, documented code.
 
@@ -46,17 +46,17 @@ _builder.add_conditional_edges(
 _builder.add_edge("fix_developer", "tester")
 ```
 
-The `should_fix_or_end` function is pure Python — it parses the Tester's output and decides whether to rerun the Developer or finish. No LLM in the decision loop.
+The `should_fix_or_end` function is pure Python: it parses the Tester's output and decides whether to rerun the Developer or finish. No LLM in the decision loop.
 
 ## The prompt caching problem and the switch to full Gemini
 
-During the exploration phase, I very quickly hit **API rate limits** on Gemini. Every agent call sent the full system prompt, tool definitions, project context — thousands of tokens per request.
+During the exploration phase, I very quickly hit **API rate limits** on Gemini. Every agent call sent the full system prompt, tool definitions, project context, thousands of tokens per request.
 
 The solution: **prompt caching**. But Gemini and Claude handle it very differently.
 
 ### Gemini: implicit caching
 
-Gemini automatically caches repeated prefixes. If the system prompt and initial instructions are identical between two calls, Google reuses the cached context. On the code side, there's nothing to do — caching is transparent.
+Gemini automatically caches repeated prefixes. If the system prompt and initial instructions are identical between two calls, Google reuses the cached context. On the code side, there's nothing to do: caching is transparent.
 
 ```python
 # Savings show up in usage metadata
@@ -67,7 +67,7 @@ logger.info("cache hit: %d/%d tokens (%d%%)", cached, total, cached * 100 // tot
 
 ### Claude: explicit caching
 
-Claude requires explicit `cache_control: ephemeral` markers on the blocks you want cached — the system prompt, tool definitions, and the first user message.
+Claude requires explicit `cache_control: ephemeral` markers on the blocks you want cached: the system prompt, tool definitions, and the first user message.
 
 ```python
 system = [{
@@ -83,7 +83,7 @@ if claude_tools:
 
 ### Why I switched to full Gemini
 
-I started with a multi-LLM architecture: Gemini for the Architect and Tester, Claude for the Developer. The idea was appealing — use each LLM where it excels.
+I started with a multi-LLM architecture: Gemini for the Architect and Tester, Claude for the Developer. The idea was appealing: use each LLM where it excels.
 
 In practice, **Claude's API cost quickly made this approach unsustainable**. A full pipeline run with Claude as Developer cost significantly more than with Gemini, especially during fix iterations where the context grows with each turn. So I decided to switch to **full Gemini** as the default pipeline, while keeping the `ClaudeAgent` in the framework as a configurable option.
 
@@ -187,9 +187,9 @@ These tools are plain Python functions, passed to agents through their construct
 
 ## The limits: a solid foundation, not a finished product
 
-Let's be honest about what the framework can and can't do. **AgenticDev excels at generating a functional project base** — file structure, initial code, tests, documentation. For simple projects (CLI tools, libraries, small APIs), the output is often usable as-is.
+Let's be honest about what the framework can and can't do. **AgenticDev excels at generating a functional project base**: file structure, initial code, tests, documentation. For simple projects (CLI tools, libraries, small APIs), the output is often usable as-is.
 
-But as complexity grows — intricate business logic, multiple integrations, performance constraints — **the generated code will be a starting point, not the final product**. There will be technical limitations (overly naive architectures, uncovered edge cases) and functional gaps (the LLM doesn't know your business context) that you'll need to fix manually or by vibe-coding with a tool like Claude Code or Cursor.
+But as complexity grows (intricate business logic, multiple integrations, performance constraints), **the generated code will be a starting point, not the final product**. There will be technical limitations (overly naive architectures, uncovered edge cases) and functional gaps (the LLM doesn't know your business context) that you'll need to fix manually or by vibe-coding with a tool like Claude Code or Cursor.
 
 This is actually the workflow I recommend: let AgenticDev generate the skeleton, then iterate on it with a coding assistant to refine the details. The framework saves you the first hours of setup, not the last hours of polish.
 
@@ -213,11 +213,11 @@ Starting with multi-LLM was intellectually satisfying, but economic reality caug
 
 ### Agent instructions are code
 
-Agent prompts aren't vague sentences — they're precise specifications with rules, examples, and edge cases. For instance, the Developer's prompt includes rules on Python vs TypeScript conventions, placeholder handling, and a mandatory completion audit before returning its response.
+Agent prompts aren't vague sentences: they're precise specifications with rules, examples, and edge cases. For instance, the Developer's prompt includes rules on Python vs TypeScript conventions, placeholder handling, and a mandatory completion audit before returning its response.
 
 ## Going further
 
-The source code is available on [GitHub](https://github.com/HamdiMechelloukh/AgenticDev). The framework is designed to be extended — adding a new agent takes about ten lines of code.
+The source code is available on [GitHub](https://github.com/HamdiMechelloukh/AgenticDev). The framework is designed to be extended: adding a new agent takes about ten lines of code.
 
 Next steps I'm considering:
 - Support for new LLM backends (Mistral, Llama)

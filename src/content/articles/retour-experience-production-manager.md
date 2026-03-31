@@ -1,4 +1,4 @@
-Pendant deux ans et demi, j'ai quitté le code pour gérer la production des données de ventes chez Decathlon Digital. Un rôle que j'ai découvert en arrivant — il s'appelait "Production Expert" dans la fiche de poste, et j'ai très vite compris que ça allait devenir du temps plein.
+Pendant deux ans et demi, j'ai quitté le code pour gérer la production des données de ventes chez Decathlon Digital. Un rôle que j'ai découvert en arrivant : il s'appelait "Production Expert" dans la fiche de poste, et j'ai très vite compris que ça allait devenir du temps plein.
 
 Voici ce que j'ai appris en passant de l'autre côté.
 
@@ -44,11 +44,11 @@ Le scénario était toujours le même :
 
 1. Le client OpCon crashe → plus aucun job ne se lance
 2. Les ventes continuent d'arriver via Kafka (des messages avec des payloads XML)
-3. Les messages s'accumulent — des centaines de milliers en quelques heures
+3. Les messages s'accumulent, des centaines de milliers en quelques heures
 4. Quand on relance le scheduler, le job de conversion XML → CSV se retrouve face à une charge massive
 5. Le job Talend souffre, les temps de traitement explosent, Redshift est saturé, les données arrivent en retard dans S3
 
-Les plus gros incidents qu'on a eus étaient liés à ce problème. Ce qui rendait la chose frustrante, c'est que le crash du client était silencieux — pas d'alerte, pas de log explicite. On ne le découvrait qu'en constatant l'absence de données en aval.
+Les plus gros incidents qu'on a eus étaient liés à ce problème. Ce qui rendait la chose frustrante, c'est que le crash du client était silencieux : pas d'alerte, pas de log explicite. On ne le découvrait qu'en constatant l'absence de données en aval.
 
 La leçon : **monitorer l'absence d'événements est aussi important que monitorer les erreurs**. Si un job qui tourne toutes les 15 minutes ne s'est pas exécuté depuis 30 minutes, c'est un signal fort.
 
@@ -60,7 +60,7 @@ Réduire le run, ce n'est pas juste "mettre des alertes". C'est concevoir un sys
 
 ### La communication est un skill technique
 
-Rédiger un message d'incident clair, animer un postmortem sans chercher de coupable, convaincre une équipe source de corriger un format de donnée — ce sont des compétences aussi importantes que savoir écrire du code. Et elles se travaillent.
+Rédiger un message d'incident clair, animer un postmortem sans chercher de coupable, convaincre une équipe source de corriger un format de donnée. Ce sont des compétences aussi importantes que savoir écrire du code. Et elles se travaillent.
 
 ### L'alerting proactif change tout
 
@@ -68,7 +68,7 @@ La différence entre un PM qui subit et un PM qui gère, c'est la proactivité. 
 
 ### Monitorer le silence
 
-Les incidents les plus vicieux ne génèrent pas d'erreur — ils génèrent du silence. Un pipeline qui ne tourne plus, un scheduler qui a crashé, un message qui n'arrive jamais. Les alertes sur l'absence d'activité m'ont sauvé plus souvent que les alertes sur les erreurs.
+Les incidents les plus vicieux ne génèrent pas d'erreur : ils génèrent du silence. Un pipeline qui ne tourne plus, un scheduler qui a crashé, un message qui n'arrive jamais. Les alertes sur l'absence d'activité m'ont sauvé plus souvent que les alertes sur les erreurs.
 
 ### La documentation n'est pas optionnelle
 
@@ -78,9 +78,9 @@ En dev, on peut parfois s'en sortir avec un code lisible et quelques commentaire
 
 Après deux ans et demi, j'ai pris la décision de revenir vers un rôle de Data Engineer. La raison est simple : **je sentais que je régressais techniquement**.
 
-Le quotidien du PM est passionnant — la diversité des problèmes, la dimension humaine, l'impact direct sur la fiabilité des données. Mais je passais mes journées à animer, documenter et communiquer, et de moins en moins à concevoir et coder.
+Le quotidien du PM est passionnant : la diversité des problèmes, la dimension humaine, l'impact direct sur la fiabilité des données. Mais je passais mes journées à animer, documenter et communiquer, et de moins en moins à concevoir et coder.
 
-J'avais peur de décrocher, de ne plus être au niveau sur les technologies qui évoluent vite — Spark, Databricks, les architectures lakehouse. Le risque de devenir un profil purement gestion sans expertise technique ne me convenait pas.
+J'avais peur de décrocher, de ne plus être au niveau sur les technologies qui évoluent vite : Spark, Databricks, les architectures lakehouse. Le risque de devenir un profil purement gestion sans expertise technique ne me convenait pas.
 
 Aujourd'hui, avec le recul, je ne regrette pas cette expérience. Elle m'a donné une compréhension de la production que beaucoup de développeurs n'ont pas. Quand je conçois un pipeline maintenant, je pense naturellement à l'observabilité, à la reprise sur erreur, à la documentation d'exploitation. Ce sont des réflexes que le code seul ne m'aurait pas donnés.
 
@@ -89,6 +89,6 @@ Aujourd'hui, avec le recul, je ne regrette pas cette expérience. Elle m'a donn�
 Si vous êtes développeur et qu'on vous propose un rôle orienté production, voici ce que j'en retiens :
 
 - **C'est un vrai métier**, pas un rôle de support. Ça demande de l'ingénierie, de la rigueur et beaucoup de soft skills.
-- **Vous allez apprendre des choses que le dev ne vous apprendra jamais** — la communication de crise, la gestion des priorités sous pression, la vision end-to-end d'un produit data.
+- **Vous allez apprendre des choses que le dev ne vous apprendra jamais** : la communication de crise, la gestion des priorités sous pression, la vision end-to-end d'un produit data.
 - **Fixez-vous une durée**. C'est enrichissant, mais si votre cœur de métier est technique, ne restez pas trop longtemps au risque de décrocher.
-- **Ramenez ces réflexes dans votre code**. L'observabilité, la documentation, le monitoring du silence — ce sont des compétences qui font de meilleurs ingénieurs.
+- **Ramenez ces réflexes dans votre code**. L'observabilité, la documentation, le monitoring du silence : ce sont des compétences qui font de meilleurs ingénieurs.

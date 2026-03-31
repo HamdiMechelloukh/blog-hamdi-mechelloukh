@@ -1,4 +1,4 @@
-For two and a half years, I stepped away from code to manage data production for sales at Decathlon Digital. A role I discovered upon arrival — the job title said "Production Expert", and I quickly realized it was going to be a full-time commitment.
+For two and a half years, I stepped away from code to manage data production for sales at Decathlon Digital. A role I discovered upon arrival: the job title said "Production Expert", and I quickly realized it was going to be a full-time commitment.
 
 Here's what I learned from switching to the other side.
 
@@ -44,11 +44,11 @@ The scenario was always the same:
 
 1. The OpCon client crashes → no jobs are launched
 2. Sales keep arriving via Kafka (messages with XML payloads)
-3. Messages pile up — hundreds of thousands within hours
+3. Messages pile up, hundreds of thousands within hours
 4. When we restart the scheduler, the XML → CSV conversion job faces a massive backlog
 5. The Talend job struggles, processing times explode, Redshift is overwhelmed, data arrives late in S3
 
-The biggest incidents we had were all tied to this problem. What made it frustrating was that the client crash was silent — no alert, no explicit log. We'd only discover it by noticing the absence of data downstream.
+The biggest incidents we had were all tied to this problem. What made it frustrating was that the client crash was silent: no alert, no explicit log. We'd only discover it by noticing the absence of data downstream.
 
 The lesson: **monitoring the absence of events is as important as monitoring errors**. If a job that runs every 15 minutes hasn't executed in 30 minutes, that's a strong signal.
 
@@ -60,7 +60,7 @@ Reducing operational burden isn't just "adding alerts". It's designing an observ
 
 ### Communication is a technical skill
 
-Writing a clear incident message, running a blameless postmortem, convincing a source team to fix a data format — these are skills as important as writing code. And they can be practiced.
+Writing a clear incident message, running a blameless postmortem, convincing a source team to fix a data format. These are skills as important as writing code. And they can be practiced.
 
 ### Proactive alerting changes everything
 
@@ -68,7 +68,7 @@ The difference between a PM who reacts and one who manages is proactivity. When 
 
 ### Monitor the silence
 
-The most dangerous incidents don't generate errors — they generate silence. A pipeline that stops running, a scheduler that has crashed, a message that never arrives. Alerts on the absence of activity saved me more often than alerts on errors.
+The most dangerous incidents don't generate errors: they generate silence. A pipeline that stops running, a scheduler that has crashed, a message that never arrives. Alerts on the absence of activity saved me more often than alerts on errors.
 
 ### Documentation is not optional
 
@@ -78,9 +78,9 @@ In dev, you can sometimes get by with readable code and a few comments. In produ
 
 After two and a half years, I decided to return to a Data Engineer role. The reason is simple: **I felt I was regressing technically**.
 
-The PM day-to-day is fascinating — the diversity of problems, the human dimension, the direct impact on data reliability. But I was spending my days facilitating, documenting and communicating, and less and less designing and coding.
+The PM day-to-day is fascinating: the diversity of problems, the human dimension, the direct impact on data reliability. But I was spending my days facilitating, documenting and communicating, and less and less designing and coding.
 
-I was afraid of falling behind, of no longer being up to speed on fast-evolving technologies — Spark, Databricks, lakehouse architectures. The risk of becoming a purely managerial profile without technical expertise didn't sit well with me.
+I was afraid of falling behind, of no longer being up to speed on fast-evolving technologies: Spark, Databricks, lakehouse architectures. The risk of becoming a purely managerial profile without technical expertise didn't sit well with me.
 
 Today, looking back, I don't regret the experience. It gave me an understanding of production that many developers don't have. When I design a pipeline now, I naturally think about observability, error recovery, and operational documentation. These are reflexes that code alone wouldn't have given me.
 
@@ -89,6 +89,6 @@ Today, looking back, I don't regret the experience. It gave me an understanding 
 If you're a developer and someone offers you a production-oriented role, here's what I'd tell you:
 
 - **It's a real job**, not a support role. It requires engineering, rigor, and a lot of soft skills.
-- **You'll learn things that development will never teach you** — crisis communication, priority management under pressure, the end-to-end view of a data product.
+- **You'll learn things that development will never teach you**: crisis communication, priority management under pressure, the end-to-end view of a data product.
 - **Set a time limit**. It's enriching, but if your core expertise is technical, don't stay too long or you risk falling behind.
-- **Bring those reflexes back into your code**. Observability, documentation, monitoring the silence — these are skills that make better engineers.
+- **Bring those reflexes back into your code**. Observability, documentation, monitoring the silence: these are skills that make better engineers.

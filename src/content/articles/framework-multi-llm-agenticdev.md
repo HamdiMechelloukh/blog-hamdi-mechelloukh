@@ -1,4 +1,4 @@
-Fin 2025, après avoir passé des heures à prompter des LLMs un par un pour générer du code, une question me trottait en tête : **et si plusieurs agents LLM pouvaient collaborer entre eux pour produire un projet complet ?** Non pas un seul agent qui fait tout, mais une équipe spécialisée — un architecte, un développeur, un testeur — chacun avec son rôle, ses outils, et ses contraintes.
+Fin 2025, après avoir passé des heures à prompter des LLMs un par un pour générer du code, une question me trottait en tête : **et si plusieurs agents LLM pouvaient collaborer entre eux pour produire un projet complet ?** Non pas un seul agent qui fait tout, mais une équipe spécialisée (un architecte, un développeur, un testeur), chacun avec son rôle, ses outils, et ses contraintes.
 
 C'est comme ça qu'est né **AgenticDev**, un framework Python qui orchestre 4 agents LLM pour transformer une simple demande en texte libre en code testé et documenté.
 
@@ -46,17 +46,17 @@ _builder.add_conditional_edges(
 _builder.add_edge("fix_developer", "tester")
 ```
 
-La fonction `should_fix_or_end` est pure Python — elle parse la sortie du Tester et décide si on relance le Developer ou si on termine. Pas de LLM dans la boucle de décision.
+La fonction `should_fix_or_end` est pure Python : elle parse la sortie du Tester et décide si on relance le Developer ou si on termine. Pas de LLM dans la boucle de décision.
 
 ## Le problème du prompt caching et le choix full Gemini
 
-En phase de découverte, j'ai très rapidement atteint les **limites de taux d'utilisation** de l'API Gemini. Chaque appel d'agent envoyait le system prompt complet, les définitions d'outils, le contexte du projet — des milliers de tokens à chaque requête.
+En phase de découverte, j'ai très rapidement atteint les **limites de taux d'utilisation** de l'API Gemini. Chaque appel d'agent envoyait le system prompt complet, les définitions d'outils, le contexte du projet, des milliers de tokens à chaque requête.
 
 La solution : le **prompt caching**. Mais Gemini et Claude le gèrent de manière très différente.
 
 ### Gemini : caching implicite
 
-Gemini applique automatiquement un cache sur les préfixes répétés. Si le system prompt et les premières instructions sont identiques entre deux appels, Google réutilise le contexte en cache. Côté code, il n'y a rien à faire — le cache est transparent.
+Gemini applique automatiquement un cache sur les préfixes répétés. Si le system prompt et les premières instructions sont identiques entre deux appels, Google réutilise le contexte en cache. Côté code, il n'y a rien à faire : le cache est transparent.
 
 ```python
 # Les économies apparaissent dans les métadonnées
@@ -67,7 +67,7 @@ logger.info("cache hit: %d/%d tokens (%d%%)", cached, total, cached * 100 // tot
 
 ### Claude : caching explicite
 
-Claude demande des marqueurs `cache_control: ephemeral` explicites sur les blocs qu'on veut cacher — le system prompt, les définitions d'outils, et le premier message utilisateur.
+Claude demande des marqueurs `cache_control: ephemeral` explicites sur les blocs qu'on veut cacher : le system prompt, les définitions d'outils, et le premier message utilisateur.
 
 ```python
 system = [{
@@ -83,7 +83,7 @@ if claude_tools:
 
 ### Pourquoi j'ai basculé sur du full Gemini
 
-J'ai commencé avec une architecture multi-LLM : Gemini pour l'Architect et le Tester, Claude pour le Developer. L'idée était séduisante — utiliser chaque LLM là où il excelle.
+J'ai commencé avec une architecture multi-LLM : Gemini pour l'Architect et le Tester, Claude pour le Developer. L'idée était séduisante : utiliser chaque LLM là où il excelle.
 
 En pratique, le **coût de l'API Claude a vite rendu cette approche insoutenable**. Un pipeline complet avec Claude comme Developer consommait significativement plus qu'avec Gemini, surtout sur les itérations de fix où le contexte grossit à chaque tour. J'ai donc décidé de passer sur du **full Gemini** pour le pipeline par défaut, tout en gardant le `ClaudeAgent` dans le framework comme option configurable.
 
@@ -187,9 +187,9 @@ Ces outils sont des fonctions Python classiques, passées aux agents via leur co
 
 ## Les limites : une base solide, pas un produit fini
 
-Il faut être honnête sur ce que le framework peut et ne peut pas faire. **AgenticDev excelle pour générer une base de projet fonctionnelle** — structure de fichiers, code initial, tests, documentation. Sur des projets simples (CLI tools, bibliothèques, petites APIs), le résultat est souvent utilisable tel quel.
+Il faut être honnête sur ce que le framework peut et ne peut pas faire. **AgenticDev excelle pour générer une base de projet fonctionnelle** : structure de fichiers, code initial, tests, documentation. Sur des projets simples (CLI tools, bibliothèques, petites APIs), le résultat est souvent utilisable tel quel.
 
-Mais dès que la complexité augmente — logique métier pointue, intégrations multiples, contraintes de performance — **le code généré sera une base de départ, pas le produit final**. Il y aura des limites techniques (architectures trop naïves, edge cases non couverts) et fonctionnelles (le LLM ne connaît pas votre contexte métier) qu'il faudra corriger manuellement ou en vibe-codant avec un outil comme Claude Code ou Cursor.
+Mais dès que la complexité augmente (logique métier pointue, intégrations multiples, contraintes de performance), **le code généré sera une base de départ, pas le produit final**. Il y aura des limites techniques (architectures trop naïves, edge cases non couverts) et fonctionnelles (le LLM ne connaît pas votre contexte métier) qu'il faudra corriger manuellement ou en vibe-codant avec un outil comme Claude Code ou Cursor.
 
 C'est d'ailleurs le workflow que je recommande : laisser AgenticDev générer le squelette, puis itérer dessus avec un assistant de code pour affiner les détails. Le framework vous fait gagner les premières heures de setup, pas les dernières heures de polish.
 
@@ -213,11 +213,11 @@ Commencer en multi-LLM était intellectuellement satisfaisant, mais la réalité
 
 ### Les instructions d'agent sont du code
 
-Les prompts des agents ne sont pas des phrases vagues — ce sont des spécifications précises avec des règles, des exemples, et des cas limites. Par exemple, le prompt du Developer inclut des règles sur les conventions Python vs TypeScript, la gestion des placeholders, et un audit de complétion obligatoire avant de retourner sa réponse.
+Les prompts des agents ne sont pas des phrases vagues : ce sont des spécifications précises avec des règles, des exemples, et des cas limites. Par exemple, le prompt du Developer inclut des règles sur les conventions Python vs TypeScript, la gestion des placeholders, et un audit de complétion obligatoire avant de retourner sa réponse.
 
 ## Pour aller plus loin
 
-Le code source est disponible sur [GitHub](https://github.com/HamdiMechelloukh/AgenticDev). Le framework est conçu pour être étendu — ajouter un nouvel agent prend une dizaine de lignes de code.
+Le code source est disponible sur [GitHub](https://github.com/HamdiMechelloukh/AgenticDev). Le framework est conçu pour être étendu : ajouter un nouvel agent prend une dizaine de lignes de code.
 
 Les prochaines étapes que j'envisage :
 - Support de nouveaux backends LLM (Mistral, Llama)

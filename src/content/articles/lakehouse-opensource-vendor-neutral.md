@@ -1,6 +1,6 @@
 Quand on travaille dans la data, on finit toujours par se poser la même question : **que se passe-t-il si demain on doit changer de plateforme ?**
 
-J'ai pu constater de première main que les éditeurs de logiciels sont assez agressifs dans leur politique de pricing, et qu'ils n'hésitent pas à abandonner une solution qui ne génère pas assez de chiffre d'affaires. Quand ça arrive, il faut pouvoir migrer rapidement — sous peine de coûts faramineux en migration, en re-développement, et en temps perdu.
+J'ai pu constater de première main que les éditeurs de logiciels sont assez agressifs dans leur politique de pricing, et qu'ils n'hésitent pas à abandonner une solution qui ne génère pas assez de chiffre d'affaires. Quand ça arrive, il faut pouvoir migrer rapidement, sous peine de coûts faramineux en migration, en re-développement, et en temps perdu.
 
 C'est cette conviction qui m'a poussé à construire **un lakehouse open-source et vendor-neutral de bout en bout**, du messaging à la visualisation. Voici les choix d'architecture, les compromis, et ce que j'en ai appris.
 
@@ -15,19 +15,19 @@ Sources → Kafka → Spark (Bronze) → Spark (Silver) → Spark (Gold) → Str
 
 ### Kafka pour l'ingestion
 
-Le choix du event-driven pour le transfert de données n'est pas anodin. En informatique, **gérer le temps est un des problèmes les plus complexes**. Côté opérationnel, on va de plus en plus vers des architectures event-driven justement pour ça — un événement arrive quand il arrive, et le système le traite. Pas de fenêtre batch à respecter, pas de "le fichier aurait dû arriver à 6h".
+Le choix du event-driven pour le transfert de données n'est pas anodin. En informatique, **gérer le temps est un des problèmes les plus complexes**. Côté opérationnel, on va de plus en plus vers des architectures event-driven justement pour ça : un événement arrive quand il arrive, et le système le traite. Pas de fenêtre batch à respecter, pas de "le fichier aurait dû arriver à 6h".
 
 Kafka est le standard de fait pour ce type d'architecture. Open-source, battle-tested, et surtout : pas de lock-in vendor. On peut le déployer sur n'importe quel cloud ou on-premise.
 
 ### Spark pour le compute
 
-On pourrait se demander : pourquoi Spark dans une architecture event-driven ? Ma position est pragmatique. Le streaming pur via Kafka convient très bien pour l'ingestion dans le bronze, voire le silver, pour **gérer la temporalité en amont**. Mais dès qu'on arrive aux transformations lourdes — agrégations, jointures, enrichissements — Spark reste l'outil le plus éprouvé et le plus portable.
+On pourrait se demander : pourquoi Spark dans une architecture event-driven ? Ma position est pragmatique. Le streaming pur via Kafka convient très bien pour l'ingestion dans le bronze, voire le silver, pour **gérer la temporalité en amont**. Mais dès qu'on arrive aux transformations lourdes (agrégations, jointures, enrichissements), Spark reste l'outil le plus éprouvé et le plus portable.
 
 L'avantage de Spark, c'est qu'il tourne partout : sur un cluster YARN, sur Kubernetes, sur Databricks, sur EMR, ou en local pour le développement. C'est un des rares outils de compute qui ne vous enferme pas.
 
 ### Iceberg pour le format de table
 
-Iceberg est le format de table ouvert qui monte en puissance. Mon choix était en partie de la curiosité technologique — au travail j'utilise Delta Lake au quotidien, donc je voulais explorer l'alternative.
+Iceberg est le format de table ouvert qui monte en puissance. Mon choix était en partie de la curiosité technologique : au travail j'utilise Delta Lake au quotidien, donc je voulais explorer l'alternative.
 
 Mais au-delà de la curiosité, Iceberg a des propriétés qui le rendent particulièrement adapté à un lakehouse vendor-neutral :
 
@@ -47,13 +47,13 @@ Le pattern médaillon (bronze/silver/gold) structure la donnée en trois niveaux
 - **Silver** — donnée nettoyée, dédupliquée, typée correctement
 - **Gold** — donnée agrégée et prête à la consommation métier
 
-Honnêtement, ces termes sont récents. Il y a quelques années, on parlait de dataraw, dataprep, dataset. Le vocabulaire change, le principe reste le même. L'important est de **rester dans cette logique de raffinement progressif sans être rigide** — la réalité fonctionnelle prévaut toujours sur les règles techniques. Si une donnée n'a pas besoin de passer par trois couches, elle n'a pas besoin de passer par trois couches.
+Honnêtement, ces termes sont récents. Il y a quelques années, on parlait de dataraw, dataprep, dataset. Le vocabulaire change, le principe reste le même. L'important est de **rester dans cette logique de raffinement progressif sans être rigide**. La réalité fonctionnelle prévaut toujours sur les règles techniques. Si une donnée n'a pas besoin de passer par trois couches, elle n'a pas besoin de passer par trois couches.
 
 ## MinIO : un S3-compatible sans le lock-in
 
 Un point qui peut surprendre : pourquoi MinIO plutôt que S3 directement ?
 
-Parce que **S3 est un service AWS**, et utiliser S3, c'est s'enfermer chez AWS. MinIO implémente l'API S3 à l'identique — tous les outils qui parlent S3 parlent MinIO sans modification. On peut développer et tester en local, déployer sur n'importe quel cloud, et migrer vers S3, GCS ou Azure Blob Storage sans changer une ligne de code applicatif.
+Parce que **S3 est un service AWS**, et utiliser S3, c'est s'enfermer chez AWS. MinIO implémente l'API S3 à l'identique : tous les outils qui parlent S3 parlent MinIO sans modification. On peut développer et tester en local, déployer sur n'importe quel cloud, et migrer vers S3, GCS ou Azure Blob Storage sans changer une ligne de code applicatif.
 
 C'est exactement le principe du vendor-neutral : **utiliser les standards ouverts plutôt que les services managés propriétaires**.
 
@@ -69,7 +69,7 @@ Mais il a des **limites réelles** :
 - Les checks coûteux en ressources (jointures massives pour la détection de doublons cross-sources) ne passent pas à l'échelle facilement
 - Et surtout : **découvrir des problèmes de qualité ne suffit pas**
 
-Ce dernier point est crucial et vient directement de mon expérience en production chez Decathlon. Vous pouvez mettre en place toutes les alertes de qualité du monde — si les équipes sources n'ont aucun engagement à corriger les problèmes, rien ne changera. Il faut travailler sur des **contrats de service en termes de qualité de données** : SLAs sur les délais de correction, responsabilités partagées, escalade claire. Sans ça, les sources feront peu d'effort dans la résolution.
+Ce dernier point est crucial et vient directement de mon expérience en production chez Decathlon. Vous pouvez mettre en place toutes les alertes de qualité du monde. Si les équipes sources n'ont aucun engagement à corriger les problèmes, rien ne changera. Il faut travailler sur des **contrats de service en termes de qualité de données** : SLAs sur les délais de correction, responsabilités partagées, escalade claire. Sans ça, les sources feront peu d'effort dans la résolution.
 
 ## La difficulté du vendor-neutral
 
@@ -81,7 +81,7 @@ Le plus gros défi de ce projet n'était pas technique au sens classique. C'éta
 - Pourquoi MinIO quand S3 est là, configuré en 2 clics ?
 - Pourquoi Airflow self-hosted quand il y a MWAA ?
 
-La réponse est toujours la même : **parce que le jour où le pricing change ou le service est déprécié, vous devez pouvoir partir**. Ça ne veut pas dire qu'il ne faut jamais utiliser de services managés — ça veut dire qu'il faut le faire en connaissance de cause, et s'assurer que la couche d'abstraction permet de switcher.
+La réponse est toujours la même : **parce que le jour où le pricing change ou le service est déprécié, vous devez pouvoir partir**. Ça ne veut pas dire qu'il ne faut jamais utiliser de services managés. Ça veut dire qu'il faut le faire en connaissance de cause, et s'assurer que la couche d'abstraction permet de switcher.
 
 En pratique, construire vendor-neutral demande plus d'effort initial :
 
@@ -99,7 +99,7 @@ L'alternative serait Dagster ou Prefect, mais Airflow reste le plus déployé en
 
 ## IaC : Terraform pour le multi-cloud
 
-Terraform est la pièce qui rend le vendor-neutral viable à l'échelle. L'infrastructure est décrite en code, versionnée dans Git, et déployable sur AWS, GCP ou Azure avec des changements de provider — pas de réécriture complète.
+Terraform est la pièce qui rend le vendor-neutral viable à l'échelle. L'infrastructure est décrite en code, versionnée dans Git, et déployable sur AWS, GCP ou Azure avec des changements de provider, sans réécriture complète.
 
 Dans ce projet, les modules Terraform provisionent l'infrastructure AWS, mais la même logique pourrait être portée sur un autre cloud sans refondre l'architecture applicative.
 
@@ -107,11 +107,11 @@ Dans ce projet, les modules Terraform provisionent l'infrastructure AWS, mais la
 
 ### Le vendor-neutral a un coût, mais le lock-in aussi
 
-Construire vendor-neutral demande plus de travail initial. Mais le lock-in a un coût caché qui explose le jour où vous devez migrer — et ce jour arrive toujours plus tôt qu'on ne le pense.
+Construire vendor-neutral demande plus de travail initial. Mais le lock-in a un coût caché qui explose le jour où vous devez migrer. Et ce jour arrive toujours plus tôt qu'on ne le pense.
 
 ### Les formats ouverts sont l'assurance vie de vos données
 
-Iceberg, Parquet, Avro — tant que vos données sont dans un format ouvert, vous pouvez changer de moteur de compute sans perdre vos données. C'est la décision la plus importante d'une architecture data.
+Iceberg, Parquet, Avro : tant que vos données sont dans un format ouvert, vous pouvez changer de moteur de compute sans perdre vos données. C'est la décision la plus importante d'une architecture data.
 
 ### La qualité des données est un problème organisationnel, pas technique
 
