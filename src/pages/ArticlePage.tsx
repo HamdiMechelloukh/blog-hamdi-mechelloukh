@@ -8,7 +8,7 @@ import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { blogArticles } from '../data';
 import { loadArticleContent } from '../utils/articleLoader';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL ?? '';
+const BASE_URL = 'https://hamdimechelloukh.com';
 
 const ArticlePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -18,6 +18,9 @@ const ArticlePage = () => {
   const [loading, setLoading] = useState(true);
 
   const article = blogArticles.find((a) => a.slug === slug);
+  const counterpart = article
+    ? blogArticles.find((a) => a.date === article.date && a.lang !== article.lang)
+    : undefined;
 
   useEffect(() => {
     if (!slug) return;
@@ -47,10 +50,16 @@ const ArticlePage = () => {
         <title>{article.title} – Hamdi Mechelloukh</title>
         <meta name="description" content={article.summary} />
         <link rel="canonical" href={`${BASE_URL}/blog/${article.slug}`} />
+        <link rel="alternate" hreflang={article.lang} href={`${BASE_URL}/blog/${article.slug}`} />
+        {counterpart && (
+          <link rel="alternate" hreflang={counterpart.lang} href={`${BASE_URL}/blog/${counterpart.slug}`} />
+        )}
+        <link rel="alternate" hreflang="x-default" href={`${BASE_URL}/blog/${article.lang === 'fr' ? article.slug : (counterpart?.slug ?? article.slug)}`} />
         <meta property="og:url" content={`${BASE_URL}/blog/${article.slug}`} />
         <meta property="og:title" content={article.title} />
         <meta property="og:description" content={article.summary} />
         <meta property="og:type" content="article" />
+        <meta property="og:locale" content={article.lang === 'fr' ? 'fr_FR' : 'en_US'} />
       </Helmet>
       <article className="article-container">
         <Link to="/blog" className="article-back">
