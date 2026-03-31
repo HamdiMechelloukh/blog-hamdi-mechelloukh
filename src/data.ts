@@ -11,6 +11,14 @@ export const projects: Project[] = [
   },
   {
     id: 2,
+    title: "Olist Flink Streaming",
+    description: "Pipeline streaming temps réel end-to-end : simulation CSV → Kafka → 3 jobs Flink 2.0 (agrégation revenus, détection d'anomalies CEP, KPIs globaux) → Apache Iceberg sur MinIO, avec Prometheus, Grafana et checkpoints RocksDB.",
+    technologies: ["Java 21", "Apache Flink", "Apache Kafka", "Apache Iceberg", "MinIO", "Prometheus", "Grafana", "Docker"],
+    imageUrl: "/assets/project_placeholder.svg",
+    githubUrl: "https://github.com/HamdiMechelloukh/olist-flink-streaming"
+  },
+  {
+    id: 3,
     title: "Olist MLOps",
     description: "Pipeline MLOps end-to-end : feature engineering → XGBoost → FastAPI serving, avec MLflow tracking, Evidently drift detection, Airflow orchestration, Prometheus metrics et déploiement multi-cloud (Terraform AWS/GCP/Azure + Helm K8s).",
     technologies: ["Python", "XGBoost", "FastAPI", "MLflow", "Airflow", "Evidently", "Prometheus", "Docker", "Terraform", "Kubernetes"],
@@ -18,7 +26,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HamdiMechelloukh/olist-mlops"
   },
   {
-    id: 3,
+    id: 4,
     title: "AgenticDev",
     description: "Framework multi-LLM agentique : un pipeline LangGraph orchestre 4 agents spécialisés (Architect, Designer, Developer, Tester) pour transformer une demande en texte libre en code testé et documenté, avec génération d'assets SVG et boucle de correction automatique.",
     technologies: ["Python", "LangGraph", "Gemini", "Claude", "Multi-LLM", "Prompt Caching"],
@@ -26,7 +34,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HamdiMechelloukh/AgenticDev"
   },
   {
-    id: 4,
+    id: 5,
     title: "Minesweeper 1v1",
     description: "Démineur multijoueur temps réel : deux joueurs s'affrontent sur des grilles identiques via WebSocket, avec un solveur par propagation de contraintes garantissant des grilles toujours résolvables, un leaderboard PostgreSQL et une PWA installable.",
     technologies: ["React", "TypeScript", "Node.js", "WebSocket", "PostgreSQL", "PWA"],
@@ -35,7 +43,7 @@ export const projects: Project[] = [
     demoUrl: "https://client-six-woad-40.vercel.app/"
   },
   {
-    id: 5,
+    id: 6,
     title: "Portfolio Personnel",
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
     technologies: ["React", "TypeScript", "Vite"],
@@ -100,6 +108,24 @@ export const blogArticles: BlogArticle[] = [
     date: "2026-03-20",
     tags: ["Data Engineering", "Lakehouse", "Iceberg", "Kafka", "Spark", "Open Source"],
     readingTimeMinutes: 9,
+  },
+  {
+    slug: "pipeline-streaming-flink-kafka-iceberg",
+    lang: "fr",
+    title: "Pipeline streaming temps réel avec Flink 2.0, Kafka et Iceberg",
+    summary: "Un pipeline streaming end-to-end sur le dataset Olist : agrégation de revenus, détection d'anomalies par CEP, KPIs à la minute, data lake Iceberg sur MinIO — et les problèmes qu'on ne voit pas venir.",
+    date: "2026-03-31",
+    tags: ["Flink", "Kafka", "Iceberg", "Streaming", "Java", "Data Engineering"],
+    readingTimeMinutes: 11,
+  },
+  {
+    slug: "flink-kafka-iceberg-streaming-pipeline",
+    lang: "en",
+    title: "Real-time streaming pipeline with Flink 2.0, Kafka and Iceberg",
+    summary: "An end-to-end streaming pipeline on the Olist dataset: revenue aggregation, CEP anomaly detection, per-minute KPIs, Iceberg data lake on MinIO — and the problems you don't see coming.",
+    date: "2026-03-31",
+    tags: ["Flink", "Kafka", "Iceberg", "Streaming", "Java", "Data Engineering"],
+    readingTimeMinutes: 11,
   },
 ];
 
