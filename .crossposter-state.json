@@ -1,14 +1,30 @@
 {
   "multi-llm-framework-agenticdev": {
-    "devto": { "postedAt": "2026-04-15T00:00:00.000Z", "id": "manual-bootstrap" }
+    "devto": {
+      "postedAt": "2026-04-15T00:00:00.000Z",
+      "id": "manual-bootstrap"
+    },
+    "linkedin": {
+      "postedAt": "2026-04-16T10:35:04.969Z",
+      "id": "urn:li:share:7450491951721811968"
+    }
   },
   "production-manager-lessons-learned": {
-    "devto": { "postedAt": "2026-04-15T00:00:00.000Z", "id": "manual-bootstrap" }
+    "devto": {
+      "postedAt": "2026-04-15T00:00:00.000Z",
+      "id": "manual-bootstrap"
+    }
   },
   "open-source-vendor-neutral-lakehouse": {
-    "devto": { "postedAt": "2026-04-15T00:00:00.000Z", "id": "manual-bootstrap" }
+    "devto": {
+      "postedAt": "2026-04-15T00:00:00.000Z",
+      "id": "manual-bootstrap"
+    }
   },
   "flink-kafka-iceberg-streaming-pipeline": {
-    "devto": { "postedAt": "2026-04-15T00:00:00.000Z", "id": "manual-bootstrap" }
+    "devto": {
+      "postedAt": "2026-04-15T00:00:00.000Z",
+      "id": "manual-bootstrap"
+    }
   }
 }
