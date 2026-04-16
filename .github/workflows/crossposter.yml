@@ -2,8 +2,9 @@ name: crossposter
 
 on:
   schedule:
-    # Mar / Mer / Jeu à 08:00 UTC = 09:00 Paris (hiver) / 10:00 Paris (été)
-    - cron: "0 8 * * 2,3,4"
+    # Mar / Mer / Jeu à 06:00 UTC = 08:00 Paris (été) / 07:00 Paris (hiver).
+    # Marge de ~30 min pour le délai GitHub Actions, garantit toujours avant 9h Paris.
+    - cron: "0 6 * * 2,3,4"
   workflow_dispatch:
     inputs:
       dry_run:
