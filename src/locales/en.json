@@ -50,7 +50,9 @@
     "project_5_title": "Minesweeper 1v1",
     "project_5_description": "Real-time multiplayer Minesweeper: two players compete on identical grids via WebSocket, with a constraint-propagation solver ensuring always-solvable boards, a PostgreSQL leaderboard and an installable PWA.",
     "project_6_title": "Personal Portfolio",
-    "project_6_description": "The site you are currently browsing, built with React and Vite."
+    "project_6_description": "The site you are currently browsing, built with React and Vite.",
+    "project_7_title": "Sanctuaire",
+    "project_7_description": "Family tool to preserve burial concessions: centralized tracking of renewal deadlines, automatic email alerts before expiry, and admin space. Public landing page with a contact form for inbound requests."
   },
   "articles": {
     "title": "Blog",

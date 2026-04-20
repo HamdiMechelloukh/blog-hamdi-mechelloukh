@@ -50,7 +50,9 @@
     "project_5_title": "Minesweeper 1v1",
     "project_5_description": "Démineur multijoueur temps réel : deux joueurs s'affrontent sur des grilles identiques via WebSocket, avec un solveur par propagation de contraintes garantissant des grilles toujours résolvables, un leaderboard PostgreSQL et une PWA installable.",
     "project_6_title": "Portfolio Personnel",
-    "project_6_description": "Le site sur lequel vous naviguez actuellement, construit avec React et Vite."
+    "project_6_description": "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",
+    "project_7_title": "Sanctuaire",
+    "project_7_description": "Outil de pérennisation des concessions funéraires familiales : suivi centralisé des échéances, alertes email automatiques avant expiration et espace administrateur. Landing publique avec formulaire de contact pour les demandes entrantes."
   },
   "articles": {
     "title": "Blog",

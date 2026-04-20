@@ -21,10 +21,12 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           ))}
         </div>
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-          <a href={project.githubUrl} className="btn" target="_blank" rel="noopener noreferrer">
-            <img src={assetPaths.github} alt="" style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '0.5rem' }} />
-            {t('portfolio.code')}
-          </a>
+          {project.githubUrl && (
+            <a href={project.githubUrl} className="btn" target="_blank" rel="noopener noreferrer">
+              <img src={assetPaths.github} alt="" style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '0.5rem' }} />
+              {t('portfolio.code')}
+            </a>
+          )}
           {project.demoUrl && (
             <a href={project.demoUrl} className="btn" style={{ backgroundColor: 'var(--secondary)' }} target="_blank" rel="noopener noreferrer">
               {t('portfolio.demo')}

@@ -43,6 +43,14 @@ export const projects: Project[] = [
     demoUrl: "https://client-six-woad-40.vercel.app/"
   },
   {
+    id: 7,
+    title: "Sanctuaire",
+    description: "Outil de pérennisation des concessions funéraires familiales : suivi centralisé des échéances, alertes email automatiques avant expiration et espace administrateur. Landing publique avec formulaire de contact pour les demandes entrantes.",
+    technologies: ["Ruby", "Rails 8", "PostgreSQL 18", "Tailwind v4", "Devise", "Solid Queue", "Resend", "Railway"],
+    imageUrl: "/assets/project_placeholder.svg",
+    demoUrl: "https://sanctuaire-production.up.railway.app"
+  },
+  {
     id: 6,
     title: "Portfolio Personnel",
     description: "Le site sur lequel vous naviguez actuellement, construit avec React et Vite.",

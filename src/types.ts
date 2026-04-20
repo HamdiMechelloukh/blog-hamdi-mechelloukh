@@ -4,7 +4,7 @@ export interface Project {
   description: string;
   technologies: string[];
   imageUrl: string; // Path to SVG or placeholder
-  githubUrl: string;
+  githubUrl?: string;
   demoUrl?: string;
 }
 
