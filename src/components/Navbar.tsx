@@ -1,14 +1,23 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { assetPaths } from '../data';
+import { assetPaths, blogArticles } from '../data';
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleLang = () => {
     const next = i18n.language === 'fr' ? 'en' : 'fr';
     i18n.changeLanguage(next);
     localStorage.setItem('lang', next);
+
+    // Sur une page d'article, suivre vers l'article jumeau dans l'autre langue
+    const match = location.pathname.match(/^\/blog\/(.+)$/);
+    if (match) {
+      const current = blogArticles.find((a) => a.slug === decodeURIComponent(match[1]));
+      if (current?.translationSlug) navigate(`/blog/${current.translationSlug}`);
+    }
   };
 
   return (

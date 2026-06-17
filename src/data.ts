@@ -65,6 +65,7 @@ export const articles: Article[] = [];
 export const blogArticles: BlogArticle[] = [
   {
     slug: "robot-investissement-ce-que-jai-appris-sur-les-llm",
+    translationSlug: "investment-bot-what-llms-taught-me",
     lang: "fr",
     title: "Deux mois à construire un robot d'investissement. Ce qu'il m'a appris sur les LLM",
     summary: "Comment un bot de veille de portefeuille m'a appris le vrai fonctionnement des LLM : non-déterminisme à température zéro, déterminisme dans la donnée, et vote d'ensemble façon Condorcet.",
@@ -74,6 +75,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "investment-bot-what-llms-taught-me",
+    translationSlug: "robot-investissement-ce-que-jai-appris-sur-les-llm",
     lang: "en",
     title: "Two months building an investment bot. What it taught me about LLMs",
     summary: "How a portfolio-monitoring bot taught me how LLMs really work: zero-temperature non-determinism, determinism in the data, and Condorcet-style ensemble voting.",
@@ -83,6 +85,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "framework-multi-llm-agenticdev",
+    translationSlug: "multi-llm-framework-agenticdev",
     lang: "fr",
     title: "AgenticDev : un framework multi-LLM pour générer du code testé",
     summary: "Comment j'ai conçu un pipeline de 4 agents LLM spécialisés avec LangGraph, prompt caching et boucle de correction automatique.",
@@ -92,6 +95,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "multi-llm-framework-agenticdev",
+    translationSlug: "framework-multi-llm-agenticdev",
     lang: "en",
     title: "AgenticDev: a multi-LLM framework for generating tested code",
     summary: "How I designed a pipeline of 4 specialized LLM agents with LangGraph, prompt caching and automatic fix loop.",
@@ -101,6 +105,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "retour-experience-production-manager",
+    translationSlug: "production-manager-lessons-learned",
     lang: "fr",
     title: "Retour d'expérience : 2 ans Production Manager chez Decathlon Digital",
     summary: "Ce que j'ai appris en quittant le code pour gérer la production des données de ventes — alerting, postmortems, communication de crise, et pourquoi je suis revenu côté technique.",
@@ -110,6 +115,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "production-manager-lessons-learned",
+    translationSlug: "retour-experience-production-manager",
     lang: "en",
     title: "Lessons from 2 years as Production Manager at Decathlon Digital",
     summary: "What I learned stepping away from code to manage sales data production — alerting, postmortems, crisis communication, and why I went back to engineering.",
@@ -119,6 +125,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "lakehouse-opensource-vendor-neutral",
+    translationSlug: "open-source-vendor-neutral-lakehouse",
     lang: "fr",
     title: "Construire un lakehouse open-source vendor-neutral",
     summary: "Pourquoi et comment j'ai conçu un lakehouse sans lock-in vendor : Kafka, Spark, Iceberg, MinIO, Great Expectations et Terraform.",
@@ -128,6 +135,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "open-source-vendor-neutral-lakehouse",
+    translationSlug: "lakehouse-opensource-vendor-neutral",
     lang: "en",
     title: "Building an open-source vendor-neutral lakehouse",
     summary: "Why and how I designed a lakehouse with no vendor lock-in: Kafka, Spark, Iceberg, MinIO, Great Expectations and Terraform.",
@@ -137,6 +145,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "pipeline-streaming-flink-kafka-iceberg",
+    translationSlug: "flink-kafka-iceberg-streaming-pipeline",
     lang: "fr",
     title: "Pipeline streaming temps réel avec Flink 2.0, Kafka et Iceberg",
     summary: "Un pipeline streaming end-to-end sur le dataset Olist : agrégation de revenus, détection d'anomalies par CEP, KPIs à la minute, data lake Iceberg sur MinIO — et les problèmes qu'on ne voit pas venir.",
@@ -146,6 +155,7 @@ export const blogArticles: BlogArticle[] = [
   },
   {
     slug: "flink-kafka-iceberg-streaming-pipeline",
+    translationSlug: "pipeline-streaming-flink-kafka-iceberg",
     lang: "en",
     title: "Real-time streaming pipeline with Flink 2.0, Kafka and Iceberg",
     summary: "An end-to-end streaming pipeline on the Olist dataset: revenue aggregation, CEP anomaly detection, per-minute KPIs, Iceberg data lake on MinIO — and the problems you don't see coming.",

@@ -19,7 +19,7 @@ const ArticlePage = () => {
 
   const article = blogArticles.find((a) => a.slug === slug);
   const counterpart = article
-    ? blogArticles.find((a) => a.date === article.date && a.lang !== article.lang)
+    ? blogArticles.find((a) => a.slug === article.translationSlug)
     : undefined;
 
   useEffect(() => {
@@ -50,11 +50,11 @@ const ArticlePage = () => {
         <title>{article.title} – Hamdi Mechelloukh</title>
         <meta name="description" content={article.summary} />
         <link rel="canonical" href={`${BASE_URL}/blog/${article.slug}`} />
-        <link rel="alternate" hreflang={article.lang} href={`${BASE_URL}/blog/${article.slug}`} />
+        <link rel="alternate" hrefLang={article.lang} href={`${BASE_URL}/blog/${article.slug}`} />
         {counterpart && (
-          <link rel="alternate" hreflang={counterpart.lang} href={`${BASE_URL}/blog/${counterpart.slug}`} />
+          <link rel="alternate" hrefLang={counterpart.lang} href={`${BASE_URL}/blog/${counterpart.slug}`} />
         )}
-        <link rel="alternate" hreflang="x-default" href={`${BASE_URL}/blog/${article.lang === 'fr' ? article.slug : (counterpart?.slug ?? article.slug)}`} />
+        <link rel="alternate" hrefLang="x-default" href={`${BASE_URL}/blog/${article.lang === 'fr' ? article.slug : (counterpart?.slug ?? article.slug)}`} />
         <meta property="og:url" content={`${BASE_URL}/blog/${article.slug}`} />
         <meta property="og:title" content={article.title} />
         <meta property="og:description" content={article.summary} />
