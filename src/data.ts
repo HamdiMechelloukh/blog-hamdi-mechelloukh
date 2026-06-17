@@ -64,6 +64,24 @@ export const articles: Article[] = [];
 
 export const blogArticles: BlogArticle[] = [
   {
+    slug: "robot-investissement-ce-que-jai-appris-sur-les-llm",
+    lang: "fr",
+    title: "Deux mois à construire un robot d'investissement. Ce qu'il m'a appris sur les LLM",
+    summary: "Comment un bot de veille de portefeuille m'a appris le vrai fonctionnement des LLM : non-déterminisme à température zéro, déterminisme dans la donnée, et vote d'ensemble façon Condorcet.",
+    date: "2026-06-17",
+    tags: ["LLM", "IA générative", "Non-déterminisme", "Python"],
+    readingTimeMinutes: 13,
+  },
+  {
+    slug: "investment-bot-what-llms-taught-me",
+    lang: "en",
+    title: "Two months building an investment bot. What it taught me about LLMs",
+    summary: "How a portfolio-monitoring bot taught me how LLMs really work: zero-temperature non-determinism, determinism in the data, and Condorcet-style ensemble voting.",
+    date: "2026-06-17",
+    tags: ["LLM", "Generative AI", "Non-determinism", "Python"],
+    readingTimeMinutes: 13,
+  },
+  {
     slug: "framework-multi-llm-agenticdev",
     lang: "fr",
     title: "AgenticDev : un framework multi-LLM pour générer du code testé",
