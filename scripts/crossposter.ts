@@ -99,8 +99,38 @@ async function postToDevto(article: BlogArticle, body: string): Promise<PostReco
   };
 }
 
+/**
+ * Access token LinkedIn. Si un refresh token est configuré (LINKEDIN_REFRESH_TOKEN +
+ * LINKEDIN_CLIENT_ID + LINKEDIN_CLIENT_SECRET), on l'échange à chaud contre un access token frais :
+ * le refresh token vit ~1 an, l'access token ~60 j → plus de renouvellement manuel tous les 2 mois.
+ * Sinon on retombe sur LINKEDIN_ACCESS_TOKEN statique (compat).
+ */
+async function getLinkedInAccessToken(): Promise<string> {
+  const refreshToken = process.env.LINKEDIN_REFRESH_TOKEN;
+  const clientId = process.env.LINKEDIN_CLIENT_ID;
+  const clientSecret = process.env.LINKEDIN_CLIENT_SECRET;
+  if (!refreshToken || !clientId || !clientSecret) {
+    return requireEnv("LINKEDIN_ACCESS_TOKEN");
+  }
+  const response = await fetch("https://www.linkedin.com/oauth/v2/accessToken", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: refreshToken,
+      client_id: clientId,
+      client_secret: clientSecret,
+    }).toString(),
+  });
+  if (!response.ok) {
+    throw new Error(`LinkedIn refresh ${response.status}: ${await response.text()}`);
+  }
+  const data = (await response.json()) as { access_token: string };
+  return data.access_token;
+}
+
 async function postToLinkedIn(article: BlogArticle): Promise<PostRecord> {
-  const accessToken = requireEnv("LINKEDIN_ACCESS_TOKEN");
+  const accessToken = await getLinkedInAccessToken();
   const authorUrn = requireEnv("LINKEDIN_USER_URN");
   const url = canonicalUrlFor(article.slug);
   const hashtags = article.tags

@@ -87,6 +87,8 @@ const server = createServer(async (req, res) => {
     const tokenData = (await tokenResponse.json()) as {
       access_token: string;
       expires_in: number;
+      refresh_token?: string;
+      refresh_token_expires_in?: number;
     };
 
     const userResponse = await fetch("https://api.linkedin.com/v2/userinfo", {
@@ -108,9 +110,19 @@ const server = createServer(async (req, res) => {
     console.log("\n--- À copier dans les secrets GitHub ---\n");
     console.log(`LINKEDIN_ACCESS_TOKEN=${tokenData.access_token}`);
     console.log(`LINKEDIN_USER_URN=${userUrn}`);
-    console.log("\n----------------------------------------\n");
-    console.log("⚠️  Le token expire dans", Math.round(tokenData.expires_in / 86400), "jours.");
-    console.log("   Pense à le renouveler avant cette date (rerun ce script).\n");
+    if (tokenData.refresh_token) {
+      const rExp = Math.round((tokenData.refresh_token_expires_in ?? 0) / 86400);
+      console.log(`LINKEDIN_REFRESH_TOKEN=${tokenData.refresh_token}`);
+      console.log("\n(+ LINKEDIN_CLIENT_ID et LINKEDIN_CLIENT_SECRET dans les secrets)");
+      console.log("\n----------------------------------------\n");
+      console.log(`✓ Refresh token obtenu (valide ~${rExp} jours).`);
+      console.log("   Le crossposter renouvellera l'access token tout seul à chaque run.");
+      console.log("   Plus rien à faire avant ~1 an (rerun ce script à l'expiration du refresh).\n");
+    } else {
+      console.log("\n----------------------------------------\n");
+      console.log("⚠️  Aucun refresh_token renvoyé : ton app LinkedIn n'est pas habilitée aux refresh tokens.");
+      console.log(`   → renouvellement MANUEL de LINKEDIN_ACCESS_TOKEN tous les ~${Math.round(tokenData.expires_in / 86400)} jours (rerun ce script).\n`);
+    }
 
     server.close();
     process.exit(0);
