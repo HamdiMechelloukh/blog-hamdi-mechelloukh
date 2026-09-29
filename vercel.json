@@ -1,11 +1,17 @@
 {
-  "redirects": [
+  "framework": null,
+  "installCommand": "./vercel-install.sh",
+  "buildCommand": "export PATH=\"${CARGO_HOME:-$HOME/.cargo}/bin:$PATH\" && ./build.sh",
+  "outputDirectory": "dist",
+  "routes": [
     {
-      "source": "/:path*",
+      "src": "/(.*)",
       "has": [{ "type": "host", "value": "www.hamdimechelloukh.com" }],
-      "destination": "https://hamdimechelloukh.com/:path*",
-      "permanent": true
-    }
-  ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+      "status": 308,
+      "headers": { "Location": "https://hamdimechelloukh.com/$1" }
+    },
+    { "handle": "filesystem" },
+    { "src": "/en(/.*)?", "status": 404, "dest": "/en/404.html" },
+    { "src": "/.*", "status": 404, "dest": "/404.html" }
+  ]
 }

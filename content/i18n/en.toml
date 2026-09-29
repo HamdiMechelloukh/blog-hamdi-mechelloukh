@@ -1,0 +1,83 @@
+[nav]
+home = "Home"
+about = "About"
+projects = "Projects"
+articles = "Blog"
+blog = "Tech watch"
+contact = "Contact"
+
+[home]
+subtitle = "Data Engineer @ Decathlon Digital"
+description = "Data Engineer with 8 years of experience, I build large-scale data pipelines that turn raw data into strategic decisions — Spark, AWS, Databricks."
+cta_projects = "View my projects"
+cta_contact = "Contact me"
+skills_title = "Skills"
+skill_data = "Data Engineering"
+skill_backend = "Backend"
+skill_db = "Databases"
+skill_cloud = "Cloud & Tools"
+
+[about]
+title = "About"
+who_title = "Who am I?"
+who_text = "Hi! I'm Hamdi Mechelloukh, Data Engineer at Decathlon Digital in Lille. I started my career in backend development before specializing in data engineering. I design and maintain large-scale data pipelines using Spark, AWS and Databricks."
+journey_title = "My journey"
+journey_text = "After retraining through AFPA, I moved from Node.js/Java development to data engineering, working at Boulanger and PROMOD as a contractor. Since 2022, I've been at Decathlon Digital where I ensured the stability of economic performance data before joining the pricing data team."
+interests_title = "Interests"
+interest_karate_title = "Kyokushinkai Karate"
+interest_karate_text = "Practitioner since May 2013, 2nd Dan. Also teaching since 2025."
+interest_gaming_title = "Video games"
+interest_gaming_text = "Passionate about RPGs and geek culture in general."
+interest_pop_title = "Pop culture"
+interest_pop_text = "Manga, comics, memes and everything geek."
+experience_title = "Experience"
+education_title = "Education"
+
+[portfolio]
+title = "Portfolio"
+description = "A selection of my recent work."
+code = "Code"
+demo = "Demo"
+
+[articles]
+title = "Blog"
+description = "My articles on data engineering, cloud and software architecture."
+reading_time = "min read"
+back_to_list = "Back to articles"
+published_on = "Published on"
+empty = "No articles yet. Come back soon!"
+
+[blog]
+title = "Tech watch"
+description = "The latest data engineering, cloud and architecture articles I follow."
+
+[contact]
+title = "Contact"
+description = "Have a project in mind or just want to chat? Feel free to reach out via the form below."
+name = "Name"
+email = "Email"
+message = "Message"
+send = "Send"
+
+[footer]
+rights = "All rights reserved."
+
+[meta]
+home_title = "Hamdi Mechelloukh – Data Engineer"
+home_description = "Portfolio of Hamdi Mechelloukh, Data Engineer with 8 years of experience. Specialist in Apache Spark, AWS, Databricks and large-scale data pipelines."
+about_title = "About – Hamdi Mechelloukh"
+about_description = "Career path, experience and interests of Hamdi Mechelloukh, Data Engineer at Decathlon Digital in Lille."
+portfolio_title = "Portfolio – Hamdi Mechelloukh"
+portfolio_description = "Data engineering projects by Hamdi Mechelloukh: Olist lakehouse (Kafka, Spark, Iceberg), MLOps pipeline (XGBoost, MLflow, Airflow), Flink streaming."
+blog_title = "Blog – Hamdi Mechelloukh"
+watch_title = "Tech watch – Hamdi Mechelloukh"
+watch_description = "Tech watch by Hamdi Mechelloukh: data engineering, cloud and architecture articles from Towards Data Science, AWS Blog, Databricks and more."
+contact_title = "Contact – Hamdi Mechelloukh"
+contact_description = "Contact Hamdi Mechelloukh, Data Engineer in Lille, to discuss a project or opportunity."
+
+[not_found]
+title = "Page not found"
+text = "This page has scattered."
+hint = "Gather the particles with your mouse (or finger) to rebuild the lost page."
+won = "Page found! It never existed, but well played."
+home = "Back to home"

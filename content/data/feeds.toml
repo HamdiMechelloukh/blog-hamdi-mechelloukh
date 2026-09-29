@@ -1,0 +1,24 @@
+[[feeds]]
+name = "Towards Data Science"
+url = "https://medium.com/feed/towards-data-science"
+
+[[feeds]]
+name = "AWS Big Data Blog"
+url = "https://aws.amazon.com/blogs/big-data/feed/"
+
+[[feeds]]
+name = "Databricks Blog"
+url = "https://www.databricks.com/blog/rss.xml"
+
+[[feeds]]
+name = "dev.to – Data Engineering"
+url = "https://dev.to/feed/tag/dataengineering"
+
+[[feeds]]
+name = "The New Stack – Data"
+url = "https://thenewstack.io/category/data/feed/"
+
+[[feeds]]
+name = "InfoQ"
+url = "https://www.infoq.com/feed/"
+

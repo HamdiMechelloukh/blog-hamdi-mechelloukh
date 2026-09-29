@@ -1,0 +1,16 @@
+[workspace]
+resolver = "3"
+members = ["crates/site", "crates/gpu", "crates/crossposter"]
+# crates/gpu ne compile que pour wasm32 (build.sh) : exclu de `cargo build` / `cargo test` sans -p.
+default-members = ["crates/site", "crates/crossposter"]
+
+[workspace.package]
+edition = "2024"
+
+# Taille du WASM : c'est le seul binaire téléchargé par les visiteurs.
+[profile.release.package.gpu]
+opt-level = "z"
+codegen-units = 1
+
+[profile.release]
+lto = true

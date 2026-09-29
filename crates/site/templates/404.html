@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <section class="section not-found">
+    <p class="not-found-code" aria-hidden="true">404</p>
+    <div class="game-target" data-gpu="target" aria-hidden="true"></div>
+    <h1 class="section-title" data-gpu="title">{{ layout.t.not_found.title }}</h1>
+    <p>{{ layout.t.not_found.text }}</p>
+    <p class="game-hint">
+      {{ layout.t.not_found.hint }}
+      <strong id="game-progress" class="game-progress" aria-live="polite">0 %</strong>
+    </p>
+    <p class="game-won" aria-live="polite">{{ layout.t.not_found.won }}</p>
+    <div class="hero-actions">
+      <a href="{{ layout.href("/") }}" class="btn">{{ layout.t.not_found.home }}</a>
+    </div>
+  </section>
+</div>
+{% endblock %}
