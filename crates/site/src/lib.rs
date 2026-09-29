@@ -148,13 +148,12 @@ struct WatchPage<'a> {
     items: &'a [WatchItem],
 }
 
-/// Page 404 unique (Vercel sert /404.html pour toute URL inconnue) : français puis anglais.
+/// Page 404 par langue : /404.html et /en/404.html, choisies par préfixe dans vercel.json.
 #[derive(Template)]
 #[template(path = "404.html")]
 struct NotFoundPage<'a> {
     layout: Layout<'a>,
     year: i32,
-    en: &'a I18n,
 }
 
 #[derive(Template)]
@@ -296,24 +295,25 @@ pub fn build(options: &BuildOptions) -> Result<()> {
         sitemap.push(SitemapEntry { path: article.path(), alternates: alternates(fr.path(), en.path()) });
     }
 
-    let fr = content.i18n(Lang::Fr);
-    let not_found = NotFoundPage {
-        layout: Layout {
-            lang: Lang::Fr,
-            t: fr,
-            section: "404",
-            title: format!("404 – {}", fr.not_found.title),
-            description: fr.not_found.text.clone(),
-            path: "/404".to_string(),
-            alternates: Vec::new(),
-            switch_path: localized(Lang::En, "/"),
-            og_type: "website",
-            gpu_mode: "game",
-        },
-        year,
-        en: content.i18n(Lang::En),
-    };
-    fs::write(out.join("404.html"), not_found.render()?)?;
+    for lang in Lang::ALL {
+        let t = content.i18n(lang);
+        let not_found = NotFoundPage {
+            layout: Layout {
+                lang,
+                t,
+                section: "404",
+                title: format!("404 – {}", t.not_found.title),
+                description: t.not_found.text.clone(),
+                path: localized(lang, "/404"),
+                alternates: Vec::new(),
+                switch_path: localized(lang.other(), "/"),
+                og_type: "website",
+                gpu_mode: "game",
+            },
+            year,
+        };
+        fs::write(out.join(localized(lang, "/404.html").trim_start_matches('/')), not_found.render()?)?;
+    }
 
     fs::write(out.join("sitemap.xml"), Sitemap { entries: sitemap }.render()?)?;
     Ok(())

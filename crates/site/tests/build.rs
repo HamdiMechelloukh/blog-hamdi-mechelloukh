@@ -85,9 +85,13 @@ fn sitemap_lists_every_page() {
 fn article_language_switch_points_to_its_twin() {
     let out_dir = build_site("switch");
     let html = fs::read_to_string(out_dir.join("blog/investment-bot-what-llms-taught-me/index.html")).unwrap();
-    let not_found = fs::read_to_string(out_dir.join("404.html")).unwrap();
+    let not_found_fr = fs::read_to_string(out_dir.join("404.html")).unwrap();
+    let not_found_en = fs::read_to_string(out_dir.join("en/404.html")).unwrap();
     fs::remove_dir_all(&out_dir).unwrap();
-    assert!(not_found.contains("data-gpu-mode=\"game\"") && not_found.contains("noindex"));
+    for not_found in [&not_found_fr, &not_found_en] {
+        assert!(not_found.contains("data-gpu-mode=\"game\"") && not_found.contains("noindex"));
+    }
+    assert!(not_found_fr.contains("<html lang=\"fr\">") && not_found_en.contains("<html lang=\"en\">"));
     assert!(html.contains("data-gpu-mode=\"calm\""));
     assert!(html.contains("<html lang=\"en\">"));
     assert!(html.contains("href=\"/blog/robot-investissement-ce-que-jai-appris-sur-les-llm\" class=\"lang-switch\""));
