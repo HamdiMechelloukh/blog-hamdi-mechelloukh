@@ -1,7 +1,7 @@
 {
   "framework": null,
   "installCommand": "./vercel-install.sh",
-  "buildCommand": "export PATH=\"$HOME/.cargo/bin:$PATH\" && ./build.sh",
+  "buildCommand": "export PATH=\"${CARGO_HOME:-$HOME/.cargo}/bin:$PATH\" && ./build.sh",
   "outputDirectory": "dist",
   "redirects": [
     {

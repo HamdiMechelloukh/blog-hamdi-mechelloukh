@@ -73,15 +73,25 @@ impl Lang {
     }
 }
 
+/// Frontmatter TOML d'un article.
 #[derive(Debug, Deserialize)]
-struct Frontmatter {
-    translation_slug: String,
-    lang: Lang,
-    title: String,
-    summary: String,
-    date: String,
-    tags: Vec<String>,
-    reading_time_minutes: u32,
+pub struct ArticleMeta {
+    pub translation_slug: String,
+    pub lang: Lang,
+    pub title: String,
+    pub summary: String,
+    pub date: String,
+    pub tags: Vec<String>,
+    pub reading_time_minutes: u32,
+}
+
+/// Article tel qu'écrit sur disque (partagé avec le crossposter).
+#[derive(Debug)]
+pub struct ArticleSource {
+    pub slug: String,
+    pub meta: ArticleMeta,
+    /// Corps markdown, sans le frontmatter.
+    pub markdown: String,
 }
 
 #[derive(Debug)]
@@ -345,7 +355,24 @@ fn read_toml<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T> {
 }
 
 fn load_articles(dir: &Path, renderer: &MarkdownRenderer) -> Result<Vec<Article>> {
-    let mut articles = Vec::new();
+    Ok(load_article_sources(dir)?
+        .into_iter()
+        .map(|source| Article {
+            html: renderer.render(&source.markdown),
+            slug: source.slug,
+            translation_slug: source.meta.translation_slug,
+            lang: source.meta.lang,
+            title: source.meta.title,
+            summary: source.meta.summary,
+            date: source.meta.date,
+            tags: source.meta.tags,
+            reading_time_minutes: source.meta.reading_time_minutes,
+        })
+        .collect())
+}
+
+pub fn load_article_sources(dir: &Path) -> Result<Vec<ArticleSource>> {
+    let mut sources = Vec::new();
     for entry in fs::read_dir(dir).with_context(|| format!("lecture de {}", dir.display()))? {
         let path = entry?.path();
         if path.extension().is_none_or(|ext| ext != "md") {
@@ -359,21 +386,11 @@ fn load_articles(dir: &Path, renderer: &MarkdownRenderer) -> Result<Vec<Article>
         let text = fs::read_to_string(&path)?;
         let (frontmatter, markdown) =
             split_frontmatter(&text).with_context(|| format!("frontmatter manquant : {}", path.display()))?;
-        let meta: Frontmatter =
+        let meta: ArticleMeta =
             toml::from_str(frontmatter).with_context(|| format!("frontmatter invalide : {}", path.display()))?;
-        articles.push(Article {
-            html: renderer.render(markdown),
-            slug,
-            translation_slug: meta.translation_slug,
-            lang: meta.lang,
-            title: meta.title,
-            summary: meta.summary,
-            date: meta.date,
-            tags: meta.tags,
-            reading_time_minutes: meta.reading_time_minutes,
-        });
+        sources.push(ArticleSource { slug, meta, markdown: markdown.to_string() });
     }
-    Ok(articles)
+    Ok(sources)
 }
 
 /// Sépare le bloc `+++ ... +++` du corps markdown.

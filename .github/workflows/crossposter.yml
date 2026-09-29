@@ -18,16 +18,15 @@ permissions:
 jobs:
   crosspost:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
 
-      - run: npm ci
+      - uses: Swatinem/rust-cache@v2
+
+      - run: cargo build -p crossposter --release
 
       - name: Run crossposter
         env:
@@ -41,9 +40,9 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then
-            npm run crosspost:dry
+            cargo run -p crossposter --release -- --dry-run
           else
-            npm run crosspost
+            cargo run -p crossposter --release
           fi
 
       - name: Commit state update

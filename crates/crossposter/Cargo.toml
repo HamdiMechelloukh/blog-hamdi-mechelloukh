@@ -1,0 +1,14 @@
+[package]
+name = "crossposter"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+anyhow = "1"
+dotenvy = "0.15"
+indexmap = { version = "2", features = ["serde"] }
+reqwest = { version = "0.13", features = ["blocking", "json", "form"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+site = { path = "../site" }
+tiny_http = "0.12"
