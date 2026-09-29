@@ -11,7 +11,10 @@ struct Globals {
     intensity: f32,
     rect_count: u32,
     dpr: f32,
-    _pad: vec2f,
+    // Vitesse de défilement lissée (px/s) : étire les particules en traînées.
+    scroll_velocity: f32,
+    // 0 -> 1 : avancée dans le texte de l'article (ancre reading).
+    reading_progress: f32,
     // Dernier clic : position (px CSS), instant (s, même base que time), 1.0 si actif.
     shock: vec4f,
 }
@@ -21,7 +24,7 @@ struct Rect {
     min: vec2f,
     max: vec2f,
     kind: u32,
-    // 0 -> 1, lissé côté Rust quand le curseur survole l'ancre.
+    // 0 -> 1, lissé côté Rust : survol pour les cartes, entrée à l'écran pour les titres.
     glow: f32,
     _pad: vec2f,
 }
@@ -40,6 +43,8 @@ const KIND_CARD: u32 = 1u;
 const KIND_TITLE: u32 = 2u;
 // Zone où se reforme le « 404 » : ni panneau ni obstacle.
 const KIND_TARGET: u32 = 3u;
+// Texte d'un article : panneau dont le liseré suit la progression de lecture.
+const KIND_READING: u32 = 4u;
 const TAU: f32 = 6.2831853;
 
 const ACCENT: vec3f = vec3f(0.976, 0.451, 0.086); // #f97316, l'orange de la charte

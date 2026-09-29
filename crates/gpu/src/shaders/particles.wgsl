@@ -27,11 +27,21 @@ fn vs_main(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance
         }
     }
 
+    // Traînée : le quad s'allonge dans le sens du mouvement apparent (défilement compris, cf. parallaxe du compute).
+    let motion = particle.vel - vec2f(0.0, globals.scroll_velocity * 0.35);
+    let motion_length = length(motion);
+    let direction = select(vec2f(1.0, 0.0), motion / motion_length, motion_length > 1e-3);
+    let stretch = min(motion_length * 0.06, 28.0);
+
     let speed = clamp(length(particle.vel) / 60.0, 0.0, 1.0);
     // Les particules capturées (page 404) forment le texte : plus lumineuses et plus chaudes.
-    let brightness = (0.10 + 0.25 * speed + 0.55 * particle.captured) * fade * (0.35 + 0.65 * globals.intensity);
+    // Une traînée couvre plus de pixels : on l'atténue pour garder une énergie lumineuse comparable.
+    let spread = sqrt(RADIUS / (RADIUS + stretch));
+    let brightness = (0.10 + 0.25 * speed + 0.55 * particle.captured) * fade * spread * (0.35 + 0.65 * globals.intensity);
 
-    let pixel = particle.pos + corner * RADIUS;
+    let pixel = particle.pos
+        + direction * corner.x * (RADIUS + stretch)
+        + vec2f(-direction.y, direction.x) * corner.y * RADIUS;
     let ndc = pixel / globals.resolution * vec2f(2.0, -2.0) + vec2f(-1.0, 1.0);
     var out: VertexOut;
     out.position = vec4f(ndc, 0.0, 1.0);

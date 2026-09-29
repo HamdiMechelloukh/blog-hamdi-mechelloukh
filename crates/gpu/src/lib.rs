@@ -25,6 +25,13 @@ const CALM_INTENSITY: f32 = 0.12;
 
 const COMMON: &str = include_str!("shaders/common.wgsl");
 
+// Types d'ancres, mêmes valeurs que les constantes KIND_* de common.wgsl.
+const KIND_PANEL: u32 = 0;
+const KIND_CARD: u32 = 1;
+const KIND_TITLE: u32 = 2;
+const KIND_TARGET: u32 = 3;
+const KIND_READING: u32 = 4;
+
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
 struct Globals {
@@ -36,7 +43,8 @@ struct Globals {
     intensity: f32,
     rect_count: u32,
     dpr: f32,
-    _pad: [f32; 2],
+    scroll_velocity: f32,
+    reading_progress: f32,
     shock: [f32; 4],
 }
 
@@ -96,6 +104,7 @@ struct Renderer {
     reduced_motion: bool,
     last_time: f64,
     last_scroll: f64,
+    scroll_velocity: f32,
 }
 
 #[wasm_bindgen(start)]
@@ -261,10 +270,11 @@ impl Renderer {
             .filter_map(|index| anchor_nodes.item(index)?.dyn_into::<Element>().ok())
             .filter_map(|element| {
                 let kind = match element.get_attribute("data-gpu")?.as_str() {
-                    "panel" => 0,
-                    "card" => 1,
-                    "title" => 2,
-                    "target" => 3,
+                    "panel" => KIND_PANEL,
+                    "card" => KIND_CARD,
+                    "title" => KIND_TITLE,
+                    "target" => KIND_TARGET,
+                    "reading" => KIND_READING,
                     _ => return None,
                 };
                 Some(Anchor { element, kind, glow: 0.0 })
@@ -298,6 +308,7 @@ impl Renderer {
             intensity: if mode.as_deref() == Some("calm") { CALM_INTENSITY } else { 1.0 },
             reduced_motion,
             last_time: 0.0,
+            scroll_velocity: 0.0,
         })
     }
 
@@ -313,9 +324,14 @@ impl Renderer {
         let scroll = self.window.scroll_y().unwrap_or(0.0);
         let scroll_delta = (scroll - self.last_scroll) as f32;
         self.last_scroll = scroll;
+        if dt > 0.0 {
+            let easing = (dt * 10.0).min(1.0);
+            self.scroll_velocity += (scroll_delta / dt - self.scroll_velocity) * easing;
+        }
 
         let pointer = self.pointer.get();
         let rects = self.collect_rects(pointer, dt);
+        let reading_progress = reading_progress(&rects, height as f32);
         let frozen = self.reduced_motion;
         let time = (now / 1000.0) as f32;
         if let Some([x, y]) = self.pending_click.take() {
@@ -332,7 +348,8 @@ impl Renderer {
             intensity: self.intensity,
             rect_count: rects.len() as u32,
             dpr: dpr as f32,
-            _pad: [0.0; 2],
+            scroll_velocity: if frozen { 0.0 } else { self.scroll_velocity },
+            reading_progress,
             shock: self.shock,
         };
         self.queue.write_buffer(&self.globals_buffer, 0, bytemuck::bytes_of(&globals));
@@ -406,10 +423,14 @@ impl Renderer {
                 [bounds.left() as f32, bounds.top() as f32],
                 [bounds.right() as f32, bounds.bottom() as f32],
             );
-            let hovered = anchor.kind == 1
-                && (min[0]..max[0]).contains(&pointer[0])
-                && (min[1]..max[1]).contains(&pointer[1]);
-            anchor.glow += (f32::from(u8::from(hovered)) - anchor.glow) * easing;
+            let lit = match anchor.kind {
+                KIND_CARD => (min[0]..max[0]).contains(&pointer[0]) && (min[1]..max[1]).contains(&pointer[1]),
+                // Un titre s'allume (plus lentement) quand il entre dans le viewport.
+                KIND_TITLE => max[1] > 0.0 && min[1] < viewport_height * 0.9,
+                _ => false,
+            };
+            let rate = if anchor.kind == KIND_TITLE { easing * 0.3 } else { easing };
+            anchor.glow += (f32::from(u8::from(lit)) - anchor.glow) * rate;
             // Hors écran (avec marge pour les halos) : inutile de l'envoyer au GPU.
             if max[1] < -100.0 || min[1] > viewport_height + 100.0 {
                 continue;
@@ -418,6 +439,14 @@ impl Renderer {
         }
         rects
     }
+}
+
+/// Avancée dans l'ancre `reading` : 0 quand son haut atteint le haut de l'écran, 1 quand son bas atteint le bas.
+fn reading_progress(rects: &[Rect], viewport_height: f32) -> f32 {
+    rects.iter().find(|rect| rect.kind == KIND_READING).map_or(0.0, |rect| {
+        let scrollable = (rect.max[1] - rect.min[1] - viewport_height).max(1.0);
+        (-rect.min[1] / scrollable).clamp(0.0, 1.0)
+    })
 }
 
 fn listen_pointer(

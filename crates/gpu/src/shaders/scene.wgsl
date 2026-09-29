@@ -31,15 +31,23 @@ fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
         if (rect.kind == KIND_TITLE) {
             let d = rect_distance(p, rect, 12.0, 24.0);
             let shimmer = 0.75 + 0.25 * sin(globals.time * 1.3 + p.x * 0.012);
-            color += ACCENT * exp(-max(d, 0.0) / 36.0) * 0.16 * shimmer;
+            // Le titre s'allume en entrant à l'écran (glow), avec un éclat au moment où il s'allume.
+            let ignition = rect.glow * (1.0 + 1.5 * rect.glow * (1.0 - rect.glow));
+            color += ACCENT * exp(-max(d, 0.0) / 36.0) * 0.16 * shimmer * ignition;
             continue;
         }
-        let radius = select(12.0, 16.0, rect.kind == KIND_PANEL);
+        let is_panel = rect.kind == KIND_PANEL || rect.kind == KIND_READING;
+        let radius = select(12.0, 16.0, is_panel);
         let d = rect_distance(p, rect, 0.0, radius);
         // Panneau : les lectures longues sont quasi opaques pour garantir le contraste.
-        let opacity = select(0.82, 0.96, rect.kind == KIND_PANEL);
+        let opacity = select(0.82, 0.96, is_panel);
         color = mix(color, PANEL, (1.0 - smoothstep(-1.0, 1.0, d)) * opacity);
-        let glow = rect.glow;
+        var glow = rect.glow;
+        if (rect.kind == KIND_READING) {
+            // Liseré rempli du haut jusqu'au point de lecture.
+            let depth = (p.y - rect.min.y) / max(rect.max.y - rect.min.y, 1.0);
+            glow = 1.0 - smoothstep(globals.reading_progress - 0.01, globals.reading_progress, depth);
+        }
         let halo = exp(-max(d, 0.0) / (14.0 + 18.0 * glow)) * (0.05 + 0.30 * glow);
         let edge = (1.0 - smoothstep(0.0, 1.5, abs(d))) * (0.18 + 0.62 * glow);
         color += mix(ACCENT, ACCENT_HOT, glow) * (halo + edge);
