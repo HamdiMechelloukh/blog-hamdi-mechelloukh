@@ -1,87 +1,71 @@
-# Portfolio Hamdi Mechelloukh
+# Portfolio et blog de Hamdi Mechelloukh
 
-Ce projet est le frontend du portfolio et blog de Hamdi Mechelloukh, développeur Full-Stack.
-Il est réalisé avec React, TypeScript et Vite.
+Site statique généré en Rust, avec un rendu WebGPU (wgpu compilé en WebAssembly) derrière le contenu.
+Le texte reste du HTML classique (SEO, accessibilité) ; le GPU dessine le fond, les particules, les panneaux et les halos.
 
-## Structure du projet
+## Structure
 
-- `src/components`: Composants réutilisables (Navbar, Footer, Cards).
-- `src/pages`: Pages de l'application (Home, About, Portfolio, Blog, Contact).
-- `src/data.ts`: Données en dur (projets, articles) et configuration des assets.
-- `src/types.ts`: Définitions TypeScript.
-- `src/index.css`: Styles globaux.
+- `crates/site` : générateur statique maison (askama, pulldown-cmark, syntect). `content/` + `static/` → `dist/`.
+- `crates/gpu` : module WebGPU. Un canvas plein écran lit la position des ancres `data-gpu="panel|card|title|target"`
+  et dessine autour. Mode `calm` sur les articles, mini-jeu sur la page 404. Sans WebGPU, rien n'est chargé et le CSS suffit.
+- `crates/crossposter` : publication des articles anglais sur dev.to et LinkedIn, notification Telegram pour Medium.
+- `content/articles/*.md` : articles, avec un frontmatter TOML (`+++`). Chaque article a un jumeau dans l'autre langue (`translation_slug`).
+- `content/data/*.toml` : projets, expériences, formation, flux de la veille.
+- `content/i18n/{fr,en}.toml` : textes de l'interface. Une clé manquante ou en trop fait échouer le build.
+- `static/` : CSS (ossature et repli sans WebGPU), images, favicon.
+- `devto/` : versions dev.to des articles.
 
-## Installation
+## URLs
 
-1. Assurez-vous d'avoir Node.js installé.
-2. Installez les dépendances :
+Français à la racine (`/`, `/about`, `/blog`…), anglais sous `/en/`. Les articles sont en `/blog/<slug>` dans les deux langues.
+Pages 404 par langue (`/404.html`, `/en/404.html`), choisies par préfixe dans `vercel.json`.
 
-```bash
-npm install
-```
+## Développement
 
-## Lancement
-
-Pour lancer le serveur de développement :
-
-```bash
-npm run dev
-```
-
-L'application sera accessible sur `http://localhost:5173`.
-
-## Build
-
-Pour construire l'application pour la production :
+Prérequis : Rust stable, la cible `wasm32-unknown-unknown` et `wasm-bindgen-cli` à la version de `Cargo.lock`.
 
 ```bash
-npm run build
+rustup target add wasm32-unknown-unknown
+cargo install wasm-bindgen-cli --version <version de wasm-bindgen dans Cargo.lock>
+
+./build.sh              # build complet dans dist/ (la veille est récupérée en ligne)
+./build.sh --offline    # sans la veille
+python3 -m http.server -d dist 8000
+cargo test              # site + crossposter (gpu ne compile que pour wasm32)
 ```
 
-## Assets
+Le rendu GPU demande un navigateur avec WebGPU. Sous Linux, il faut souvent l'activer à la main
+(`chrome://flags/#enable-unsafe-webgpu`, ou `dom.webgpu.enabled` dans Firefox).
 
-Les icônes et images sont situées dans le dossier `assets` à la racine (servi comme racine par Vite).
-Le manifest des assets se trouve dans `assets/manifest.json`.
+## Déploiement
+
+Vercel : `vercel-install.sh` ajoute la cible wasm32 à la Rust préinstallée et télécharge `wasm-bindgen`,
+puis `build.sh` génère `dist/`.
 
 ## Crossposter
 
-Script qui publie automatiquement les articles anglais sur dev.to et LinkedIn, et envoie une notification Telegram pour l'import manuel sur Medium (Medium n'offre plus de token d'intégration).
+1 élément par run, 3 runs par semaine (mar/mer/jeu, 06:00 UTC) via GitHub Actions, pour étaler la publication des articles × plateformes.
+L'état est dans `.crossposter-state.json`, committé par le workflow après chaque run.
 
-### Cadence
-
-1 article par run, 3 runs par semaine (mar/mer/jeu 09:00 Paris) via GitHub Actions. Cela étale la publication des N articles × 3 plateformes dans le temps et évite de flooder les feeds.
+```bash
+cargo run -p crossposter -- --list                        # file d'attente
+cargo run -p crossposter -- --dry-run                     # simuler le prochain run
+cargo run -p crossposter                                  # publier 1 élément
+cargo run -p crossposter -- --mark-done medium <slug>     # après un import Medium manuel
+```
 
 ### Variables d'environnement
 
-Copier `.env.example` vers `.env` pour tester en local. En prod, les mêmes valeurs sont à mettre dans GitHub Secrets :
+Copier `.env.example` vers `.env` pour un usage local. En prod, les mêmes valeurs sont dans les GitHub Secrets :
 
-- `DEVTO_API_KEY` — settings dev.to → Extensions → API Keys
-- `LINKEDIN_ACCESS_TOKEN`, `LINKEDIN_USER_URN` — obtenus via `npm run linkedin-auth` (voir ci-dessous)
-- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` — bot perso pour les notifications Medium
+- `DEVTO_API_KEY` : dev.to → Settings → Extensions → API Keys
+- `LINKEDIN_USER_URN`, `LINKEDIN_REFRESH_TOKEN`, `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` : voir ci-dessous
+  (`LINKEDIN_ACCESS_TOKEN` seul reste accepté si l'app n'a pas de refresh token)
+- `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` : bot perso pour les notifications Medium
 
-### Setup LinkedIn (une seule fois, tous les ~60 jours)
+### Setup LinkedIn (une fois, puis à l'expiration du refresh token, ~1 an)
 
-1. Créer une app sur https://www.linkedin.com/developers/apps avec les produits "Share on LinkedIn" + "Sign In with LinkedIn using OpenID Connect" et la redirect URL `http://localhost:5555/callback`.
+1. Créer une app sur https://www.linkedin.com/developers/apps avec les produits « Share on LinkedIn » et
+   « Sign In with LinkedIn using OpenID Connect », et la redirect URL `http://localhost:5555/callback`.
 2. Mettre `LINKEDIN_CLIENT_ID` et `LINKEDIN_CLIENT_SECRET` dans `.env`.
-3. Lancer `npm run linkedin-auth`, suivre l'URL affichée, copier les valeurs finales dans `.env` (et les GitHub Secrets pour la prod).
-4. Le token expire au bout de ~60 jours — re-run la commande avant expiration.
-
-### Scripts
-
-```bash
-npm run crosspost:list   # voir la file d'attente (articles × plateformes non publiés)
-npm run crosspost:dry    # simuler le prochain run sans publier
-npm run crosspost        # publier 1 élément de la file
-```
-
-### État
-
-L'état des publications est persisté dans `.crossposter-state.json` à la racine (committé par GitHub Actions après chaque run).
-
-### Workflow Medium
-
-Quand un article est sélectionné pour Medium, le script envoie un message Telegram avec le lien vers `https://medium.com/p/import` et la commande à lancer une fois l'import fait :
-
-```bash
-npm run crosspost -- --mark-done medium <slug>
-```
+3. Lancer `cargo run -p crossposter -- linkedin-auth`, ouvrir l'URL affichée, puis copier les valeurs finales dans les GitHub Secrets.
