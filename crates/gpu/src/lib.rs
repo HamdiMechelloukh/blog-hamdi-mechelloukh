@@ -1,5 +1,8 @@
 //! Rendu WebGPU du site : un canvas plein écran derrière la page, qui dessine autour des ancres DOM
-//! (`data-gpu="panel|card|title"`). Sans WebGPU, rien n'est créé et le CSS seul s'applique.
+//! (`data-gpu="panel|card|title|target"`). Sans WebGPU, rien n'est créé et le CSS seul s'applique.
+//! `<body data-gpu-mode>` : "calm" sur les articles, "game" sur la page 404 (voir game.rs).
+
+mod game;
 
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
@@ -50,6 +53,9 @@ struct Rect {
 struct Particle {
     pos: [f32; 2],
     vel: [f32; 2],
+    slot: [f32; 2],
+    captured: f32,
+    _pad: f32,
 }
 
 struct Anchor {
@@ -76,6 +82,8 @@ struct Renderer {
     scene_pipeline: wgpu::RenderPipeline,
     particles_pipeline: wgpu::RenderPipeline,
     particle_count: u32,
+    /// Présent seulement sur la page 404.
+    game: Option<game::Game>,
     anchors: Vec<Anchor>,
     pointer: Rc<Cell<[f32; 2]>>,
     intensity: f32,
@@ -153,10 +161,23 @@ impl Renderer {
         let config = surface.get_default_config(&adapter, 1, 1).ok_or("surface non configurable")?;
         let format = config.format;
 
+        let mode = body.get_attribute("data-gpu-mode");
+        let reduced_motion = window
+            .match_media("(prefers-reduced-motion: reduce)")?
+            .is_some_and(|query| query.matches());
+        // Sans mouvement, le jeu est injouable : la 404 garde alors son rendu calme.
+        let is_game = mode.as_deref() == Some("game") && !reduced_motion;
+
         let viewport_width = window.inner_width()?.as_f64().unwrap_or(1024.0);
         let viewport_height = window.inner_height()?.as_f64().unwrap_or(768.0);
-        let particle_count = if viewport_width < MOBILE_WIDTH { PARTICLES_MOBILE } else { PARTICLES_DESKTOP };
-        let particles = seed_particles(particle_count, viewport_width as f32, viewport_height as f32);
+        let (particle_count, slots) = if is_game {
+            (game::PARTICLES, game::glyph_slots(&document).await?)
+        } else if viewport_width < MOBILE_WIDTH {
+            (PARTICLES_MOBILE, vec![[0.0; 2]])
+        } else {
+            (PARTICLES_DESKTOP, vec![[0.0; 2]])
+        };
+        let particles = seed_particles(particle_count, viewport_width as f32, viewport_height as f32, &slots);
 
         use wgpu::util::DeviceExt;
         let globals_buffer = device.create_buffer(&wgpu::BufferDescriptor {
@@ -176,35 +197,39 @@ impl Renderer {
             contents: bytemuck::cast_slice(&particles),
             usage: wgpu::BufferUsages::STORAGE,
         });
+        // Compteur de captures de la page 404 ; lié partout pour garder un seul layout de compute.
+        let captured_counter = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+            label: Some("captured"),
+            contents: &[0; 4],
+            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_SRC,
+        });
 
-        let compute_layout = bind_group_layout(&device, "compute", false);
-        let render_layout = bind_group_layout(&device, "render", true);
-        let bind_group = |layout: &wgpu::BindGroupLayout| {
-            device.create_bind_group(&wgpu::BindGroupDescriptor {
-                label: None,
-                layout,
-                entries: &[
-                    wgpu::BindGroupEntry { binding: 0, resource: globals_buffer.as_entire_binding() },
-                    wgpu::BindGroupEntry { binding: 1, resource: rects_buffer.as_entire_binding() },
-                    wgpu::BindGroupEntry { binding: 2, resource: particles_buffer.as_entire_binding() },
-                ],
-            })
-        };
-        let compute_bind_group = bind_group(&compute_layout);
-        let render_bind_group = bind_group(&render_layout);
+        let compute_layout = bind_group_layout(&device, "compute", true);
+        let render_layout = bind_group_layout(&device, "render", false);
+        let mut entries = vec![
+            wgpu::BindGroupEntry { binding: 0, resource: globals_buffer.as_entire_binding() },
+            wgpu::BindGroupEntry { binding: 1, resource: rects_buffer.as_entire_binding() },
+            wgpu::BindGroupEntry { binding: 2, resource: particles_buffer.as_entire_binding() },
+        ];
+        let render_bind_group =
+            device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &render_layout, entries: &entries });
+        entries.push(wgpu::BindGroupEntry { binding: 3, resource: captured_counter.as_entire_binding() });
+        let compute_bind_group =
+            device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &compute_layout, entries: &entries });
 
         let compute_module = shader(&device, "compute", include_str!("shaders/compute.wgsl"));
         let scene_module = shader(&device, "scene", include_str!("shaders/scene.wgsl"));
         let particles_module = shader(&device, "particles", include_str!("shaders/particles.wgsl"));
 
-        let compute_pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
-            label: Some("compute"),
-            layout: Some(&pipeline_layout(&device, &compute_layout)),
-            module: &compute_module,
-            entry_point: Some("main"),
-            compilation_options: Default::default(),
-            cache: None,
-        });
+        let compute_pipeline_layout = pipeline_layout(&device, &compute_layout);
+        let compute_pipeline = create_compute_pipeline(&device, &compute_pipeline_layout, &compute_module);
+        let game = if is_game {
+            let module = shader(&device, "game", include_str!("shaders/game.wgsl"));
+            let pipeline = create_compute_pipeline(&device, &compute_pipeline_layout, &module);
+            Some(game::Game::new(&device, pipeline, captured_counter, &document)?)
+        } else {
+            None
+        };
         let render_pipeline_layout = pipeline_layout(&device, &render_layout);
         let scene_pipeline = render_pipeline(&device, &render_pipeline_layout, &scene_module, format, None);
         let additive = wgpu::BlendState {
@@ -221,11 +246,6 @@ impl Renderer {
         let pointer = Rc::new(Cell::new(POINTER_AWAY));
         listen_pointer(&window, pointer.clone())?;
 
-        let calm = body.get_attribute("data-gpu-mode").as_deref() == Some("calm");
-        let reduced_motion = window
-            .match_media("(prefers-reduced-motion: reduce)")?
-            .is_some_and(|query| query.matches());
-
         let anchor_nodes = document.query_selector_all("[data-gpu]")?;
         let anchors = (0..anchor_nodes.length())
             .filter_map(|index| anchor_nodes.item(index)?.dyn_into::<Element>().ok())
@@ -234,6 +254,7 @@ impl Renderer {
                     "panel" => 0,
                     "card" => 1,
                     "title" => 2,
+                    "target" => 3,
                     _ => return None,
                 };
                 Some(Anchor { element, kind, glow: 0.0 })
@@ -258,9 +279,10 @@ impl Renderer {
             scene_pipeline,
             particles_pipeline,
             particle_count,
+            game,
             anchors,
             pointer,
-            intensity: if calm { CALM_INTENSITY } else { 1.0 },
+            intensity: if mode.as_deref() == Some("calm") { CALM_INTENSITY } else { 1.0 },
             reduced_motion,
             last_time: 0.0,
         })
@@ -307,7 +329,7 @@ impl Renderer {
         let mut encoder = self.device.create_command_encoder(&Default::default());
         {
             let mut pass = encoder.begin_compute_pass(&Default::default());
-            pass.set_pipeline(&self.compute_pipeline);
+            pass.set_pipeline(self.game.as_ref().map_or(&self.compute_pipeline, |game| &game.pipeline));
             pass.set_bind_group(0, &self.compute_bind_group, &[]);
             pass.dispatch_workgroups(self.particle_count.div_ceil(64), 1, 1);
         }
@@ -328,8 +350,15 @@ impl Renderer {
             pass.set_pipeline(&self.particles_pipeline);
             pass.draw(0..6, 0..self.particle_count);
         }
+        let readback = self.game.as_mut().is_some_and(|game| game.encode_readback(&mut encoder));
         self.queue.submit([encoder.finish()]);
         self.queue.present(frame);
+        if let Some(game) = &mut self.game {
+            if readback {
+                game.start_readback();
+            }
+            game.update_dom();
+        }
     }
 
     fn resize(&mut self, width: u32, height: u32) {
@@ -387,7 +416,7 @@ fn listen_pointer(window: &Window, pointer: Rc<Cell<[f32; 2]>>) -> Result<(), Js
 }
 
 /// Répartition pseudo-aléatoire (xorshift) : pas besoin d'une dépendance `rand` pour ça.
-fn seed_particles(count: u32, width: f32, height: f32) -> Vec<Particle> {
+fn seed_particles(count: u32, width: f32, height: f32, slots: &[[f32; 2]]) -> Vec<Particle> {
     let mut state: u32 = 0x9e37_79b9;
     let mut next = || {
         state ^= state << 13;
@@ -395,8 +424,15 @@ fn seed_particles(count: u32, width: f32, height: f32) -> Vec<Particle> {
         state ^= state << 5;
         state as f32 / u32::MAX as f32
     };
-    (0..count)
-        .map(|_| Particle { pos: [next() * width, next() * height], vel: [0.0, 0.0] })
+    (0..count as usize)
+        .map(|index| Particle {
+            pos: [next() * width, next() * height],
+            vel: [0.0, 0.0],
+            // Pas premier : répartit les particules sur tout le masque plutôt que ligne par ligne.
+            slot: slots[index * 7919 % slots.len()],
+            captured: 0.0,
+            _pad: 0.0,
+        })
         .collect()
 }
 
@@ -407,8 +443,9 @@ fn shader(device: &wgpu::Device, label: &str, source: &str) -> wgpu::ShaderModul
     })
 }
 
-/// 0 : globals, 1 : ancres, 2 : particules (écriture pour le compute, lecture pour le rendu).
-fn bind_group_layout(device: &wgpu::Device, label: &str, read_only_particles: bool) -> wgpu::BindGroupLayout {
+/// 0 : globals, 1 : ancres, 2 : particules (écriture pour le compute, lecture pour le rendu),
+/// 3 : compteur de captures (compute seulement).
+fn bind_group_layout(device: &wgpu::Device, label: &str, compute: bool) -> wgpu::BindGroupLayout {
     let storage = |binding, read_only| wgpu::BindGroupLayoutEntry {
         binding,
         // Un storage inscriptible visible du vertex shader exigerait la feature VERTEX_WRITABLE_STORAGE.
@@ -420,22 +457,38 @@ fn bind_group_layout(device: &wgpu::Device, label: &str, read_only_particles: bo
         },
         count: None,
     };
-    device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-        label: Some(label),
-        entries: &[
-            wgpu::BindGroupLayoutEntry {
-                binding: 0,
-                visibility: wgpu::ShaderStages::all(),
-                ty: wgpu::BindingType::Buffer {
-                    ty: wgpu::BufferBindingType::Uniform,
-                    has_dynamic_offset: false,
-                    min_binding_size: None,
-                },
-                count: None,
+    let mut entries = vec![
+        wgpu::BindGroupLayoutEntry {
+            binding: 0,
+            visibility: wgpu::ShaderStages::all(),
+            ty: wgpu::BindingType::Buffer {
+                ty: wgpu::BufferBindingType::Uniform,
+                has_dynamic_offset: false,
+                min_binding_size: None,
             },
-            storage(1, true),
-            storage(2, read_only_particles),
-        ],
+            count: None,
+        },
+        storage(1, true),
+        storage(2, !compute),
+    ];
+    if compute {
+        entries.push(storage(3, false));
+    }
+    device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor { label: Some(label), entries: &entries })
+}
+
+fn create_compute_pipeline(
+    device: &wgpu::Device,
+    layout: &wgpu::PipelineLayout,
+    module: &wgpu::ShaderModule,
+) -> wgpu::ComputePipeline {
+    device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
+        label: None,
+        layout: Some(layout),
+        module,
+        entry_point: Some("main"),
+        compilation_options: Default::default(),
+        cache: None,
     })
 }
 

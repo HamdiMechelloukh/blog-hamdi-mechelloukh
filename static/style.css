@@ -710,3 +710,74 @@ html.gpu .article-prose {
   background: transparent;
   border-color: transparent;
 }
+
+/* Page 404 : sans WebGPU, un « 404 » typographique ; avec, les particules le reforment dans .game-target. */
+.not-found {
+  text-align: center;
+}
+
+.not-found .section-title {
+  margin-top: 1.5rem;
+}
+
+.not-found-code {
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.game-target {
+  display: none;
+  width: min(560px, 90vw);
+  aspect-ratio: 5 / 2;
+  margin: 0 auto;
+}
+
+.game-hint,
+.game-won {
+  display: none;
+  margin: 1.5rem auto 2rem;
+  max-width: 560px;
+  color: var(--muted);
+}
+
+.game-progress {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+html.gpu .not-found-code {
+  display: none;
+}
+
+html.gpu .game-target {
+  display: block;
+}
+
+html.gpu .game-hint {
+  display: block;
+}
+
+html.gpu.game-complete .game-hint {
+  display: none;
+}
+
+html.gpu.game-complete .game-won {
+  display: block;
+  color: var(--text-color);
+}
+
+/* Sans mouvement, le jeu est désactivé côté WASM : on garde le « 404 » typographique. */
+@media (prefers-reduced-motion: reduce) {
+  html.gpu .not-found-code {
+    display: block;
+  }
+
+  html.gpu .game-target,
+  html.gpu .game-hint {
+    display: none;
+  }
+}

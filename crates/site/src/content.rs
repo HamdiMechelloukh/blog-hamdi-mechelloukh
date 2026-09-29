@@ -194,6 +194,7 @@ pub struct I18n {
     pub contact: ContactText,
     pub footer: FooterText,
     pub meta: MetaText,
+    pub not_found: NotFoundText,
 }
 
 #[derive(Debug, Deserialize)]
@@ -282,6 +283,16 @@ pub struct ContactText {
 #[serde(deny_unknown_fields)]
 pub struct FooterText {
     pub rights: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct NotFoundText {
+    pub title: String,
+    pub text: String,
+    pub hint: String,
+    pub won: String,
+    pub home: String,
 }
 
 #[derive(Debug, Deserialize)]

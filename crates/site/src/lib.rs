@@ -52,6 +52,8 @@ pub struct Layout<'a> {
     /// Même page dans l'autre langue.
     pub switch_path: String,
     pub og_type: &'static str,
+    /// `<body data-gpu-mode>` : "" (vitrine), "calm" (lecture), "game" (page 404).
+    pub gpu_mode: &'static str,
 }
 
 impl Layout<'_> {
@@ -146,6 +148,15 @@ struct WatchPage<'a> {
     items: &'a [WatchItem],
 }
 
+/// Page 404 unique (Vercel sert /404.html pour toute URL inconnue) : français puis anglais.
+#[derive(Template)]
+#[template(path = "404.html")]
+struct NotFoundPage<'a> {
+    layout: Layout<'a>,
+    year: i32,
+    en: &'a I18n,
+}
+
 #[derive(Template)]
 #[template(path = "contact.html")]
 struct ContactPage<'a> {
@@ -202,6 +213,7 @@ pub fn build(options: &BuildOptions) -> Result<()> {
             alternates: alternates(localized(Lang::Fr, page), localized(Lang::En, page)),
             switch_path: localized(lang.other(), page),
             og_type: "website",
+            gpu_mode: "",
         };
 
         let pages: Vec<(&str, String)> = vec![
@@ -278,10 +290,30 @@ pub fn build(options: &BuildOptions) -> Result<()> {
             alternates: alternates(fr.path(), en.path()),
             switch_path: twin.path(),
             og_type: "article",
+            gpu_mode: "calm",
         };
         write_page(out, &article.path(), &ArticlePage { layout, year, article }.render()?)?;
         sitemap.push(SitemapEntry { path: article.path(), alternates: alternates(fr.path(), en.path()) });
     }
+
+    let fr = content.i18n(Lang::Fr);
+    let not_found = NotFoundPage {
+        layout: Layout {
+            lang: Lang::Fr,
+            t: fr,
+            section: "404",
+            title: format!("404 – {}", fr.not_found.title),
+            description: fr.not_found.text.clone(),
+            path: "/404".to_string(),
+            alternates: Vec::new(),
+            switch_path: localized(Lang::En, "/"),
+            og_type: "website",
+            gpu_mode: "game",
+        },
+        year,
+        en: content.i18n(Lang::En),
+    };
+    fs::write(out.join("404.html"), not_found.render()?)?;
 
     fs::write(out.join("sitemap.xml"), Sitemap { entries: sitemap }.render()?)?;
     Ok(())

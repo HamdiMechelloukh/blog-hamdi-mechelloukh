@@ -2,17 +2,13 @@
 
 @group(0) @binding(2) var<storage, read_write> particles: array<Particle>;
 
-const TAU: f32 = 6.2831853;
 const REPEL_MARGIN: f32 = 28.0;
-
-fn flow(p: vec2f, t: f32) -> vec2f {
-    let angle = (sin(p.x * 0.0041 + t * 0.11) * cos(p.y * 0.0053 - t * 0.07)
-        + 0.5 * sin((p.x + p.y) * 0.0021 + t * 0.05)) * TAU;
-    return vec2f(cos(angle), sin(angle));
-}
 
 // Pousse la particule hors de la boîte (marge incluse), le long de la normale sortante.
 fn repel(p: vec2f, rect: Rect) -> vec2f {
+    if (rect.kind == KIND_TARGET) {
+        return vec2f(0.0);
+    }
     let d = rect_distance(p, rect, REPEL_MARGIN, 0.0);
     if (d >= 0.0) {
         return vec2f(0.0);
@@ -49,8 +45,6 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     particle.vel = (particle.vel + force * dt * globals.intensity) * pow(0.12, dt);
     particle.pos += particle.vel * dt * globals.intensity;
 
-    // Sortie d'écran : réapparition du côté opposé.
-    let size = globals.resolution;
-    particle.pos = particle.pos - floor(particle.pos / size) * size;
+    particle.pos = wrap(particle.pos);
     particles[index] = particle;
 }

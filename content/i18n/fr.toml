@@ -74,3 +74,10 @@ watch_title = "Veille – Hamdi Mechelloukh"
 watch_description = "Veille technologique de Hamdi Mechelloukh : data engineering, cloud, architecture. Articles issus de Towards Data Science, AWS Blog, Databricks et plus."
 contact_title = "Contact – Hamdi Mechelloukh"
 contact_description = "Contactez Hamdi Mechelloukh, Data Engineer à Lille, pour discuter d'un projet ou d'une opportunité."
+
+[not_found]
+title = "Page introuvable"
+text = "Cette page s'est dispersée."
+hint = "Rassemble les particules avec ta souris (ou ton doigt) pour reformer la page perdue."
+won = "Page retrouvée ! Elle n'existait pas, mais c'était bien joué."
+home = "Retour à l'accueil"

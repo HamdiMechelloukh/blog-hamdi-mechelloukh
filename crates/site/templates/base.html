@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ layout.title }}</title>
     <meta name="description" content="{{ layout.description }}" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="{% if layout.section == "404" %}noindex{% else %}index, follow{% endif %}" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="{{ crate::BASE_URL }}{{ layout.path }}" />
     {% for alternate in layout.alternates %}
@@ -49,7 +49,7 @@
     <link rel="stylesheet" href="/syntax.css" />
     <script type="module">import init from "/gpu/gpu.js"; init();</script>
   </head>
-  <body{% if layout.og_type == "article" %} data-gpu-mode="calm"{% endif %}>
+  <body{% if !layout.gpu_mode.is_empty() %} data-gpu-mode="{{ layout.gpu_mode }}"{% endif %}>
     <div class="page">
       <nav class="navbar" data-gpu="panel">
         <div class="container navbar-content">

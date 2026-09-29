@@ -74,3 +74,10 @@ watch_title = "Tech watch – Hamdi Mechelloukh"
 watch_description = "Tech watch by Hamdi Mechelloukh: data engineering, cloud and architecture articles from Towards Data Science, AWS Blog, Databricks and more."
 contact_title = "Contact – Hamdi Mechelloukh"
 contact_description = "Contact Hamdi Mechelloukh, Data Engineer in Lille, to discuss a project or opportunity."
+
+[not_found]
+title = "Page not found"
+text = "This page has scattered."
+hint = "Gather the particles with your mouse (or finger) to rebuild the lost page."
+won = "Page found! It never existed, but well played."
+home = "Back to home"

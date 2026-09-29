@@ -63,8 +63,10 @@ fn no_broken_internal_links() {
 fn sitemap_lists_every_page() {
     let out_dir = build_site("sitemap");
     let sitemap = fs::read_to_string(out_dir.join("sitemap.xml")).unwrap();
+    // Pages servies par URL propre (dossier/index.html) ; 404.html est à part et hors sitemap.
     let pages: Vec<String> = html_files(&out_dir)
         .iter()
+        .filter(|file| file.ends_with("index.html"))
         .map(|file| {
             let dir = file.parent().unwrap().strip_prefix(&out_dir).unwrap();
             format!("/{}", dir.display())
@@ -83,7 +85,10 @@ fn sitemap_lists_every_page() {
 fn article_language_switch_points_to_its_twin() {
     let out_dir = build_site("switch");
     let html = fs::read_to_string(out_dir.join("blog/investment-bot-what-llms-taught-me/index.html")).unwrap();
+    let not_found = fs::read_to_string(out_dir.join("404.html")).unwrap();
     fs::remove_dir_all(&out_dir).unwrap();
+    assert!(not_found.contains("data-gpu-mode=\"game\"") && not_found.contains("noindex"));
+    assert!(html.contains("data-gpu-mode=\"calm\""));
     assert!(html.contains("<html lang=\"en\">"));
     assert!(html.contains("href=\"/blog/robot-investissement-ce-que-jai-appris-sur-les-llm\" class=\"lang-switch\""));
 }

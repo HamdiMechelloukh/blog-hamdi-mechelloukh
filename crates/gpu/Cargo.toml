@@ -16,14 +16,17 @@ wgpu = { version = "30", default-features = false, features = ["webgpu", "wgsl"]
 [dependencies.web-sys]
 version = "0.3"
 features = [
+  "CanvasRenderingContext2d",
   "console",
   "CssStyleDeclaration",
   "Document",
   "DomRect",
   "DomTokenList",
   "Element",
+  "FontFaceSet",
   "HtmlCanvasElement",
   "HtmlElement",
+  "ImageData",
   "MediaQueryList",
   "NodeList",
   "PointerEvent",

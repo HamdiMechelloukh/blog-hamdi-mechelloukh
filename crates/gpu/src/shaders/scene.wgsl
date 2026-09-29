@@ -23,6 +23,9 @@ fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
 
     for (var i = 0u; i < globals.rect_count; i++) {
         let rect = rects[i];
+        if (rect.kind == KIND_TARGET) {
+            continue;
+        }
         if (rect.kind == KIND_TITLE) {
             let d = rect_distance(p, rect, 12.0, 24.0);
             let shimmer = 0.75 + 0.25 * sin(globals.time * 1.3 + p.x * 0.012);
