@@ -33,6 +33,8 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     particle.pos.y -= globals.scroll_delta * 0.35;
 
     var force = flow(particle.pos, globals.time) * 22.0;
+    let ring = shock_ring(particle.pos);
+    force += ring.xy * ring.z * 2600.0;
     for (var i = 0u; i < globals.rect_count; i++) {
         force += repel(particle.pos, rects[i]) * 60.0;
     }

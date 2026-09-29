@@ -13,7 +13,9 @@ const PANEL: vec3f = vec3f(0.043, 0.051, 0.078);
 
 @fragment
 fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
-    let p = frag.xy / globals.dpr;
+    // L'onde de choc déforme le fond : on échantillonne la scène un peu en retrait de l'anneau.
+    let ring = shock_ring(frag.xy / globals.dpr);
+    let p = frag.xy / globals.dpr - ring.xy * ring.z * 14.0;
     let uv = p / globals.resolution;
 
     var color = mix(NIGHT_TOP, NIGHT_BOTTOM, uv.y);
@@ -42,6 +44,8 @@ fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
         let edge = (1.0 - smoothstep(0.0, 1.5, abs(d))) * (0.18 + 0.62 * glow);
         color += mix(ACCENT, ACCENT_HOT, glow) * (halo + edge);
     }
+
+    color += ACCENT_HOT * ring.z * 0.10;
 
     // Vignette.
     let centered = uv - 0.5;

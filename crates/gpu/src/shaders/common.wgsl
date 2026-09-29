@@ -12,6 +12,8 @@ struct Globals {
     rect_count: u32,
     dpr: f32,
     _pad: vec2f,
+    // Dernier clic : position (px CSS), instant (s, même base que time), 1.0 si actif.
+    shock: vec4f,
 }
 
 // Ancre DOM (data-gpu) projetée dans le viewport.
@@ -61,6 +63,23 @@ fn flow(p: vec2f, t: f32) -> vec2f {
 // Sortie d'écran : réapparition du côté opposé.
 fn wrap(p: vec2f) -> vec2f {
     return p - floor(p / globals.resolution) * globals.resolution;
+}
+
+const SHOCK_SPEED: f32 = 900.0;
+const SHOCK_WIDTH: f32 = 70.0;
+const SHOCK_DURATION: f32 = 1.4;
+
+// Anneau de l'onde de choc au point p : xy = direction sortante, z = intensité (0 hors de l'anneau).
+fn shock_ring(p: vec2f) -> vec3f {
+    let age = globals.time - globals.shock.z;
+    if (globals.shock.w < 0.5 || age < 0.0 || age > SHOCK_DURATION) {
+        return vec3f(0.0);
+    }
+    let offset = p - globals.shock.xy;
+    let distance = length(offset);
+    let band = 1.0 - smoothstep(0.0, SHOCK_WIDTH, abs(distance - age * SHOCK_SPEED));
+    let fade = 1.0 - age / SHOCK_DURATION;
+    return vec3f(offset / max(distance, 1.0), band * fade * fade);
 }
 
 fn rect_distance(p: vec2f, rect: Rect, margin: f32, radius: f32) -> f32 {

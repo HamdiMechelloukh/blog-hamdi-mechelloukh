@@ -2,6 +2,7 @@
 //! (`data-gpu="panel|card|title|target"`). Sans WebGPU, rien n'est créé et le CSS seul s'applique.
 //! `<body data-gpu-mode>` : "calm" sur les articles, "game" sur la page 404 (voir game.rs).
 
+mod bloom;
 mod game;
 
 use std::cell::{Cell, RefCell};
@@ -36,6 +37,7 @@ struct Globals {
     rect_count: u32,
     dpr: f32,
     _pad: [f32; 2],
+    shock: [f32; 4],
 }
 
 #[repr(C)]
@@ -81,11 +83,15 @@ struct Renderer {
     compute_pipeline: wgpu::ComputePipeline,
     scene_pipeline: wgpu::RenderPipeline,
     particles_pipeline: wgpu::RenderPipeline,
+    bloom: bloom::Bloom,
     particle_count: u32,
     /// Présent seulement sur la page 404.
     game: Option<game::Game>,
     anchors: Vec<Anchor>,
     pointer: Rc<Cell<[f32; 2]>>,
+    /// Clic pas encore transformé en onde de choc.
+    pending_click: Rc<Cell<Option<[f32; 2]>>>,
+    shock: [f32; 4],
     intensity: f32,
     reduced_motion: bool,
     last_time: f64,
@@ -231,7 +237,9 @@ impl Renderer {
             None
         };
         let render_pipeline_layout = pipeline_layout(&device, &render_layout);
-        let scene_pipeline = render_pipeline(&device, &render_pipeline_layout, &scene_module, format, None);
+        // Scène et particules sont rendues en HDR ; le bloom compose ensuite dans le format du canvas.
+        let scene_pipeline =
+            render_pipeline(&device, &render_pipeline_layout, &scene_module, bloom::HDR_FORMAT, None);
         let additive = wgpu::BlendState {
             color: wgpu::BlendComponent {
                 src_factor: wgpu::BlendFactor::One,
@@ -241,10 +249,12 @@ impl Renderer {
             alpha: wgpu::BlendComponent::OVER,
         };
         let particles_pipeline =
-            render_pipeline(&device, &render_pipeline_layout, &particles_module, format, Some(additive));
+            render_pipeline(&device, &render_pipeline_layout, &particles_module, bloom::HDR_FORMAT, Some(additive));
+        let bloom = bloom::Bloom::new(&device, format, config.width, config.height);
 
         let pointer = Rc::new(Cell::new(POINTER_AWAY));
-        listen_pointer(&window, pointer.clone())?;
+        let pending_click = Rc::new(Cell::new(None));
+        listen_pointer(&window, pointer.clone(), pending_click.clone())?;
 
         let anchor_nodes = document.query_selector_all("[data-gpu]")?;
         let anchors = (0..anchor_nodes.length())
@@ -278,10 +288,13 @@ impl Renderer {
             compute_pipeline,
             scene_pipeline,
             particles_pipeline,
+            bloom,
             particle_count,
             game,
             anchors,
             pointer,
+            pending_click,
+            shock: [0.0; 4],
             intensity: if mode.as_deref() == Some("calm") { CALM_INTENSITY } else { 1.0 },
             reduced_motion,
             last_time: 0.0,
@@ -304,16 +317,23 @@ impl Renderer {
         let pointer = self.pointer.get();
         let rects = self.collect_rects(pointer, dt);
         let frozen = self.reduced_motion;
+        let time = (now / 1000.0) as f32;
+        if let Some([x, y]) = self.pending_click.take() {
+            if !frozen {
+                self.shock = [x, y, time, 1.0];
+            }
+        }
         let globals = Globals {
             resolution: [width as f32, height as f32],
             pointer,
-            time: if frozen { 0.0 } else { (now / 1000.0) as f32 },
+            time: if frozen { 0.0 } else { time },
             dt: if frozen { 0.0 } else { dt },
             scroll_delta,
             intensity: self.intensity,
             rect_count: rects.len() as u32,
             dpr: dpr as f32,
             _pad: [0.0; 2],
+            shock: self.shock,
         };
         self.queue.write_buffer(&self.globals_buffer, 0, bytemuck::bytes_of(&globals));
         if !rects.is_empty() {
@@ -337,7 +357,7 @@ impl Renderer {
             let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                 label: Some("frame"),
                 color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                    view: &view,
+                    view: self.bloom.hdr_view(),
                     depth_slice: None,
                     resolve_target: None,
                     ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::BLACK), store: wgpu::StoreOp::Store },
@@ -350,6 +370,7 @@ impl Renderer {
             pass.set_pipeline(&self.particles_pipeline);
             pass.draw(0..6, 0..self.particle_count);
         }
+        self.bloom.encode(&mut encoder, &view);
         let readback = self.game.as_mut().is_some_and(|game| game.encode_readback(&mut encoder));
         self.queue.submit([encoder.finish()]);
         self.queue.present(frame);
@@ -371,6 +392,7 @@ impl Renderer {
         self.config.width = width;
         self.config.height = height;
         self.surface.configure(&self.device, &self.config);
+        self.bloom.resize(&self.device, width, height);
     }
 
     /// Positions des ancres visibles dans le viewport, avec le survol lissé.
@@ -398,7 +420,16 @@ impl Renderer {
     }
 }
 
-fn listen_pointer(window: &Window, pointer: Rc<Cell<[f32; 2]>>) -> Result<(), JsValue> {
+fn listen_pointer(
+    window: &Window,
+    pointer: Rc<Cell<[f32; 2]>>,
+    pending_click: Rc<Cell<Option<[f32; 2]>>>,
+) -> Result<(), JsValue> {
+    let on_down = Closure::<dyn FnMut(PointerEvent)>::new(move |event: PointerEvent| {
+        pending_click.set(Some([event.client_x() as f32, event.client_y() as f32]));
+    });
+    window.add_event_listener_with_callback("pointerdown", on_down.as_ref().unchecked_ref())?;
+    on_down.forget();
     let move_pointer = pointer.clone();
     let on_move = Closure::<dyn FnMut(PointerEvent)>::new(move |event: PointerEvent| {
         move_pointer.set([event.client_x() as f32, event.client_y() as f32]);
