@@ -23,6 +23,7 @@ features = [
   "DomRect",
   "DomTokenList",
   "Element",
+  "EventTarget",
   "FontFaceSet",
   "HtmlCanvasElement",
   "HtmlElement",
@@ -30,5 +31,6 @@ features = [
   "MediaQueryList",
   "NodeList",
   "PointerEvent",
+  "Storage",
   "Window",
 ]

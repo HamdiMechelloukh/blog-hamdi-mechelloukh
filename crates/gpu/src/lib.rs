@@ -7,6 +7,8 @@ mod game;
 
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use bytemuck::{Pod, Zeroable};
 use wasm_bindgen::JsCast;
@@ -22,8 +24,24 @@ const MAX_DPR: f64 = 2.0;
 const POINTER_AWAY: [f32; 2] = [-1.0e5, -1.0e5];
 /// Intensité de l'animation sur les pages de lecture (`data-gpu-mode="calm"`).
 const CALM_INTENSITY: f32 = 0.12;
+/// Transition d'entrée : point du clic sur un lien de la page précédente, en sessionStorage.
+const TRANSITION_KEY: &str = "gpu-transition-origin";
+/// Au-delà, le clic mémorisé n'est plus celui qui a amené ici (rechargement, retour arrière…).
+const TRANSITION_MAX_AGE_MS: f64 = 3000.0;
+const BURST_MIN_SPEED: f32 = 300.0;
+/// Aligné sur MAX_SPEED de compute.wgsl.
+const BURST_MAX_SPEED: f32 = 1500.0;
+/// Qualité adaptative : au-delà de ce temps de frame moyen, on dessine moins de particules.
+const SLOW_FRAME_MS: f32 = 28.0;
+const FRAME_BUDGET_MS: f32 = 1000.0 / 60.0;
+/// Les premières frames sont lentes par nature (compilation des shaders) : elles ne comptent pas.
+const WARMUP_FRAMES: u32 = 60;
 
 const COMMON: &str = include_str!("shaders/common.wgsl");
+/// Les trois étapes de WebGPU. Surtout pas `ShaderStages::all()` : il inclut des étapes propres à wgpu natif
+/// (mesh, task…) que Chrome rejette (« Value 511 is invalid for WGPUShaderStage »), là où Firefox laisse passer.
+const VISIBLE_EVERYWHERE: wgpu::ShaderStages =
+    wgpu::ShaderStages::VERTEX.union(wgpu::ShaderStages::FRAGMENT).union(wgpu::ShaderStages::COMPUTE);
 
 // Types d'ancres, mêmes valeurs que les constantes KIND_* de common.wgsl.
 const KIND_PANEL: u32 = 0;
@@ -80,6 +98,8 @@ struct Renderer {
     canvas: HtmlCanvasElement,
     // Sur le web, l'instance doit survivre à la surface et au device.
     _instance: wgpu::Instance,
+    /// Levé par le callback de perte du device (qui doit être Send, d'où l'atomique).
+    device_lost: Arc<AtomicBool>,
     surface: wgpu::Surface<'static>,
     device: wgpu::Device,
     queue: wgpu::Queue,
@@ -93,6 +113,11 @@ struct Renderer {
     particles_pipeline: wgpu::RenderPipeline,
     bloom: bloom::Bloom,
     particle_count: u32,
+    /// Particules dessinées (qualité adaptative) : toutes au départ, jusqu'à un quart si les frames sont lentes.
+    drawn_particles: u32,
+    /// Temps de frame moyen (moyenne mobile exponentielle), en ms.
+    frame_ms: f32,
+    frames_rendered: u32,
     /// Présent seulement sur la page 404.
     game: Option<game::Game>,
     anchors: Vec<Anchor>,
@@ -130,16 +155,42 @@ async fn run() -> Result<(), JsValue> {
     document.document_element().ok_or("pas de <html>")?.class_list().add_1("gpu")?;
 
     // Boucle requestAnimationFrame : elle se suspend d'elle-même quand l'onglet est caché.
+    // `paused` l'arrête pendant une navigation (pagehide) ; elle reprend si la page revient du cache.
+    let paused = Rc::new(Cell::new(false));
     let frame: Rc<RefCell<Option<Closure<dyn FnMut(f64)>>>> = Rc::new(RefCell::new(None));
     let next_frame = frame.clone();
     let loop_window = window.clone();
+    let loop_paused = paused.clone();
     *frame.borrow_mut() = Some(Closure::new(move |now: f64| {
-        renderer.borrow_mut().frame(now);
+        if loop_paused.get() {
+            return;
+        }
+        let mut renderer = renderer.borrow_mut();
+        if renderer.device_lost.load(Ordering::Relaxed) {
+            renderer.shut_down();
+            return;
+        }
+        renderer.frame(now);
         if let Some(callback) = next_frame.borrow().as_ref() {
             let _ = loop_window.request_animation_frame(callback.as_ref().unchecked_ref());
         }
     }));
     window.request_animation_frame(frame.borrow().as_ref().unwrap().as_ref().unchecked_ref())?;
+
+    let hide_paused = paused.clone();
+    let on_page_hide = Closure::<dyn FnMut()>::new(move || hide_paused.set(true));
+    let show_window = window.clone();
+    let on_page_show = Closure::<dyn FnMut()>::new(move || {
+        if paused.replace(false) {
+            if let Some(callback) = frame.borrow().as_ref() {
+                let _ = show_window.request_animation_frame(callback.as_ref().unchecked_ref());
+            }
+        }
+    });
+    window.add_event_listener_with_callback("pagehide", on_page_hide.as_ref().unchecked_ref())?;
+    window.add_event_listener_with_callback("pageshow", on_page_show.as_ref().unchecked_ref())?;
+    on_page_hide.forget();
+    on_page_show.forget();
     Ok(())
 }
 
@@ -171,6 +222,13 @@ impl Renderer {
             .request_device(&wgpu::DeviceDescriptor::default())
             .await
             .map_err(|error| error.to_string())?;
+        // GPU réinitialisé (pilote surchargé, veille…) : on arrête d'envoyer des commandes vers un device mort.
+        let device_lost = Arc::new(AtomicBool::new(false));
+        let lost_flag = device_lost.clone();
+        device.set_device_lost_callback(move |_, message| {
+            web_sys::console::warn_1(&format!("device WebGPU perdu : {message}").into());
+            lost_flag.store(true, Ordering::Relaxed);
+        });
 
         // Taille réelle fixée à la première frame (resize).
         let config = surface.get_default_config(&adapter, 1, 1).ok_or("surface non configurable")?;
@@ -192,7 +250,9 @@ impl Renderer {
         } else {
             (PARTICLES_DESKTOP, vec![[0.0; 2]])
         };
-        let particles = seed_particles(particle_count, viewport_width as f32, viewport_height as f32, &slots);
+        // Jaillissement depuis le clic de la page précédente, sauf en lecture, sur la 404 ou sans mouvement.
+        let origin = take_transition_origin(&window).filter(|_| mode.is_none() && !reduced_motion);
+        let particles = seed_particles(particle_count, viewport_width as f32, viewport_height as f32, &slots, origin);
 
         use wgpu::util::DeviceExt;
         let globals_buffer = device.create_buffer(&wgpu::BufferDescriptor {
@@ -262,7 +322,8 @@ impl Renderer {
         let bloom = bloom::Bloom::new(&device, format, config.width, config.height);
 
         let pointer = Rc::new(Cell::new(POINTER_AWAY));
-        let pending_click = Rc::new(Cell::new(None));
+        // L'onde de choc accompagne le jaillissement dès la première frame.
+        let pending_click = Rc::new(Cell::new(origin));
         listen_pointer(&window, pointer.clone(), pending_click.clone())?;
 
         let anchor_nodes = document.query_selector_all("[data-gpu]")?;
@@ -287,6 +348,7 @@ impl Renderer {
             window,
             canvas,
             _instance: instance,
+            device_lost,
             surface,
             device,
             queue,
@@ -300,6 +362,9 @@ impl Renderer {
             particles_pipeline,
             bloom,
             particle_count,
+            drawn_particles: particle_count,
+            frame_ms: FRAME_BUDGET_MS,
+            frames_rendered: 0,
             game,
             anchors,
             pointer,
@@ -320,6 +385,10 @@ impl Renderer {
 
         // dt borné : après un onglet caché, pas de saut de simulation.
         let dt = if self.last_time == 0.0 { 0.0 } else { ((now - self.last_time) / 1000.0).min(0.05) } as f32;
+        self.frames_rendered = self.frames_rendered.saturating_add(1);
+        if self.frames_rendered > WARMUP_FRAMES {
+            self.adapt_quality((now - self.last_time) as f32);
+        }
         self.last_time = now;
         let scroll = self.window.scroll_y().unwrap_or(0.0);
         let scroll_delta = (scroll - self.last_scroll) as f32;
@@ -385,7 +454,7 @@ impl Renderer {
             pass.set_pipeline(&self.scene_pipeline);
             pass.draw(0..3, 0..1);
             pass.set_pipeline(&self.particles_pipeline);
-            pass.draw(0..6, 0..self.particle_count);
+            pass.draw(0..6, 0..self.drawn_particles);
         }
         self.bloom.encode(&mut encoder, &view);
         let readback = self.game.as_mut().is_some_and(|game| game.encode_readback(&mut encoder));
@@ -396,6 +465,26 @@ impl Renderer {
                 game.start_readback();
             }
             game.update_dom();
+        }
+    }
+
+    /// Frames lentes en moyenne : un quart de particules dessinées en moins, sans descendre sous le quart du total.
+    /// La mesure repart du budget d'une frame pour laisser le temps au changement de faire effet.
+    fn adapt_quality(&mut self, frame_ms: f32) {
+        // Un onglet caché peut donner des écarts énormes : on les borne pour ne pas fausser la moyenne.
+        self.frame_ms += (frame_ms.min(100.0) - self.frame_ms) * 0.05;
+        let floor = self.particle_count / 4;
+        if self.frame_ms > SLOW_FRAME_MS && self.drawn_particles > floor {
+            self.drawn_particles = (self.drawn_particles * 3 / 4).max(floor);
+            self.frame_ms = FRAME_BUDGET_MS;
+        }
+    }
+
+    /// Retour au rendu CSS seul : le canvas disparaît et la page retrouve ses fonds.
+    fn shut_down(&self) {
+        self.canvas.remove();
+        if let Some(root) = self.window.document().and_then(|document| document.document_element()) {
+            let _ = root.class_list().remove_1("gpu");
         }
     }
 
@@ -454,8 +543,18 @@ fn listen_pointer(
     pointer: Rc<Cell<[f32; 2]>>,
     pending_click: Rc<Cell<Option<[f32; 2]>>>,
 ) -> Result<(), JsValue> {
+    let storage = window.session_storage().ok().flatten();
     let on_down = Closure::<dyn FnMut(PointerEvent)>::new(move |event: PointerEvent| {
-        pending_click.set(Some([event.client_x() as f32, event.client_y() as f32]));
+        let (x, y) = (event.client_x() as f32, event.client_y() as f32);
+        pending_click.set(Some([x, y]));
+        let on_link = event
+            .target()
+            .and_then(|target| target.dyn_into::<Element>().ok())
+            .is_some_and(|element| element.closest("a[href]").ok().flatten().is_some());
+        if let (true, Some(storage)) = (on_link, &storage) {
+            // Stockage indisponible ou plein : pas de transition, rien de grave.
+            let _ = storage.set_item(TRANSITION_KEY, &format!("{x},{y},{}", js_sys::Date::now()));
+        }
     });
     window.add_event_listener_with_callback("pointerdown", on_down.as_ref().unchecked_ref())?;
     on_down.forget();
@@ -475,8 +574,21 @@ fn listen_pointer(
     Ok(())
 }
 
+/// Lit puis efface le point de clic mémorisé par la page précédente, s'il est récent.
+fn take_transition_origin(window: &Window) -> Option<[f32; 2]> {
+    let storage = window.session_storage().ok()??;
+    let value = storage.get_item(TRANSITION_KEY).ok()??;
+    let _ = storage.remove_item(TRANSITION_KEY);
+    let parts: Vec<f64> = value.split(',').filter_map(|part| part.parse().ok()).collect();
+    let [x, y, timestamp] = parts[..] else {
+        return None;
+    };
+    (js_sys::Date::now() - timestamp < TRANSITION_MAX_AGE_MS).then_some([x as f32, y as f32])
+}
+
 /// Répartition pseudo-aléatoire (xorshift) : pas besoin d'une dépendance `rand` pour ça.
-fn seed_particles(count: u32, width: f32, height: f32, slots: &[[f32; 2]]) -> Vec<Particle> {
+/// Avec `origin`, toutes les particules partent de ce point avec une vitesse sortante (transition d'entrée).
+fn seed_particles(count: u32, width: f32, height: f32, slots: &[[f32; 2]], origin: Option<[f32; 2]>) -> Vec<Particle> {
     let mut state: u32 = 0x9e37_79b9;
     let mut next = || {
         state ^= state << 13;
@@ -485,13 +597,23 @@ fn seed_particles(count: u32, width: f32, height: f32, slots: &[[f32; 2]]) -> Ve
         state as f32 / u32::MAX as f32
     };
     (0..count as usize)
-        .map(|index| Particle {
-            pos: [next() * width, next() * height],
-            vel: [0.0, 0.0],
-            // Pas premier : répartit les particules sur tout le masque plutôt que ligne par ligne.
-            slot: slots[index * 7919 % slots.len()],
-            captured: 0.0,
-            _pad: 0.0,
+        .map(|index| {
+            let (pos, vel) = match origin {
+                Some(origin) => {
+                    let angle = next() * std::f32::consts::TAU;
+                    let speed = BURST_MIN_SPEED + next() * (BURST_MAX_SPEED - BURST_MIN_SPEED);
+                    (origin, [angle.cos() * speed, angle.sin() * speed])
+                }
+                None => ([next() * width, next() * height], [0.0, 0.0]),
+            };
+            Particle {
+                pos,
+                vel,
+                // Pas premier : répartit les particules sur tout le masque plutôt que ligne par ligne.
+                slot: slots[index * 7919 % slots.len()],
+                captured: 0.0,
+                _pad: 0.0,
+            }
         })
         .collect()
 }
@@ -509,7 +631,7 @@ fn bind_group_layout(device: &wgpu::Device, label: &str, compute: bool) -> wgpu:
     let storage = |binding, read_only| wgpu::BindGroupLayoutEntry {
         binding,
         // Un storage inscriptible visible du vertex shader exigerait la feature VERTEX_WRITABLE_STORAGE.
-        visibility: if read_only { wgpu::ShaderStages::all() } else { wgpu::ShaderStages::COMPUTE },
+        visibility: if read_only { VISIBLE_EVERYWHERE } else { wgpu::ShaderStages::COMPUTE },
         ty: wgpu::BindingType::Buffer {
             ty: wgpu::BufferBindingType::Storage { read_only },
             has_dynamic_offset: false,
@@ -520,7 +642,7 @@ fn bind_group_layout(device: &wgpu::Device, label: &str, compute: bool) -> wgpu:
     let mut entries = vec![
         wgpu::BindGroupLayoutEntry {
             binding: 0,
-            visibility: wgpu::ShaderStages::all(),
+            visibility: VISIBLE_EVERYWHERE,
             ty: wgpu::BindingType::Buffer {
                 ty: wgpu::BufferBindingType::Uniform,
                 has_dynamic_offset: false,

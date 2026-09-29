@@ -703,12 +703,19 @@ ul {
 }
 
 html.gpu .card,
-html.gpu .navbar,
 html.gpu .footer,
 html.gpu .contact-form,
 html.gpu .article-prose {
   background: transparent;
   border-color: transparent;
+}
+
+/* La barre reste collée en haut et le contenu HTML défile dessous : le canvas, derrière tout le HTML,
+   ne peut pas le masquer. Elle garde donc un fond CSS, en verre dépoli sur le rendu GPU. */
+html.gpu .navbar {
+  background: rgba(11, 13, 20, 0.72);
+  backdrop-filter: blur(12px);
+  border-bottom-color: rgba(249, 115, 22, 0.25);
 }
 
 /* Page 404 : sans WebGPU, un « 404 » typographique ; avec, les particules le reforment dans .game-target. */

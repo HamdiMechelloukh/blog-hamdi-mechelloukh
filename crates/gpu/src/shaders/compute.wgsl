@@ -3,6 +3,7 @@
 @group(0) @binding(2) var<storage, read_write> particles: array<Particle>;
 
 const REPEL_MARGIN: f32 = 28.0;
+const MAX_SPEED: f32 = 1500.0;
 
 // Pousse la particule hors de la boîte (marge incluse), le long de la normale sortante.
 fn repel(p: vec2f, rect: Rect) -> vec2f {
@@ -41,10 +42,19 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     let to_pointer = globals.pointer - particle.pos;
     let pointer_distance = length(to_pointer);
     if (pointer_distance < 220.0 && pointer_distance > 1.0) {
-        force += to_pointer / pointer_distance * (1.0 - pointer_distance / 220.0) * 90.0;
+        // Attraction, qui s'inverse près du curseur : un anneau plutôt qu'un amas. Des milliers de particules
+        // superposées sur les mêmes pixels saturent le blending et peuvent faire décrocher un GPU intégré.
+        let pull = (1.0 - pointer_distance / 220.0) * 90.0;
+        let push = (1.0 - smoothstep(0.0, 50.0, pointer_distance)) * 260.0;
+        force += to_pointer / pointer_distance * (pull - push);
     }
 
     particle.vel = (particle.vel + force * dt * globals.intensity) * pow(0.12, dt);
+    // Vitesse plafonnée : bornes la longueur des traînées (et donc le coût de rendu) après une onde de choc.
+    let speed = length(particle.vel);
+    if (speed > MAX_SPEED) {
+        particle.vel *= MAX_SPEED / speed;
+    }
     particle.pos += particle.vel * dt * globals.intensity;
 
     particle.pos = wrap(particle.pos);
