@@ -347,6 +347,10 @@ ul {
   gap: 2.5rem;
   align-items: center;
   text-align: center;
+  padding: 2.5rem;
+  background: var(--panel);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
 }
 
 .about-avatar {
@@ -725,7 +729,8 @@ ul {
     font-size: 1.6rem;
   }
 
-  .article-prose {
+  .article-prose,
+  .about-content {
     padding: 1.25rem;
   }
 
@@ -747,6 +752,7 @@ ul {
 
 html.gpu .card,
 html.gpu .viz,
+html.gpu .about-content,
 html.gpu .footer,
 html.gpu .contact-form,
 html.gpu .article-prose {
