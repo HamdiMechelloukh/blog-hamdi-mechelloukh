@@ -1,0 +1,14 @@
+[workspace]
+resolver = "3"
+members = ["crates/site", "crates/gpu"]
+
+[workspace.package]
+edition = "2024"
+
+# Taille du WASM : c'est le seul binaire téléchargé par les visiteurs.
+[profile.release.package.gpu]
+opt-level = "z"
+codegen-units = 1
+
+[profile.release]
+lto = true

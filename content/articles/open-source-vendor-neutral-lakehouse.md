@@ -1,3 +1,13 @@
++++
+translation_slug = "lakehouse-opensource-vendor-neutral"
+lang = "en"
+title = "Building an open-source vendor-neutral lakehouse"
+summary = "Why and how I designed a lakehouse with no vendor lock-in: Kafka, Spark, Iceberg, MinIO, Great Expectations and Terraform."
+date = "2026-03-20"
+tags = ["Data Engineering", "Lakehouse", "Iceberg", "Kafka", "Spark", "Open Source"]
+reading_time_minutes = 9
++++
+
 When you work in data, you always end up asking the same question: **what happens if we need to switch platforms tomorrow?**
 
 I've seen firsthand that software vendors can be aggressive with pricing, and they won't hesitate to sunset a product that isn't generating enough revenue. When that happens, you need to migrate quickly, or face massive costs in migration, redevelopment, and lost time.

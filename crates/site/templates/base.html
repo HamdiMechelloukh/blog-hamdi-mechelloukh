@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="{{ layout.lang.code() }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ layout.title }}</title>
+    <meta name="description" content="{{ layout.description }}" />
+    <meta name="robots" content="index, follow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href="{{ crate::BASE_URL }}{{ layout.path }}" />
+    {% for alternate in layout.alternates %}
+    <link rel="alternate" hreflang="{{ alternate.hreflang }}" href="{{ crate::BASE_URL }}{{ alternate.path }}" />
+    {% endfor %}
+    <link rel="alternate" type="application/rss+xml" title="Hamdi Mechelloukh" href="{{ layout.href("/rss.xml") }}" />
+
+    <meta property="og:type" content="{{ layout.og_type }}" />
+    <meta property="og:url" content="{{ crate::BASE_URL }}{{ layout.path }}" />
+    <meta property="og:title" content="{{ layout.title }}" />
+    <meta property="og:description" content="{{ layout.description }}" />
+    <meta property="og:image" content="{{ crate::BASE_URL }}/assets/PXL_20251202_194539824.jpg" />
+    <meta property="og:locale" content="{{ layout.lang.og_locale() }}" />
+    <meta property="og:locale:alternate" content="{{ layout.lang.other().og_locale() }}" />
+    <meta property="og:site_name" content="Hamdi Mechelloukh" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ layout.title }}" />
+    <meta name="twitter:description" content="{{ layout.description }}" />
+    <meta name="twitter:image" content="{{ crate::BASE_URL }}/assets/PXL_20251202_194539824.jpg" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Hamdi Mechelloukh",
+      "jobTitle": "Data Engineer",
+      "url": "https://hamdimechelloukh.com/",
+      "sameAs": [
+        "https://github.com/HamdiMechelloukh",
+        "https://linkedin.com/in/hamdimechelloukh"
+      ],
+      "worksFor": { "@type": "Organization", "name": "Decathlon Digital" },
+      "knowsAbout": ["Apache Spark", "Python", "AWS", "Databricks", "Data Engineering", "Apache Kafka", "Apache Iceberg"]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/syntax.css" />
+    <script type="module">import init from "/gpu/gpu.js"; init();</script>
+  </head>
+  <body{% if layout.og_type == "article" %} data-gpu-mode="calm"{% endif %}>
+    <div class="page">
+      <nav class="navbar" data-gpu="panel">
+        <div class="container navbar-content">
+          <a href="{{ layout.href("/") }}" class="nav-logo">Hamdi</a>
+          <div class="nav-links">
+            {% for item in layout.nav_items() %}
+            <a href="{{ item.href }}" class="nav-link{% if item.active %} active{% endif %}"{% if item.active %} aria-current="page"{% endif %}>
+              <img src="{{ item.icon }}" alt="" />
+              <span>{{ item.label }}</span>
+            </a>
+            {% endfor %}
+            <a href="{{ layout.switch_path }}" class="lang-switch" hreflang="{{ layout.lang.other().code() }}" lang="{{ layout.lang.other().code() }}">{{ layout.lang.other().code()|upper }}</a>
+          </div>
+        </div>
+      </nav>
+      <main>
+        {% block content %}{% endblock %}
+      </main>
+      <footer class="footer" data-gpu="panel">
+        <div class="container">
+          <div class="social-links">
+            <a href="https://github.com/HamdiMechelloukh" target="_blank" rel="noopener noreferrer">
+              <img src="/assets/github_icon.svg" alt="GitHub" class="social-icon" />
+            </a>
+            <a href="https://linkedin.com/in/hamdimechelloukh" target="_blank" rel="noopener noreferrer">
+              <img src="/assets/linkedin_icon.svg" alt="LinkedIn" class="social-icon" />
+            </a>
+          </div>
+          <p>&copy; {{ year }} Hamdi Mechelloukh. {{ layout.t.footer.rights }}</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,4 +1,8 @@
 {
+  "framework": null,
+  "installCommand": "./vercel-install.sh",
+  "buildCommand": "export PATH=\"$HOME/.cargo/bin:$PATH\" && ./build.sh",
+  "outputDirectory": "dist",
   "redirects": [
     {
       "source": "/:path*",
@@ -6,6 +10,5 @@
       "destination": "https://hamdimechelloukh.com/:path*",
       "permanent": true
     }
-  ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  ]
 }

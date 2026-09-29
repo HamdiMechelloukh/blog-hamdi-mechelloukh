@@ -1,3 +1,13 @@
++++
+translation_slug = "investment-bot-what-llms-taught-me"
+lang = "fr"
+title = "Deux mois à construire un robot d'investissement. Ce qu'il m'a appris sur les LLM"
+summary = "Comment un bot de veille de portefeuille m'a appris le vrai fonctionnement des LLM : non-déterminisme à température zéro, déterminisme dans la donnée, et vote d'ensemble façon Condorcet."
+date = "2026-06-17"
+tags = ["LLM", "IA générative", "Non-déterminisme", "Python"]
+reading_time_minutes = 13
++++
+
 Pendant deux mois, j'ai bricolé un petit système qui surveille mon portefeuille et m'envoie, une fois par mois, ce qu'il pense que je devrais faire : acheter, renforcer, alléger, vendre.
 
 Des idées fausses, des bugs qui en cachaient d'autres, des décisions reprises deux ou trois fois. Et au bout du compte, une vision bien plus claire de la façon dont les modèles de langage se comportent réellement, assez loin de ce que j'imaginais au départ.

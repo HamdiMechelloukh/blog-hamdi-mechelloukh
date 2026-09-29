@@ -1,3 +1,13 @@
++++
+translation_slug = "retour-experience-production-manager"
+lang = "en"
+title = "Lessons from 2 years as Production Manager at Decathlon Digital"
+summary = "What I learned stepping away from code to manage sales data production — alerting, postmortems, crisis communication, and why I went back to engineering."
+date = "2026-03-19"
+tags = ["Production", "Data Engineering", "Lessons Learned", "Decathlon"]
+reading_time_minutes = 8
++++
+
 For two and a half years, I stepped away from code to manage data production for sales at Decathlon Digital. A role I discovered upon arrival: the job title said "Production Expert", and I quickly realized it was going to be a full-time commitment.
 
 Here's what I learned from switching to the other side.

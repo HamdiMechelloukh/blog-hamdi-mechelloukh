@@ -1,3 +1,13 @@
++++
+translation_slug = "open-source-vendor-neutral-lakehouse"
+lang = "fr"
+title = "Construire un lakehouse open-source vendor-neutral"
+summary = "Pourquoi et comment j'ai conçu un lakehouse sans lock-in vendor : Kafka, Spark, Iceberg, MinIO, Great Expectations et Terraform."
+date = "2026-03-20"
+tags = ["Data Engineering", "Lakehouse", "Iceberg", "Kafka", "Spark", "Open Source"]
+reading_time_minutes = 9
++++
+
 Quand on travaille dans la data, on finit toujours par se poser la même question : **que se passe-t-il si demain on doit changer de plateforme ?**
 
 J'ai pu constater de première main que les éditeurs de logiciels sont assez agressifs dans leur politique de pricing, et qu'ils n'hésitent pas à abandonner une solution qui ne génère pas assez de chiffre d'affaires. Quand ça arrive, il faut pouvoir migrer rapidement, sous peine de coûts faramineux en migration, en re-développement, et en temps perdu.

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <section class="section">
+    <h1 class="section-title" data-gpu="title"><img src="/assets/about_icon.svg" alt="" />{{ layout.t.about.title }}</h1>
+    <div class="about-content">
+      <div class="about-avatar">
+        <img src="/assets/PXL_20251202_194539824.jpg" alt="Hamdi Mechelloukh" />
+      </div>
+      <div class="about-text">
+        <h2>{{ layout.t.about.who_title }}</h2>
+        <p class="card-text about-lead">{{ layout.t.about.who_text }}</p>
+        <h3>{{ layout.t.about.journey_title }}</h3>
+        <p class="card-text">{{ layout.t.about.journey_text }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" data-gpu="title">{{ layout.t.about.interests_title }}</h2>
+    <div class="narrow">
+      <div class="card-grid">
+        <div data-gpu="card" class="card card-compact card-centered">
+          <h3>{{ layout.t.about.interest_karate_title }}</h3>
+          <p class="card-text">{{ layout.t.about.interest_karate_text }}</p>
+        </div>
+        <div data-gpu="card" class="card card-compact card-centered">
+          <h3>{{ layout.t.about.interest_gaming_title }}</h3>
+          <p class="card-text">{{ layout.t.about.interest_gaming_text }}</p>
+        </div>
+        <div data-gpu="card" class="card card-compact card-centered">
+          <h3>{{ layout.t.about.interest_pop_title }}</h3>
+          <p class="card-text">{{ layout.t.about.interest_pop_text }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" data-gpu="title">{{ layout.t.about.experience_title }}</h2>
+    <div class="narrow">
+      {% for experience in experiences %}
+      <div data-gpu="card" class="card card-compact timeline-card">
+        <div class="timeline-head">
+          <div>
+            <h3>{{ experience.role }}</h3>
+            <p class="timeline-org">{{ experience.company }}</p>
+          </div>
+          <div class="timeline-when">
+            <p>{{ experience.period }}</p>
+            <p class="timeline-where">{{ experience.location }}</p>
+          </div>
+        </div>
+        <p class="card-text timeline-body">{{ experience.description }}</p>
+        <div class="timeline-techs">
+          {% for technology in experience.technologies %}<span class="tech-pill">{{ technology }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" data-gpu="title">{{ layout.t.about.education_title }}</h2>
+    <div class="narrow">
+      {% for school in education %}
+      <div data-gpu="card" class="card card-compact timeline-card">
+        <div class="timeline-head">
+          <div>
+            <h3>{{ school.degree }}</h3>
+            <p class="timeline-org">{{ school.school }}</p>
+          </div>
+          <p class="timeline-when">{{ school.period }}</p>
+        </div>
+        {% if let Some(description) = school.description %}
+        <p class="card-text timeline-body">{{ description }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

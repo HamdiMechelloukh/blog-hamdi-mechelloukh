@@ -1,0 +1,64 @@
+[[projects]]
+title_fr = "Olist Data Lakehouse"
+title_en = "Olist Data Lakehouse"
+description_fr = "Lakehouse de données vendor-neutral end-to-end : ingestion Kafka → Spark → Iceberg (bronze/silver/gold) avec Airflow, Great Expectations, Terraform IaC (AWS) et un dashboard Streamlit."
+description_en = "End-to-end vendor-neutral data lakehouse: Kafka → Spark → Iceberg ingestion (bronze/silver/gold) with Airflow, Great Expectations, Terraform IaC (AWS) and a Streamlit dashboard."
+technologies = ["Python", "PySpark", "Apache Kafka", "Apache Spark", "Apache Iceberg", "Apache Airflow", "MinIO", "Great Expectations", "Streamlit", "Docker", "Terraform", "AWS"]
+image_url = "/assets/project_placeholder.svg"
+github_url = "https://github.com/HamdiMechelloukh/olist-lakehouse"
+
+[[projects]]
+title_fr = "Olist Flink Streaming"
+title_en = "Olist Flink Streaming"
+description_fr = "Pipeline streaming temps réel end-to-end : simulation CSV → Kafka → 3 jobs Flink 2.0 (agrégation revenus, détection d'anomalies CEP, KPIs globaux) → Apache Iceberg sur MinIO, avec Prometheus, Grafana et checkpoints RocksDB."
+description_en = "End-to-end real-time streaming pipeline: CSV simulation → Kafka → 3 Flink 2.0 jobs (revenue aggregation, CEP anomaly detection, global KPIs) → Apache Iceberg on MinIO, with Prometheus, Grafana and RocksDB checkpoints."
+technologies = ["Java 21", "Apache Flink", "Apache Kafka", "Apache Iceberg", "MinIO", "Prometheus", "Grafana", "Docker"]
+image_url = "/assets/project_placeholder.svg"
+github_url = "https://github.com/HamdiMechelloukh/olist-flink-streaming"
+
+[[projects]]
+title_fr = "Olist MLOps"
+title_en = "Olist MLOps"
+description_fr = "Pipeline MLOps end-to-end : feature engineering → XGBoost → FastAPI serving, avec MLflow tracking, Evidently drift detection, Airflow orchestration, Prometheus metrics et déploiement multi-cloud (Terraform AWS/GCP/Azure + Helm K8s)."
+description_en = "End-to-end MLOps pipeline: feature engineering → XGBoost → FastAPI serving, with MLflow tracking, Evidently drift detection, Airflow orchestration, Prometheus metrics and multi-cloud deployment (Terraform AWS/GCP/Azure + Helm K8s)."
+technologies = ["Python", "XGBoost", "FastAPI", "MLflow", "Airflow", "Evidently", "Prometheus", "Docker", "Terraform", "Kubernetes"]
+image_url = "/assets/project_placeholder.svg"
+github_url = "https://github.com/HamdiMechelloukh/olist-mlops"
+
+[[projects]]
+title_fr = "AgenticDev"
+title_en = "AgenticDev"
+description_fr = "Framework multi-LLM agentique : un pipeline LangGraph orchestre 4 agents spécialisés (Architect, Designer, Developer, Tester) pour transformer une demande en texte libre en code testé et documenté, avec génération d'assets SVG et boucle de correction automatique."
+description_en = "Multi-LLM agentic framework: a LangGraph pipeline orchestrates 4 specialized agents (Architect, Designer, Developer, Tester) to turn a free-text request into tested, documented code, with SVG asset generation and automatic fix loop."
+technologies = ["Python", "LangGraph", "Gemini", "Claude", "Multi-LLM", "Prompt Caching"]
+image_url = "/assets/project_placeholder.svg"
+github_url = "https://github.com/HamdiMechelloukh/AgenticDev"
+
+[[projects]]
+title_fr = "Minesweeper 1v1"
+title_en = "Minesweeper 1v1"
+description_fr = "Démineur multijoueur temps réel : deux joueurs s'affrontent sur des grilles identiques via WebSocket, avec un solveur par propagation de contraintes garantissant des grilles toujours résolvables, un leaderboard PostgreSQL et une PWA installable."
+description_en = "Real-time multiplayer Minesweeper: two players compete on identical grids via WebSocket, with a constraint-propagation solver ensuring always-solvable boards, a PostgreSQL leaderboard and an installable PWA."
+technologies = ["React", "TypeScript", "Node.js", "WebSocket", "PostgreSQL", "PWA"]
+image_url = "/assets/project_placeholder.svg"
+github_url = "https://github.com/HamdiMechelloukh/minesweeper-1v1"
+demo_url = "https://client-six-woad-40.vercel.app/"
+
+[[projects]]
+title_fr = "Sanctuaire"
+title_en = "Sanctuaire"
+description_fr = "Outil de pérennisation des concessions funéraires familiales : suivi centralisé des échéances, alertes email automatiques avant expiration et espace administrateur. Landing publique avec formulaire de contact pour les demandes entrantes."
+description_en = "Family tool to preserve burial concessions: centralized tracking of renewal deadlines, automatic email alerts before expiry, and admin space. Public landing page with a contact form for inbound requests."
+technologies = ["Ruby", "Rails 8", "PostgreSQL 18", "Tailwind v4", "Devise", "Solid Queue", "Resend", "Railway"]
+image_url = "/assets/project_placeholder.svg"
+demo_url = "https://sanctuaire-production.up.railway.app"
+
+[[projects]]
+title_fr = "Portfolio Personnel"
+title_en = "Personal Portfolio"
+description_fr = "Le site sur lequel vous naviguez actuellement : générateur statique maison en Rust et fond de particules WebGPU (wgpu → WASM)."
+description_en = "The site you are currently browsing: a hand-rolled static site generator in Rust and a WebGPU particle background (wgpu → WASM)."
+technologies = ["Rust", "WebAssembly", "WebGPU", "wgpu"]
+image_url = "/assets/project_placeholder.svg"
+github_url = "https://github.com/HamdiMechelloukh/blog-hamdi-mechelloukh"
+

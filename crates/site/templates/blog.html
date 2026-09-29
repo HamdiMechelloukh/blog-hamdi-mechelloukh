@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <section class="section">
+    <h1 class="section-title" data-gpu="title"><img src="/assets/blog_icon.svg" alt="" />{{ layout.t.articles.title }}</h1>
+    <p class="card-text page-intro">{{ layout.t.articles.description }}</p>
+    {% if articles.is_empty() %}
+    <p class="empty">{{ layout.t.articles.empty }}</p>
+    {% else %}
+    <div class="card-grid">
+      {% for article in articles %}
+      <a href="{{ article.path() }}" class="card-link">
+        <article data-gpu="card" class="card card-full">
+          <div class="card-body">
+            <span class="card-meta">{{ layout.lang.long_date(article.date) }} · {{ article.reading_time_minutes }} {{ layout.t.articles.reading_time }}</span>
+            <h3 class="card-title">{{ article.title }}</h3>
+            <p class="card-text">{{ article.summary }}</p>
+            <div class="tag-list">
+              {% for tag in article.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+            </div>
+          </div>
+        </article>
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

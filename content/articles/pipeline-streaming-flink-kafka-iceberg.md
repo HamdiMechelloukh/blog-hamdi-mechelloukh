@@ -1,3 +1,13 @@
++++
+translation_slug = "flink-kafka-iceberg-streaming-pipeline"
+lang = "fr"
+title = "Pipeline streaming temps réel avec Flink 2.0, Kafka et Iceberg"
+summary = "Un pipeline streaming end-to-end sur le dataset Olist : agrégation de revenus, détection d'anomalies par CEP, KPIs à la minute, data lake Iceberg sur MinIO — et les problèmes qu'on ne voit pas venir."
+date = "2026-03-31"
+tags = ["Flink", "Kafka", "Iceberg", "Streaming", "Java", "Data Engineering"]
+reading_time_minutes = 11
++++
+
 Il est 14h03. Une vente flash vient de démarrer.
 
 Dans l'entrepôt, un opérateur encode les commandes entrantes dans le système de gestion. Il saisit une quantité, se trompe, corrige dans la foulée. Deux événements, une seule réalité. Trente secondes d'écart.

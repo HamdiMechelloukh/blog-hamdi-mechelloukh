@@ -1,0 +1,76 @@
+[nav]
+home = "Accueil"
+about = "À propos"
+projects = "Projets"
+articles = "Blog"
+blog = "Veille"
+contact = "Contact"
+
+[home]
+subtitle = "Data Engineer @ Decathlon Digital"
+description = "Data Engineer avec 8 ans d'expérience, je conçois des pipelines de données à grande échelle pour transformer des données brutes en décisions stratégiques — Spark, AWS, Databricks."
+cta_projects = "Voir mes projets"
+cta_contact = "Me contacter"
+skills_title = "Compétences"
+skill_data = "Data Engineering"
+skill_backend = "Backend"
+skill_db = "Bases de données"
+skill_cloud = "Cloud & Outils"
+
+[about]
+title = "À propos"
+who_title = "Qui suis-je ?"
+who_text = "Bonjour ! Je suis Hamdi Mechelloukh, Data Engineer chez Decathlon Digital à Lille. J'ai commencé ma carrière dans le développement backend avant de me spécialiser dans la data engineering. Je conçois et maintiens des pipelines de données à grande échelle avec Spark, AWS et Databricks."
+journey_title = "Mon parcours"
+journey_text = "Après une reconversion via l'AFPA, j'ai évolué du développement Node.js/Java vers la data engineering, en passant par des missions chez Boulanger et PROMOD en prestation de services. Depuis 2022, je suis chez Decathlon Digital où j'ai assuré la stabilité des données de performance économique avant de rejoindre l'équipe des données de prix."
+interests_title = "Centres d'intérêt"
+interest_karate_title = "Karaté Kyokushinkai"
+interest_karate_text = "Pratiquant depuis mai 2013, 2ème Dan. Également professeur depuis 2025."
+interest_gaming_title = "Jeux vidéo"
+interest_gaming_text = "Passionné de RPGs et de culture geek en général."
+interest_pop_title = "Culture pop"
+interest_pop_text = "Manga, BD, mèmes et tout ce qui fait partie de la culture geek."
+experience_title = "Expériences"
+education_title = "Formation"
+
+[portfolio]
+title = "Portfolio"
+description = "Une sélection de mes réalisations récentes."
+code = "Code"
+demo = "Demo"
+
+[articles]
+title = "Blog"
+description = "Mes articles sur le data engineering, le cloud et l'architecture logicielle."
+reading_time = "min de lecture"
+back_to_list = "Retour aux articles"
+published_on = "Publié le"
+empty = "Aucun article pour le moment. Revenez bientôt !"
+
+[blog]
+title = "Veille technologique"
+description = "Les derniers articles data engineering, cloud et architecture que je suis."
+
+[contact]
+title = "Contact"
+description = "Vous avez un projet en tête ou vous souhaitez simplement discuter ? N'hésitez pas à me contacter via le formulaire ci-dessous."
+name = "Nom"
+email = "Email"
+message = "Message"
+send = "Envoyer"
+
+[footer]
+rights = "Tous droits réservés."
+
+[meta]
+home_title = "Hamdi Mechelloukh – Data Engineer"
+home_description = "Portfolio de Hamdi Mechelloukh, Data Engineer avec 8 ans d'expérience. Spécialisé en Apache Spark, AWS, Databricks et pipelines de données à grande échelle."
+about_title = "À propos – Hamdi Mechelloukh"
+about_description = "Parcours, expériences et centres d'intérêt de Hamdi Mechelloukh, Data Engineer chez Decathlon Digital à Lille."
+portfolio_title = "Portfolio – Hamdi Mechelloukh"
+portfolio_description = "Projets data engineering de Hamdi Mechelloukh : lakehouse Olist (Kafka, Spark, Iceberg), pipeline MLOps (XGBoost, MLflow, Airflow), streaming Flink."
+blog_title = "Blog – Hamdi Mechelloukh"
+watch_title = "Veille – Hamdi Mechelloukh"
+watch_description = "Veille technologique de Hamdi Mechelloukh : data engineering, cloud, architecture. Articles issus de Towards Data Science, AWS Blog, Databricks et plus."
+contact_title = "Contact – Hamdi Mechelloukh"
+contact_description = "Contactez Hamdi Mechelloukh, Data Engineer à Lille, pour discuter d'un projet ou d'une opportunité."

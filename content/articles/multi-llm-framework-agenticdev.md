@@ -1,3 +1,13 @@
++++
+translation_slug = "framework-multi-llm-agenticdev"
+lang = "en"
+title = "AgenticDev: a multi-LLM framework for generating tested code"
+summary = "How I designed a pipeline of 4 specialized LLM agents with LangGraph, prompt caching and automatic fix loop."
+date = "2026-03-19"
+tags = ["LLM", "Agents", "LangGraph", "Python", "Gemini", "Claude"]
+reading_time_minutes = 10
++++
+
 In late 2025, after spending hours prompting LLMs one by one to generate code, a question kept nagging me: **what if multiple LLM agents could collaborate to produce a complete project?** Not a single agent doing everything, but a specialized team (an architect, a developer, a tester), each with its own role, tools, and constraints.
 
 That's how **AgenticDev** was born, a Python framework that orchestrates 4 LLM agents to turn a plain-text request into tested, documented code.

@@ -1,3 +1,13 @@
++++
+translation_slug = "robot-investissement-ce-que-jai-appris-sur-les-llm"
+lang = "en"
+title = "Two months building an investment bot. What it taught me about LLMs"
+summary = "How a portfolio-monitoring bot taught me how LLMs really work: zero-temperature non-determinism, determinism in the data, and Condorcet-style ensemble voting."
+date = "2026-06-17"
+tags = ["LLM", "Generative AI", "Non-determinism", "Python"]
+reading_time_minutes = 13
++++
+
 For two months, I tinkered together a small system that watches my portfolio and sends me, once a month, what it thinks I should do: buy, add, lighten, sell.
 
 Wrong ideas, bugs hiding other bugs, decisions redone two or three times. And in the end, a much clearer picture of how language models actually behave, pretty far from what I imagined at the start.

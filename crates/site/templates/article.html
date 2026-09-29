@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <article class="article-container">
+    <a href="{{ layout.href("/blog") }}" class="article-back">&larr; {{ layout.t.articles.back_to_list }}</a>
+    <header class="article-header">
+      <h1 class="article-title" data-gpu="title">{{ article.title }}</h1>
+      <div class="article-meta">
+        <span>{{ layout.t.articles.published_on }} {{ layout.lang.long_date(article.date) }}</span>
+        <span>·</span>
+        <span>{{ article.reading_time_minutes }} {{ layout.t.articles.reading_time }}</span>
+      </div>
+      <div class="tag-list tag-list-centered">
+        {% for tag in article.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+      </div>
+    </header>
+    <div class="article-prose" data-gpu="panel">
+      {{ article.html|safe }}
+    </div>
+  </article>
+</div>
+{% endblock %}

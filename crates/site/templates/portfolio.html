@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <section class="section">
+    <h1 class="section-title" data-gpu="title"><img src="/assets/portfolio_icon.svg" alt="" />{{ layout.t.portfolio.title }}</h1>
+    <p class="card-text page-intro">{{ layout.t.portfolio.description }}</p>
+    <div class="card-grid">
+      {% for project in projects %}
+      <article data-gpu="card" class="card">
+        <img src="{{ project.image_url }}" alt="{{ project.title(layout.lang) }}" class="card-img" />
+        <div class="card-body">
+          <h3 class="card-title">{{ project.title(layout.lang) }}</h3>
+          <p class="card-text">{{ project.description(layout.lang) }}</p>
+          <div class="tag-list">
+            {% for technology in project.technologies %}<span class="tag">{{ technology }}</span>{% endfor %}
+          </div>
+          <div class="card-actions">
+            {% if let Some(url) = project.github_url %}
+            <a href="{{ url }}" class="btn" target="_blank" rel="noopener noreferrer">
+              <img src="/assets/github_icon.svg" alt="" class="btn-icon" />{{ layout.t.portfolio.code }}
+            </a>
+            {% endif %}
+            {% if let Some(url) = project.demo_url %}
+            <a href="{{ url }}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">{{ layout.t.portfolio.demo }}</a>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}

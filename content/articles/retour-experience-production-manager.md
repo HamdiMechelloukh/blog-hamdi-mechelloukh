@@ -1,3 +1,13 @@
++++
+translation_slug = "production-manager-lessons-learned"
+lang = "fr"
+title = "Retour d'expérience : 2 ans Production Manager chez Decathlon Digital"
+summary = "Ce que j'ai appris en quittant le code pour gérer la production des données de ventes — alerting, postmortems, communication de crise, et pourquoi je suis revenu côté technique."
+date = "2026-03-19"
+tags = ["Production", "Data Engineering", "Retour d'expérience", "Decathlon"]
+reading_time_minutes = 8
++++
+
 Pendant deux ans et demi, j'ai quitté le code pour gérer la production des données de ventes chez Decathlon Digital. Un rôle que j'ai découvert en arrivant : il s'appelait "Production Expert" dans la fiche de poste, et j'ai très vite compris que ça allait devenir du temps plein.
 
 Voici ce que j'ai appris en passant de l'autre côté.

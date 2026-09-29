@@ -1,0 +1,80 @@
+[[experiences]]
+company = "Decathlon Digital"
+role = "Data Engineer"
+period = "Juil. 2024 – Aujourd'hui"
+location = "Lille, Hybride"
+description = "Développement de jobs Scala/Python Spark sur environnement AWS/Databricks pour l'équipe des données de prix"
+technologies = ["Scala", "Python", "Apache Spark", "AWS", "Databricks"]
+
+[[experiences]]
+company = "Decathlon Digital"
+role = "Production Manager – Data Domain Sales"
+period = "Juil. 2022 – Déc. 2024"
+location = "Croix, Hauts-de-France"
+description = "Garant de la stabilité du produit Perfeco (données de performance économique/ventes). Animation des parties prenantes de la chaîne d'intégration des données, gestion des postmortems, organisation du support et de l'astreinte."
+technologies = ["Data Quality", "JIRA", "Gestion de crise"]
+
+[[experiences]]
+company = "Objectware"
+role = "Developer"
+period = "Janv. 2022 – Juin 2022"
+location = "Lille"
+description = "Développement logiciel en mission client."
+technologies = ["TypeScript", "Node.js"]
+
+[[experiences]]
+company = "Boulanger"
+role = "Back-end Developer"
+period = "Mars 2021 – Juin 2022"
+location = "Lille"
+description = "Développement de REST APIs et de loaders Apache Kafka."
+technologies = ["Java 11", "Spring Boot", "Apache Kafka", "Kafka Streams", "MongoDB", "Docker"]
+
+[[experiences]]
+company = "PROMOD"
+role = "Data Engineer"
+period = "Nov. 2019 – Mars 2021"
+location = "Lille"
+description = "Développement de jobs PySpark dans Azure HDInsight (environnement Hadoop) via Cloudera pour des besoins BI et DataScience."
+technologies = ["Python", "PySpark", "Apache Spark", "Apache Hadoop", "Apache Hive", "Cloudera Impala", "Microsoft Azure", "Apache Oozie"]
+
+[[experiences]]
+company = "Boulanger"
+role = "Back-end Developer"
+period = "Avr. 2019 – Nov. 2019"
+location = "Lille"
+description = "Développement de REST APIs et de loaders Apache Kafka."
+technologies = ["Java 8", "Spring Boot", "Apache Kafka", "Kafka Streams", "MongoDB", "Docker"]
+
+[[experiences]]
+company = "Leansys"
+role = "Developer"
+period = "Juin 2018 – Déc. 2021"
+location = "Villeneuve-d'Ascq"
+description = "Missions variées : APIs REST pour logiciels de gestion interne, plateforme de mise en relation chauffeurs/clients, chatbots cloud natifs multicanaux (Google Assistant, Amazon Alexa)."
+technologies = ["TypeScript", "Node.js", "MongoDB", "TypeORM", "Google Cloud Platform", "AWS", "PostgreSQL", "Docker", "DialogFlow", "Alexa Skill Kit"]
+
+[[education]]
+school = "AFPA"
+degree = "Concepteur Développeur Informatique – Bac+4"
+period = "2017 – 2018"
+description = "Java, JPA/Hibernate, Spring, Android, JavaScript, PHP, SQL Server, MySQL."
+
+[[education]]
+school = "HEI Lille"
+degree = "Cycle Ingénieur"
+period = "2012 – 2014"
+description = "Grande école d'ingénieurs. Activités : AS Kickboxing, Association Aparté (Bande dessinée)."
+
+[[education]]
+school = "Lycée César Baggio"
+degree = "Classe Préparatoire ATS – Sciences Physiques"
+period = "2011 – 2012"
+description = "9ème de promo sur 39 élèves. Équivalent Bac+3 (60 ECTS validés)."
+
+[[education]]
+school = "Lycée Saint Rémi"
+degree = "BTS Électrotechnique"
+period = "2009 – 2011"
+description = "Mention Bien."
+

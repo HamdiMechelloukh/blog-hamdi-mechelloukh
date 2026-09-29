@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <section class="hero">
+    <img src="/assets/PXL_20251202_194539824.jpg" alt="Hamdi Mechelloukh" class="hero-avatar" />
+    <h1 class="hero-title" data-gpu="title">Hamdi Mechelloukh</h1>
+    <p class="hero-subtitle">{{ layout.t.home.subtitle }}</p>
+    <p class="hero-description">{{ layout.t.home.description }}</p>
+    <div class="hero-actions">
+      <a href="{{ layout.href("/portfolio") }}" class="btn">{{ layout.t.home.cta_projects }}</a>
+      <a href="{{ layout.href("/contact") }}" class="btn btn-outline">{{ layout.t.home.cta_contact }}</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" data-gpu="title">{{ layout.t.home.skills_title }}</h2>
+    <div class="card-grid skills-grid">
+      <div data-gpu="card" class="card card-padded card-centered">
+        <h3>{{ layout.t.home.skill_data }}</h3>
+        <p class="card-text">Python, Scala, Apache Spark, Databricks, AWS, Azure, Hadoop, Hive</p>
+      </div>
+      <div data-gpu="card" class="card card-padded card-centered">
+        <h3>{{ layout.t.home.skill_backend }}</h3>
+        <p class="card-text">Java, Spring Boot, Node.js, TypeScript, Apache Kafka, REST APIs</p>
+      </div>
+      <div data-gpu="card" class="card card-padded card-centered">
+        <h3>{{ layout.t.home.skill_db }}</h3>
+        <p class="card-text">MongoDB, PostgreSQL, MySQL, Apache Hive, BigQuery</p>
+      </div>
+      <div data-gpu="card" class="card card-padded card-centered">
+        <h3>{{ layout.t.home.skill_cloud }}</h3>
+        <p class="card-text">AWS, Azure, GCP, Docker, Git, Jenkins</p>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
