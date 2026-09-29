@@ -17,6 +17,10 @@ struct Globals {
     reading_progress: f32,
     // Dernier clic : position (px CSS), instant (s, même base que time), 1.0 si actif.
     shock: vec4f,
+    // Vitesse du curseur (px/s, lissée) : entraîne le fluide.
+    pointer_velocity: vec2f,
+    // Taille de la grille du fluide, en cellules.
+    fluid_grid: vec2u,
 }
 
 // Ancre DOM (data-gpu) projetée dans le viewport.

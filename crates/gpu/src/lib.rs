@@ -3,6 +3,7 @@
 //! `<body data-gpu-mode>` : "calm" sur les articles, "game" sur la page 404 (voir game.rs).
 
 mod bloom;
+mod fluid;
 mod game;
 
 use std::cell::{Cell, RefCell};
@@ -64,6 +65,8 @@ struct Globals {
     scroll_velocity: f32,
     reading_progress: f32,
     shock: [f32; 4],
+    pointer_velocity: [f32; 2],
+    fluid_grid: [u32; 2],
 }
 
 #[repr(C)]
@@ -122,6 +125,12 @@ struct Renderer {
     game: Option<game::Game>,
     anchors: Vec<Anchor>,
     pointer: Rc<Cell<[f32; 2]>>,
+    /// Position du curseur à la frame précédente, pour sa vitesse.
+    last_pointer: [f32; 2],
+    /// Vitesse du curseur lissée (px/s), qui entraîne le fluide.
+    pointer_velocity: [f32; 2],
+    /// Présent partout sauf sur la 404, où le jeu a son propre compute.
+    fluid: fluid::Fluid,
     /// Clic pas encore transformé en onde de choc.
     pending_click: Rc<Cell<Option<[f32; 2]>>>,
     shock: [f32; 4],
@@ -288,7 +297,10 @@ impl Renderer {
         ];
         let render_bind_group =
             device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &render_layout, entries: &entries });
+        let fluid_module = shader(&device, "fluid", include_str!("shaders/fluid.wgsl"));
+        let fluid = fluid::Fluid::new(&device, &fluid_module, &globals_buffer, viewport_width as f32, viewport_height as f32);
         entries.push(wgpu::BindGroupEntry { binding: 3, resource: captured_counter.as_entire_binding() });
+        entries.push(wgpu::BindGroupEntry { binding: 4, resource: fluid.velocity.as_entire_binding() });
         let compute_bind_group =
             device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &compute_layout, entries: &entries });
 
@@ -374,6 +386,9 @@ impl Renderer {
             reduced_motion,
             last_time: 0.0,
             scroll_velocity: 0.0,
+            last_pointer: POINTER_AWAY,
+            pointer_velocity: [0.0; 2],
+            fluid,
         })
     }
 
@@ -399,6 +414,19 @@ impl Renderer {
         }
 
         let pointer = self.pointer.get();
+        if dt > 0.0 {
+            // Curseur qui entre ou sort de la page : pas de vitesse, sinon un saut géant agiterait le fluide.
+            let target = if pointer == POINTER_AWAY || self.last_pointer == POINTER_AWAY {
+                [0.0, 0.0]
+            } else {
+                [(pointer[0] - self.last_pointer[0]) / dt, (pointer[1] - self.last_pointer[1]) / dt]
+            };
+            let easing = (dt * 20.0).min(1.0);
+            for axis in 0..2 {
+                self.pointer_velocity[axis] += (target[axis] - self.pointer_velocity[axis]) * easing;
+            }
+        }
+        self.last_pointer = pointer;
         let rects = self.collect_rects(pointer, dt);
         let reading_progress = reading_progress(&rects, height as f32);
         let frozen = self.reduced_motion;
@@ -420,6 +448,8 @@ impl Renderer {
             scroll_velocity: if frozen { 0.0 } else { self.scroll_velocity },
             reading_progress,
             shock: self.shock,
+            pointer_velocity: if frozen { [0.0; 2] } else { self.pointer_velocity },
+            fluid_grid: self.fluid.grid,
         };
         self.queue.write_buffer(&self.globals_buffer, 0, bytemuck::bytes_of(&globals));
         if !rects.is_empty() {
@@ -435,6 +465,9 @@ impl Renderer {
         let mut encoder = self.device.create_command_encoder(&Default::default());
         {
             let mut pass = encoder.begin_compute_pass(&Default::default());
+            if self.game.is_none() {
+                self.fluid.encode(&mut pass);
+            }
             pass.set_pipeline(self.game.as_ref().map_or(&self.compute_pipeline, |game| &game.pipeline));
             pass.set_bind_group(0, &self.compute_bind_group, &[]);
             pass.dispatch_workgroups(self.particle_count.div_ceil(64), 1, 1);
@@ -626,7 +659,7 @@ fn shader(device: &wgpu::Device, label: &str, source: &str) -> wgpu::ShaderModul
 }
 
 /// 0 : globals, 1 : ancres, 2 : particules (écriture pour le compute, lecture pour le rendu),
-/// 3 : compteur de captures (compute seulement).
+/// 3 : compteur de captures, 4 : vitesse du fluide (compute seulement).
 fn bind_group_layout(device: &wgpu::Device, label: &str, compute: bool) -> wgpu::BindGroupLayout {
     let storage = |binding, read_only| wgpu::BindGroupLayoutEntry {
         binding,
@@ -655,6 +688,7 @@ fn bind_group_layout(device: &wgpu::Device, label: &str, compute: bool) -> wgpu:
     ];
     if compute {
         entries.push(storage(3, false));
+        entries.push(storage(4, true));
     }
     device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor { label: Some(label), entries: &entries })
 }
