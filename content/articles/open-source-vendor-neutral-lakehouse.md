@@ -57,6 +57,15 @@ The medallion pattern (bronze/silver/gold) structures data in three levels of re
 - **Silver** — cleaned, deduplicated, properly typed data
 - **Gold** — aggregated data ready for business consumption
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="lakehouse" role="img" aria-label="Medallion pattern animation: raw data in bronze, cleaned in silver, aggregated in gold">
+<span class="viz-label" style="left:16.7%;top:88%">Bronze<br>raw</span>
+<span class="viz-label" style="left:50%;top:88%">Silver<br>cleaned</span>
+<span class="viz-label" style="left:83.3%;top:88%">Gold<br>aggregated</span>
+</div>
+<figcaption>Progressive refinement: data lands messy in bronze (duplicates, gaps), comes out cleaned and aligned in silver, then aggregated into a few stable metrics in gold.</figcaption>
+</figure>
+
 Honestly, these terms are recent. A few years ago, we called them dataraw, dataprep, dataset. The vocabulary changes, the principle stays the same. What matters is to **follow this progressive refinement logic without being rigid.** Functional reality always takes precedence over technical rules. If data doesn't need three layers, it doesn't need three layers.
 
 ## MinIO: S3-compatible without the lock-in

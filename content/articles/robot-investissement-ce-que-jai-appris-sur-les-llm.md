@@ -234,6 +234,21 @@ Ce qu'il faut en retenir sans les symboles :
   p < 0,5  (pire que pile)   ──> tend vers 0   (le vote empire tout !)
 ```
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="condorcet" role="img" aria-label="Courbes de Condorcet : probabilité que la majorité ait raison selon le nombre de jurés, pour p égal à 0,6, 0,5 et 0,4">
+<span class="viz-label viz-label-start" style="left:86%;top:17.4%">p = 0,6</span>
+<span class="viz-label viz-label-start" style="left:86%;top:48.5%">p = 0,5</span>
+<span class="viz-label viz-label-start" style="left:86%;top:79.6%">p = 0,4</span>
+<span class="viz-label" style="left:4%;top:12%">1</span>
+<span class="viz-label" style="left:4%;top:48.5%">0,5</span>
+<span class="viz-label" style="left:4%;top:85%">0</span>
+<span class="viz-label" style="left:8%;top:93%">1 juré</span>
+<span class="viz-label" style="left:46%;top:93%">nombre de jurés N</span>
+<span class="viz-label" style="left:84%;top:93%">51 jurés</span>
+</div>
+<figcaption>P(majorité juste) quand le nombre de jurés passe de 1 à 51. Avec des jurés meilleurs que le hasard (p = 0,6), la majorité tend vers la certitude ; à p = 0,5, le vote n'aide pas ; en dessous, il empire tout.</figcaption>
+</figure>
+
 Attention au piège que la formule rend visible : le vote n'améliore les choses **que si chaque juré est déjà meilleur que le hasard.** Si le modèle est mauvais sur une question, multiplier les essais ne fait qu'amplifier l'erreur. Le vote fiabilise un juré correct mais bruité ; il ne sauve pas un juré incompétent.
 
 Et il y a un second piège, plus pernicieux. Le théorème de Condorcet a **deux** hypothèses, pas une : des jurés meilleurs que le hasard (je viens d'en parler), et des erreurs **indépendantes**. Or relancer le même modèle cinq fois, c'est cinq fois le même réseau, les mêmes biais, le même raisonnement type. Le bruit flottant ne décorrèle les sorties que près des égalités, justement là où je veux qu'elles votent. Mais sur une erreur systématique (le modèle ne comprend pas un secteur, surévalue une thèse), les cinq essais se trompent ensemble, et pire : ils se trompent **à l'unanimité**. Car un vote unanime n'est qu'une **réponse constante**, et une réponse constante n'est que le **renfort de la thèse du modèle**, pas une preuve qu'elle est juste. Le 5/5 mesure la stabilité, jamais la vérité. Pour trancher un consensus, il faut donc une source **hors du modèle** ; un même modèle relancé ne fera que répéter sa thèse avec aplomb. Le vote neutralise le bruit d'échantillonnage ; il ne corrige pas le biais du modèle.

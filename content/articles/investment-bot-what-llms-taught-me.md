@@ -233,6 +233,21 @@ What to take from it without the symbols:
   p < 0.5  (worse than coin)   ──> tends to 0   (voting makes it worse!)
 ```
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="condorcet" role="img" aria-label="Condorcet curves: probability that the majority is right depending on the number of jurors, for p equal to 0.6, 0.5 and 0.4">
+<span class="viz-label viz-label-start" style="left:86%;top:17.4%">p = 0.6</span>
+<span class="viz-label viz-label-start" style="left:86%;top:48.5%">p = 0.5</span>
+<span class="viz-label viz-label-start" style="left:86%;top:79.6%">p = 0.4</span>
+<span class="viz-label" style="left:4%;top:12%">1</span>
+<span class="viz-label" style="left:4%;top:48.5%">0.5</span>
+<span class="viz-label" style="left:4%;top:85%">0</span>
+<span class="viz-label" style="left:8%;top:93%">1 juror</span>
+<span class="viz-label" style="left:46%;top:93%">number of jurors N</span>
+<span class="viz-label" style="left:84%;top:93%">51 jurors</span>
+</div>
+<figcaption>P(majority right) as the number of jurors grows from 1 to 51. With jurors better than chance (p = 0.6), the majority tends to certainty; at p = 0.5, voting doesn't help; below that, it makes everything worse.</figcaption>
+</figure>
+
 Watch the trap the formula makes visible: voting only improves things **if each juror is already better than chance.** If the model is bad on a question, multiplying the runs only amplifies the error. Voting makes a correct-but-noisy juror reliable; it doesn't save an incompetent one.
 
 And there's a second trap, more insidious. Condorcet's theorem has **two** assumptions, not one: jurors better than chance (I just talked about that), and **independent** errors. But re-running the same model five times is five times the same network, the same biases, the same typical reasoning. The floating-point noise only decorrelates the outputs near the ties, exactly where I want them to vote. But on a systematic error (the model doesn't understand a sector, overrates a thesis), the five runs are wrong together, and worse: they're wrong **unanimously**. Because a unanimous vote is only a **constant answer**, and a constant answer is only the **reinforcement of the model's thesis**, not proof that it's right. 5/5 measures stability, never truth. To settle a consensus, you therefore need a source **outside the model**; the same model re-run will only repeat its thesis with confidence. Voting neutralizes the sampling noise; it doesn't correct the model's bias.

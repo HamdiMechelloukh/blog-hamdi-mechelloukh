@@ -50,6 +50,9 @@ const KIND_CARD: u32 = 1;
 const KIND_TITLE: u32 = 2;
 const KIND_TARGET: u32 = 3;
 const KIND_READING: u32 = 4;
+const KIND_VIZ: u32 = 5;
+/// Valeurs de `data-viz`, dans l'ordre des constantes VIZ_* de viz.wgsl.
+const VIZ_VARIANTS: [&str; 4] = ["flink", "condorcet", "agents", "lakehouse"];
 
 #[repr(C)]
 #[derive(Clone, Copy, Pod, Zeroable)]
@@ -76,7 +79,8 @@ struct Rect {
     max: [f32; 2],
     kind: u32,
     glow: f32,
-    _pad: [f32; 2],
+    variant: u32,
+    _pad: f32,
 }
 
 #[repr(C)]
@@ -94,6 +98,8 @@ struct Anchor {
     kind: u32,
     /// Intensité du survol, lissée d'une frame à l'autre.
     glow: f32,
+    /// Visualisation d'article : indice de `data-viz` dans VIZ_VARIANTS.
+    variant: u32,
 }
 
 struct Renderer {
@@ -305,7 +311,8 @@ impl Renderer {
             device.create_bind_group(&wgpu::BindGroupDescriptor { label: None, layout: &compute_layout, entries: &entries });
 
         let compute_module = shader(&device, "compute", include_str!("shaders/compute.wgsl"));
-        let scene_module = shader(&device, "scene", include_str!("shaders/scene.wgsl"));
+        let scene_module =
+            shader(&device, "scene", concat!(include_str!("shaders/viz.wgsl"), include_str!("shaders/scene.wgsl")));
         let particles_module = shader(&device, "particles", include_str!("shaders/particles.wgsl"));
 
         let compute_pipeline_layout = pipeline_layout(&device, &compute_layout);
@@ -348,9 +355,17 @@ impl Renderer {
                     "title" => KIND_TITLE,
                     "target" => KIND_TARGET,
                     "reading" => KIND_READING,
+                    "viz" => KIND_VIZ,
                     _ => return None,
                 };
-                Some(Anchor { element, kind, glow: 0.0 })
+                // Variante inconnue (faute de frappe dans l'article) : l'ancre est ignorée plutôt que mal dessinée.
+                let variant = if kind == KIND_VIZ {
+                    let name = element.get_attribute("data-viz")?;
+                    VIZ_VARIANTS.iter().position(|variant| *variant == name)? as u32
+                } else {
+                    0
+                };
+                Some(Anchor { element, kind, glow: 0.0, variant })
             })
             .take(MAX_RECTS)
             .collect();
@@ -557,7 +572,7 @@ impl Renderer {
             if max[1] < -100.0 || min[1] > viewport_height + 100.0 {
                 continue;
             }
-            rects.push(Rect { min, max, kind: anchor.kind, glow: anchor.glow, _pad: [0.0; 2] });
+            rects.push(Rect { min, max, kind: anchor.kind, glow: anchor.glow, variant: anchor.variant, _pad: 0.0 });
         }
         rects
     }

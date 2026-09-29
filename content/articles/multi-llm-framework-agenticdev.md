@@ -40,6 +40,17 @@ Architect → Designer → Developer → Tester
                                    Developer ← fix loop (max 3×)
 ```
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="agents" role="img" aria-label="AgenticDev pipeline animation: Architect, Designer, Developer then Tester, going through the fix loop twice before succeeding">
+<span class="viz-label" style="left:12%;top:22%">Architect</span>
+<span class="viz-label" style="left:37%;top:22%">Designer</span>
+<span class="viz-label" style="left:62%;top:22%">Developer</span>
+<span class="viz-label" style="left:87%;top:22%">Tester</span>
+<span class="viz-label" style="left:74.5%;top:72%">fix loop (max 3×)</span>
+</div>
+<figcaption>A typical run: the Tester fails twice and sends the Developer back in fix mode, then the tests pass. Order and retries are set by the graph, not by an LLM.</figcaption>
+</figure>
+
 Each node is an autonomous agent, but **execution order and retry logic are deterministic**. The LLM controls the *what* (generated content), but not the *when* (execution flow).
 
 ```python

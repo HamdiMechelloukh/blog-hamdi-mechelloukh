@@ -57,6 +57,15 @@ Le pattern médaillon (bronze/silver/gold) structure la donnée en trois niveaux
 - **Silver** — donnée nettoyée, dédupliquée, typée correctement
 - **Gold** — donnée agrégée et prête à la consommation métier
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="lakehouse" role="img" aria-label="Animation du pattern médaillon : donnée brute en bronze, nettoyée en silver, agrégée en gold">
+<span class="viz-label" style="left:16.7%;top:88%">Bronze<br>brut</span>
+<span class="viz-label" style="left:50%;top:88%">Silver<br>nettoyé</span>
+<span class="viz-label" style="left:83.3%;top:88%">Gold<br>agrégé</span>
+</div>
+<figcaption>Raffinement progressif : la donnée arrive désordonnée en bronze (doublons, trous), sort nettoyée et alignée en silver, puis agrégée en quelques indicateurs stables en gold.</figcaption>
+</figure>
+
 Honnêtement, ces termes sont récents. Il y a quelques années, on parlait de dataraw, dataprep, dataset. Le vocabulaire change, le principe reste le même. L'important est de **rester dans cette logique de raffinement progressif sans être rigide**. La réalité fonctionnelle prévaut toujours sur les règles techniques. Si une donnée n'a pas besoin de passer par trois couches, elle n'a pas besoin de passer par trois couches.
 
 ## MinIO : un S3-compatible sans le lock-in

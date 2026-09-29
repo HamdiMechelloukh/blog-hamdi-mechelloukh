@@ -633,6 +633,44 @@ ul {
   background: var(--panel-raised);
 }
 
+/* Visualisations animées des articles (crates/gpu, viz.wgsl) : les libellés sont ici, le dessin est au GPU.
+   Les positions en % des libellés correspondent aux coordonnées normalisées des nœuds dans le shader. */
+.viz-figure {
+  margin: 2rem 0;
+}
+
+.viz {
+  position: relative;
+  aspect-ratio: 2 / 1;
+  border-radius: 14px;
+  background: var(--panel-raised);
+  border: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  line-height: 1.25;
+  overflow: hidden;
+}
+
+.viz-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.viz-label-start {
+  transform: translate(0, -50%);
+  text-align: left;
+}
+
+.viz-figure figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: center;
+}
+
 /* Mobile */
 @media (min-width: 768px) {
   .about-content {
@@ -690,6 +728,11 @@ ul {
   .article-prose {
     padding: 1.25rem;
   }
+
+  .viz {
+    aspect-ratio: 4 / 3;
+    font-size: 0.65rem;
+  }
 }
 
 /* Rendu GPU actif : le canvas dessine fonds, panneaux et halos derrière les ancres data-gpu. */
@@ -703,6 +746,7 @@ ul {
 }
 
 html.gpu .card,
+html.gpu .viz,
 html.gpu .footer,
 html.gpu .contact-form,
 html.gpu .article-prose {

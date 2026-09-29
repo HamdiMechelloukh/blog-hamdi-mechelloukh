@@ -40,6 +40,17 @@ Architect → Designer → Developer → Tester
                                    Developer ← fix loop (max 3×)
 ```
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="agents" role="img" aria-label="Animation du pipeline AgenticDev : Architect, Designer, Developer puis Tester, avec deux passages par la boucle de correction avant le succès">
+<span class="viz-label" style="left:12%;top:22%">Architect</span>
+<span class="viz-label" style="left:37%;top:22%">Designer</span>
+<span class="viz-label" style="left:62%;top:22%">Developer</span>
+<span class="viz-label" style="left:87%;top:22%">Tester</span>
+<span class="viz-label" style="left:74.5%;top:72%">boucle de correction (max 3×)</span>
+</div>
+<figcaption>Un run type : le Tester échoue deux fois et renvoie au Developer en mode correction, puis les tests passent. L'ordre et les retries sont fixés par le graphe, pas par un LLM.</figcaption>
+</figure>
+
 Chaque nœud est un agent autonome, mais **l'ordre d'exécution et la logique de retry sont déterministes**. Le LLM garde le contrôle sur le *quoi* (le contenu généré), mais pas sur le *quand* (le flux d'exécution).
 
 ```python

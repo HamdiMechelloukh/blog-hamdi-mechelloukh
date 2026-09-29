@@ -28,6 +28,15 @@ fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
         if (rect.kind == KIND_TARGET) {
             continue;
         }
+        if (rect.kind == KIND_VIZ) {
+            let d = rect_distance(p, rect, 0.0, 14.0);
+            color = mix(color, PANEL, (1.0 - smoothstep(-1.0, 1.0, d)) * 0.94);
+            if (d < 0.0) {
+                color += viz(rect.variant, p - rect.min, rect.max - rect.min, globals.time);
+            }
+            color += ACCENT * (1.0 - smoothstep(0.0, 1.5, abs(d))) * 0.25;
+            continue;
+        }
         if (rect.kind == KIND_TITLE) {
             let d = rect_distance(p, rect, 12.0, 24.0);
             let shimmer = 0.75 + 0.25 * sin(globals.time * 1.3 + p.x * 0.012);

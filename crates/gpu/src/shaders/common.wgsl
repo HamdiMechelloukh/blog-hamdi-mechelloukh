@@ -30,7 +30,9 @@ struct Rect {
     kind: u32,
     // 0 -> 1, lissé côté Rust : survol pour les cartes, entrée à l'écran pour les titres.
     glow: f32,
-    _pad: vec2f,
+    // Visualisation d'article (KIND_VIZ) : laquelle dessiner (constantes VIZ_* de viz.wgsl).
+    variant: u32,
+    _pad: f32,
 }
 
 struct Particle {
@@ -49,6 +51,8 @@ const KIND_TITLE: u32 = 2u;
 const KIND_TARGET: u32 = 3u;
 // Texte d'un article : panneau dont le liseré suit la progression de lecture.
 const KIND_READING: u32 = 4u;
+// Visualisation animée dans un article.
+const KIND_VIZ: u32 = 5u;
 const TAU: f32 = 6.2831853;
 
 const ACCENT: vec3f = vec3f(0.976, 0.451, 0.086); // #f97316, l'orange de la charte

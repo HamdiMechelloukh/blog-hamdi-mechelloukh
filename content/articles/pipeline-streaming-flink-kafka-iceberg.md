@@ -62,6 +62,17 @@ Olist CSV → Simulator → Kafka (orders)
                     Apache Iceberg (MinIO)
 ```
 
+<figure class="viz-figure">
+<div class="viz" data-gpu="viz" data-viz="flink" role="img" aria-label="Animation du pipeline : les événements Kafka alimentent trois jobs Flink qui écrivent dans Iceberg">
+<span class="viz-label" style="left:9%;top:64%">Kafka<br>orders</span>
+<span class="viz-label" style="left:45%;top:31%">Revenue · fenêtre 1 min</span>
+<span class="viz-label" style="left:45%;top:61%">Anomalies · CEP</span>
+<span class="viz-label" style="left:45%;top:91%">KPI · windowAll</span>
+<span class="viz-label" style="left:88%;top:64%">Iceberg</span>
+</div>
+<figcaption>Le même pipeline en mouvement : chaque événement part vers les trois jobs. Les fenêtres de Revenue et des KPI se remplissent puis émettent un agrégat ; la détection d'anomalies absorbe le flux et n'émet qu'une alerte de temps en temps.</figcaption>
+</figure>
+
 Trois jobs indépendants, un topic source commun, trois topics de sortie, et un data lake Iceberg en option.
 
 L'indépendance des jobs est un choix délibéré. En production, on veut pouvoir redémarrer `AnomalyDetectionJob` sans impacter `RevenueAggregationJob`. Chaque job a son propre checkpoint, son propre état, sa propre topologie.
