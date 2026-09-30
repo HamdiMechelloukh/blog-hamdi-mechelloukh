@@ -30,6 +30,9 @@ const TRANSITION_MAX_AGE_MS: f64 = 3000.0;
 const BURST_MIN_SPEED: f32 = 300.0;
 /// Aligné sur MAX_SPEED de compute.wgsl.
 const BURST_MAX_SPEED: f32 = 1500.0;
+/// Maelstrom : il naît après ce temps d'immobilité du curseur et atteint sa pleine force au second seuil.
+const VORTEX_START_S: f32 = 1.2;
+const VORTEX_FULL_S: f32 = 4.0;
 /// Qualité adaptative : au-delà de ce temps de frame moyen, on dessine moins de particules.
 const SLOW_FRAME_MS: f32 = 28.0;
 const FRAME_BUDGET_MS: f32 = 1000.0 / 60.0;
@@ -65,7 +68,7 @@ struct Globals {
     dpr: f32,
     scroll_velocity: f32,
     reading_progress: f32,
-    _pad: f32,
+    vortex: f32,
     shock: [f32; 4],
     pointer_velocity: [f32; 2],
     fluid_grid: [u32; 2],
@@ -134,6 +137,8 @@ struct Renderer {
     last_pointer: [f32; 2],
     /// Vitesse du curseur lissée (px/s), qui entraîne le fluide.
     pointer_velocity: [f32; 2],
+    /// Temps d'immobilité du curseur (s), pour le maelstrom.
+    pointer_idle: f32,
     /// Présent partout sauf sur la 404, où le jeu a son propre compute.
     fluid: fluid::Fluid,
     /// Clic pas encore transformé en onde de choc.
@@ -402,6 +407,7 @@ impl Renderer {
             last_time: 0.0,
             scroll_velocity: 0.0,
             last_pointer: POINTER_AWAY,
+            pointer_idle: 0.0,
             pointer_velocity: [0.0; 2],
             fluid,
         })
@@ -441,8 +447,11 @@ impl Renderer {
                 self.pointer_velocity[axis] += (target[axis] - self.pointer_velocity[axis]) * easing;
             }
         }
+        let still = pointer == self.last_pointer && pointer != POINTER_AWAY;
+        self.pointer_idle = if still { self.pointer_idle + dt } else { 0.0 };
         self.last_pointer = pointer;
         let rects = self.collect_rects(pointer, dt);
+        let vortex = vortex_strength(&rects, pointer, self.pointer_idle);
         let reading_progress = reading_progress(&rects, height as f32);
         let frozen = self.reduced_motion;
         let time = (now / 1000.0) as f32;
@@ -461,7 +470,7 @@ impl Renderer {
             dpr: dpr as f32,
             scroll_velocity: if frozen { 0.0 } else { self.scroll_velocity },
             reading_progress,
-            _pad: 0.0,
+            vortex: if frozen { 0.0 } else { vortex },
             shock: self.shock,
             pointer_velocity: if frozen { [0.0; 2] } else { self.pointer_velocity },
             fluid_grid: self.fluid.grid,
@@ -577,6 +586,19 @@ impl Renderer {
         }
         rects
     }
+}
+
+/// Force du maelstrom (0..1) : il monte avec l'immobilité du curseur, mais jamais sur du texte, où l'on laisse
+/// souvent la souris en lisant (un tourbillon y tournerait en permanence sous les yeux).
+fn vortex_strength(rects: &[Rect], pointer: [f32; 2], idle: f32) -> f32 {
+    let over_content = rects.iter().any(|rect| {
+        (rect.min[0]..rect.max[0]).contains(&pointer[0]) && (rect.min[1]..rect.max[1]).contains(&pointer[1])
+    });
+    if over_content {
+        return 0.0;
+    }
+    let progress = ((idle - VORTEX_START_S) / (VORTEX_FULL_S - VORTEX_START_S)).clamp(0.0, 1.0);
+    progress * progress * (3.0 - 2.0 * progress)
 }
 
 /// Avancée dans l'ancre `reading` : 0 quand son haut atteint le haut de l'écran, 1 quand son bas atteint le bas.

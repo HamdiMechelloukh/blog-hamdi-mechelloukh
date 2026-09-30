@@ -15,6 +15,11 @@ const POINTER_RADIUS: f32 = 70.0;
 const POINTER_STRENGTH: f32 = 0.6;
 const AMBIENT_FORCE: f32 = 45.0;
 const DISSIPATION: f32 = 0.35;
+// Maelstrom : force tangentielle en anneau autour du curseur (nulle au centre, éteinte au-delà de 150 px).
+// Champ purement rotatif, donc sans divergence : la projection le conserve, contrairement à une poussée radiale.
+const VORTEX_FORCE: f32 = 260.0;
+const VORTEX_INNER: f32 = 40.0;
+const VORTEX_OUTER: f32 = 150.0;
 const MAX_FLUID_SPEED: f32 = 1500.0;
 
 fn grid() -> vec2i {
@@ -66,6 +71,12 @@ fn advect(@builtin(global_invocation_id) id: vec3u) {
     let moving = min(length(globals.pointer_velocity) / 50.0, 1.0);
     velocity = mix(velocity, globals.pointer_velocity, pointer_weight * POINTER_STRENGTH * moving);
     velocity += flow(center, globals.time) * AMBIENT_FORCE * dt;
+    let pointer_distance = length(to_pointer);
+    if (globals.vortex > 0.0 && pointer_distance > 1.0) {
+        let tangent = vec2f(-to_pointer.y, to_pointer.x) / pointer_distance;
+        let ring = smoothstep(0.0, VORTEX_INNER, pointer_distance) * (1.0 - smoothstep(90.0, VORTEX_OUTER, pointer_distance));
+        velocity += tangent * ring * VORTEX_FORCE * globals.vortex * dt;
+    }
 
     let speed = length(velocity);
     if (speed > MAX_FLUID_SPEED) {

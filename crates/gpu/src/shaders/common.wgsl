@@ -13,8 +13,8 @@ struct Globals {
     scroll_velocity: f32,
     // 0 -> 1 : avancée dans le texte de l'article (ancre reading).
     reading_progress: f32,
-    // Aligne shock (vec4f) sur 16 octets, comme le bourrage explicite côté Rust.
-    _pad: f32,
+    // 0 -> 1 : maelstrom autour du curseur immobile (hors zones de texte).
+    vortex: f32,
     // Dernier clic : position (px CSS), instant (s, même base que time), 1.0 si actif.
     shock: vec4f,
     // Vitesse du curseur (px/s, lissée) : entraîne le fluide.

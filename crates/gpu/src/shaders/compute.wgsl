@@ -6,6 +6,9 @@
 
 const REPEL_MARGIN: f32 = 28.0;
 const MAX_SPEED: f32 = 1500.0;
+// Surcroît d'attraction pendant le maelstrom, et de répulsion au centre pour garder l'œil du tourbillon ouvert.
+const VORTEX_PULL: f32 = 300.0;
+const VORTEX_EYE_PUSH: f32 = 400.0;
 // Vitesse à laquelle une particule adopte la vitesse du fluide (1/s).
 const FLUID_COUPLING: f32 = 2.5;
 
@@ -63,8 +66,10 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
     if (pointer_distance < 220.0 && pointer_distance > 1.0) {
         // Attraction, qui s'inverse près du curseur : un anneau plutôt qu'un amas. Des milliers de particules
         // superposées sur les mêmes pixels saturent le blending et peuvent faire décrocher un GPU intégré.
-        let pull = (1.0 - pointer_distance / 220.0) * 90.0;
-        let push = (1.0 - smoothstep(0.0, 50.0, pointer_distance)) * 260.0;
+        // Le maelstrom (curseur immobile) aspire en spirale ; l'aspiration se fait ici, sur les particules :
+        // dans le fluide incompressible, une convergence vers le centre serait annulée par la projection.
+        let pull = (1.0 - pointer_distance / 220.0) * (90.0 + VORTEX_PULL * globals.vortex);
+        let push = (1.0 - smoothstep(0.0, 50.0, pointer_distance)) * (260.0 + VORTEX_EYE_PUSH * globals.vortex);
         force += to_pointer / pointer_distance * (pull - push);
     }
 
