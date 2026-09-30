@@ -51,6 +51,7 @@ const KIND_TITLE: u32 = 2;
 const KIND_TARGET: u32 = 3;
 const KIND_READING: u32 = 4;
 const KIND_VIZ: u32 = 5;
+const KIND_SCRIM: u32 = 6;
 /// Valeurs de `data-viz`, dans l'ordre des constantes VIZ_* de viz.wgsl.
 const VIZ_VARIANTS: [&str; 4] = ["flink", "condorcet", "agents", "lakehouse"];
 
@@ -356,6 +357,7 @@ impl Renderer {
                     "target" => KIND_TARGET,
                     "reading" => KIND_READING,
                     "viz" => KIND_VIZ,
+                    "scrim" => KIND_SCRIM,
                     _ => return None,
                 };
                 // Variante inconnue (faute de frappe dans l'article) : l'ancre est ignorée plutôt que mal dessinée.
@@ -568,8 +570,9 @@ impl Renderer {
             };
             let rate = if anchor.kind == KIND_TITLE { easing * 0.3 } else { easing };
             anchor.glow += (f32::from(u8::from(lit)) - anchor.glow) * rate;
-            // Hors écran (avec marge pour les halos) : inutile de l'envoyer au GPU.
-            if max[1] < -100.0 || min[1] > viewport_height + 100.0 {
+            // Hors écran (avec marge pour les halos), ou masqué en CSS (rectangle vide en 0,0) : rien à dessiner.
+            let hidden = bounds.width() == 0.0 || bounds.height() == 0.0;
+            if hidden || max[1] < -100.0 || min[1] > viewport_height + 100.0 {
                 continue;
             }
             rects.push(Rect { min, max, kind: anchor.kind, glow: anchor.glow, variant: anchor.variant, _pad: 0.0 });

@@ -11,6 +11,12 @@ const NIGHT_TOP: vec3f = vec3f(0.020, 0.024, 0.047);
 const NIGHT_BOTTOM: vec3f = vec3f(0.047, 0.027, 0.063);
 const PANEL: vec3f = vec3f(0.043, 0.051, 0.078);
 
+// Tout texte posé sur le fond (titres, descriptions, en-têtes) : fond assombri en fondu autour, sans panneau.
+fn darken_behind(color: vec3f, p: vec2f, rect: Rect) -> vec3f {
+    let d = rect_distance(p, rect, 0.0, 12.0);
+    return color * (1.0 - 0.8 * (1.0 - smoothstep(-8.0, 40.0, d)));
+}
+
 @fragment
 fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
     // L'onde de choc déforme le fond : on échantillonne la scène un peu en retrait de l'anneau.
@@ -28,6 +34,10 @@ fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
         if (rect.kind == KIND_TARGET) {
             continue;
         }
+        if (rect.kind == KIND_SCRIM) {
+            color = darken_behind(color, p, rect);
+            continue;
+        }
         if (rect.kind == KIND_VIZ) {
             let d = rect_distance(p, rect, 0.0, 14.0);
             color = mix(color, PANEL, (1.0 - smoothstep(-1.0, 1.0, d)) * 0.94);
@@ -38,11 +48,14 @@ fn fs_main(@builtin(position) frag: vec4f) -> @location(0) vec4f {
             continue;
         }
         if (rect.kind == KIND_TITLE) {
+            color = darken_behind(color, p, rect);
             let d = rect_distance(p, rect, 12.0, 24.0);
             let shimmer = 0.75 + 0.25 * sin(globals.time * 1.3 + p.x * 0.012);
             // Le titre s'allume en entrant à l'écran (glow), avec un éclat au moment où il s'allume.
             let ignition = rect.glow * (1.0 + 1.5 * rect.glow * (1.0 - rect.glow));
-            color += ACCENT * exp(-max(d, 0.0) / 36.0) * 0.16 * shimmer * ignition;
+            // Halo seulement autour du texte : dessous, le fond reste sombre pour le contraste.
+            let outside = smoothstep(0.0, 12.0, d);
+            color += ACCENT * exp(-max(d, 0.0) / 36.0) * 0.16 * shimmer * ignition * outside;
             continue;
         }
         let is_panel = rect.kind == KIND_PANEL || rect.kind == KIND_READING;

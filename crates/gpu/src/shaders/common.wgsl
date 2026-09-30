@@ -53,6 +53,8 @@ const KIND_TARGET: u32 = 3u;
 const KIND_READING: u32 = 4u;
 // Visualisation animée dans un article.
 const KIND_VIZ: u32 = 5u;
+// Texte court posé sur le fond (descriptions) : fond assombri en fondu autour, sans panneau.
+const KIND_SCRIM: u32 = 6u;
 const TAU: f32 = 6.2831853;
 
 const ACCENT: vec3f = vec3f(0.976, 0.451, 0.086); // #f97316, l'orange de la charte

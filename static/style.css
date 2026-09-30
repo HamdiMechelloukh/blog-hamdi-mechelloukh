@@ -89,7 +89,10 @@ ul {
 
 .page-intro {
   text-align: center;
-  margin-bottom: 3rem;
+  /* Largeur du texte seulement : l'ancre GPU (scrim) épouse le paragraphe, pas toute la ligne. */
+  width: fit-content;
+  max-width: 720px;
+  margin: 0 auto 3rem;
 }
 
 .empty {
@@ -317,6 +320,8 @@ ul {
 }
 
 .hero-subtitle {
+  width: fit-content;
+  margin-inline: auto;
   font-size: 1.25rem;
   color: var(--primary);
   font-weight: 600;
@@ -347,10 +352,6 @@ ul {
   gap: 2.5rem;
   align-items: center;
   text-align: center;
-  padding: 2.5rem;
-  background: var(--panel);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
 }
 
 .about-avatar {
@@ -729,8 +730,7 @@ ul {
     font-size: 1.6rem;
   }
 
-  .article-prose,
-  .about-content {
+  .article-prose {
     padding: 1.25rem;
   }
 
@@ -752,7 +752,6 @@ ul {
 
 html.gpu .card,
 html.gpu .viz,
-html.gpu .about-content,
 html.gpu .footer,
 html.gpu .contact-form,
 html.gpu .article-prose {
@@ -762,6 +761,11 @@ html.gpu .article-prose {
 
 /* La barre reste collée en haut et le contenu HTML défile dessous : le canvas, derrière tout le HTML,
    ne peut pas le masquer. Elle garde donc un fond CSS, en verre dépoli sur le rendu GPU. */
+/* Descriptions sur le fond animé : assombri autour d'elles par le shader, texte au contraste maximal. */
+html.gpu .page-intro {
+  color: var(--text-color);
+}
+
 html.gpu .navbar {
   background: rgba(11, 13, 20, 0.72);
   backdrop-filter: blur(12px);

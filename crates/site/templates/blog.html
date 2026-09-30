@@ -3,7 +3,7 @@
 <div class="container">
   <section class="section">
     <h1 class="section-title" data-gpu="title"><img src="/assets/blog_icon.svg" alt="" />{{ layout.t.articles.title }}</h1>
-    <p class="card-text page-intro">{{ layout.t.articles.description }}</p>
+    <p class="card-text page-intro" data-gpu="scrim">{{ layout.t.articles.description }}</p>
     {% if articles.is_empty() %}
     <p class="empty">{{ layout.t.articles.empty }}</p>
     {% else %}

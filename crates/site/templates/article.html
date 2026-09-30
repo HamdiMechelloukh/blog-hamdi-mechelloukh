@@ -2,8 +2,8 @@
 {% block content %}
 <div class="container">
   <article class="article-container">
-    <a href="{{ layout.href("/blog") }}" class="article-back">&larr; {{ layout.t.articles.back_to_list }}</a>
-    <header class="article-header">
+    <a href="{{ layout.href("/blog") }}" class="article-back" data-gpu="scrim">&larr; {{ layout.t.articles.back_to_list }}</a>
+    <header class="article-header" data-gpu="scrim">
       <h1 class="article-title" data-gpu="title">{{ article.title }}</h1>
       <div class="article-meta">
         <span>{{ layout.t.articles.published_on }} {{ layout.lang.long_date(article.date) }}</span>
