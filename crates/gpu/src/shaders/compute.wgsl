@@ -68,14 +68,14 @@ fn main(@builtin(global_invocation_id) id: vec3u) {
         force += to_pointer / pointer_distance * (pull - push);
     }
 
-    particle.vel += force * dt * globals.intensity;
+    particle.vel += force * dt;
     particle.vel = mix(particle.vel, fluid_at(particle.pos), min(dt * FLUID_COUPLING, 1.0));
     // Vitesse plafonnée : bornes la longueur des traînées (et donc le coût de rendu) après une onde de choc.
     let speed = length(particle.vel);
     if (speed > MAX_SPEED) {
         particle.vel *= MAX_SPEED / speed;
     }
-    particle.pos += particle.vel * dt * globals.intensity;
+    particle.pos += particle.vel * dt;
 
     particle.pos = wrap(particle.pos);
     particles[index] = particle;

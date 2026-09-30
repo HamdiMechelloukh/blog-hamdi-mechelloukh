@@ -7,7 +7,7 @@ Le texte reste du HTML classique (SEO, accessibilité) ; le GPU dessine le fond,
 
 - `crates/site` : générateur statique maison (askama, pulldown-cmark, syntect). `content/` + `static/` → `dist/`.
 - `crates/gpu` : module WebGPU. Un canvas plein écran lit la position des ancres `data-gpu="panel|card|title|target"`
-  et dessine autour. Mode `calm` sur les articles, mini-jeu sur la page 404. Sans WebGPU, rien n'est chargé et le CSS suffit.
+  et dessine autour. Mini-jeu sur la page 404. Sans WebGPU, rien n'est chargé et le CSS suffit.
 - `crates/crossposter` : publication des articles anglais sur dev.to et LinkedIn, notification Telegram pour Medium.
 - `content/articles/*.md` : articles, avec un frontmatter TOML (`+++`). Chaque article a un jumeau dans l'autre langue (`translation_slug`).
 - `content/data/*.toml` : projets, expériences, formation, flux de la veille.

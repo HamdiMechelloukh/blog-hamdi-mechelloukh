@@ -1,6 +1,6 @@
 //! Rendu WebGPU du site : un canvas plein écran derrière la page, qui dessine autour des ancres DOM
 //! (`data-gpu="panel|card|title|target"`). Sans WebGPU, rien n'est créé et le CSS seul s'applique.
-//! `<body data-gpu-mode>` : "calm" sur les articles, "game" sur la page 404 (voir game.rs).
+//! `<body data-gpu-mode="game">` sur la page 404 (voir game.rs) ; mêmes effets partout ailleurs, articles compris.
 
 mod bloom;
 mod fluid;
@@ -23,8 +23,6 @@ const MOBILE_WIDTH: f64 = 768.0;
 const MAX_DPR: f64 = 2.0;
 /// Pointeur hors écran : aucune attraction ni lueur.
 const POINTER_AWAY: [f32; 2] = [-1.0e5, -1.0e5];
-/// Intensité de l'animation sur les pages de lecture (`data-gpu-mode="calm"`).
-const CALM_INTENSITY: f32 = 0.12;
 /// Transition d'entrée : point du clic sur un lien de la page précédente, en sessionStorage.
 const TRANSITION_KEY: &str = "gpu-transition-origin";
 /// Au-delà, le clic mémorisé n'est plus celui qui a amené ici (rechargement, retour arrière…).
@@ -63,11 +61,11 @@ struct Globals {
     time: f32,
     dt: f32,
     scroll_delta: f32,
-    intensity: f32,
     rect_count: u32,
     dpr: f32,
     scroll_velocity: f32,
     reading_progress: f32,
+    _pad: f32,
     shock: [f32; 4],
     pointer_velocity: [f32; 2],
     fluid_grid: [u32; 2],
@@ -141,7 +139,6 @@ struct Renderer {
     /// Clic pas encore transformé en onde de choc.
     pending_click: Rc<Cell<Option<[f32; 2]>>>,
     shock: [f32; 4],
-    intensity: f32,
     reduced_motion: bool,
     last_time: f64,
     last_scroll: f64,
@@ -254,7 +251,7 @@ impl Renderer {
         let reduced_motion = window
             .match_media("(prefers-reduced-motion: reduce)")?
             .is_some_and(|query| query.matches());
-        // Sans mouvement, le jeu est injouable : la 404 garde alors son rendu calme.
+        // Sans mouvement, le jeu est injouable : la 404 garde alors le rendu normal.
         let is_game = mode.as_deref() == Some("game") && !reduced_motion;
 
         let viewport_width = window.inner_width()?.as_f64().unwrap_or(1024.0);
@@ -401,7 +398,6 @@ impl Renderer {
             pointer,
             pending_click,
             shock: [0.0; 4],
-            intensity: if mode.as_deref() == Some("calm") { CALM_INTENSITY } else { 1.0 },
             reduced_motion,
             last_time: 0.0,
             scroll_velocity: 0.0,
@@ -461,11 +457,11 @@ impl Renderer {
             time: if frozen { 0.0 } else { time },
             dt: if frozen { 0.0 } else { dt },
             scroll_delta,
-            intensity: self.intensity,
             rect_count: rects.len() as u32,
             dpr: dpr as f32,
             scroll_velocity: if frozen { 0.0 } else { self.scroll_velocity },
             reading_progress,
+            _pad: 0.0,
             shock: self.shock,
             pointer_velocity: if frozen { [0.0; 2] } else { self.pointer_velocity },
             fluid_grid: self.fluid.grid,

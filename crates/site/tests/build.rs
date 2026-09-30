@@ -92,7 +92,8 @@ fn article_language_switch_points_to_its_twin() {
         assert!(not_found.contains("data-gpu-mode=\"game\"") && not_found.contains("noindex"));
     }
     assert!(not_found_fr.contains("<html lang=\"fr\">") && not_found_en.contains("<html lang=\"en\">"));
-    assert!(html.contains("data-gpu-mode=\"calm\""));
+    // Mêmes effets que le reste du site : pas de mode particulier sur les articles.
+    assert!(!html.contains("data-gpu-mode"));
     assert!(html.contains("<html lang=\"en\">"));
     assert!(html.contains("href=\"/blog/robot-investissement-ce-que-jai-appris-sur-les-llm\" class=\"lang-switch\""));
 }

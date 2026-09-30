@@ -39,8 +39,7 @@ fn vs_main(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance
     // Les particules capturées (page 404) forment le texte : plus lumineuses et plus chaudes.
     // Une traînée couvre plus de pixels : on l'atténue pour garder une énergie lumineuse comparable.
     let spread = sqrt(RADIUS / (RADIUS + stretch));
-    let brightness = (0.10 + 0.25 * speed + 0.55 * particle.captured) * fade * spread * (0.35 + 0.65 * globals.intensity)
-        * PARTICLE_BRIGHTNESS;
+    let brightness = (0.10 + 0.25 * speed + 0.55 * particle.captured) * fade * spread * PARTICLE_BRIGHTNESS;
 
     let pixel = particle.pos
         + direction * corner.x * (RADIUS + stretch)

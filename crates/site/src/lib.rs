@@ -52,7 +52,7 @@ pub struct Layout<'a> {
     /// Même page dans l'autre langue.
     pub switch_path: String,
     pub og_type: &'static str,
-    /// `<body data-gpu-mode>` : "" (vitrine), "calm" (lecture), "game" (page 404).
+    /// `<body data-gpu-mode>` : "" partout, "game" sur la page 404.
     pub gpu_mode: &'static str,
 }
 
@@ -289,7 +289,7 @@ pub fn build(options: &BuildOptions) -> Result<()> {
             alternates: alternates(fr.path(), en.path()),
             switch_path: twin.path(),
             og_type: "article",
-            gpu_mode: "calm",
+            gpu_mode: "",
         };
         write_page(out, &article.path(), &ArticlePage { layout, year, article }.render()?)?;
         sitemap.push(SitemapEntry { path: article.path(), alternates: alternates(fr.path(), en.path()) });

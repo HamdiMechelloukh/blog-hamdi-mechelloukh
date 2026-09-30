@@ -7,14 +7,14 @@ struct Globals {
     time: f32,
     dt: f32,
     scroll_delta: f32,
-    // 1.0 sur les pages vitrines, faible sur les articles (data-gpu-mode="calm").
-    intensity: f32,
     rect_count: u32,
     dpr: f32,
     // Vitesse de défilement lissée (px/s) : étire les particules en traînées.
     scroll_velocity: f32,
     // 0 -> 1 : avancée dans le texte de l'article (ancre reading).
     reading_progress: f32,
+    // Aligne shock (vec4f) sur 16 octets, comme le bourrage explicite côté Rust.
+    _pad: f32,
     // Dernier clic : position (px CSS), instant (s, même base que time), 1.0 si actif.
     shock: vec4f,
     // Vitesse du curseur (px/s, lissée) : entraîne le fluide.
