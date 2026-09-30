@@ -1,4 +1,4 @@
-// Rendu des particules : un quad par instance, disque doux en blending additif.
+// Rendu des particules : un quad par instance, disque doux, fusion max (la plus lumineuse l'emporte).
 
 @group(0) @binding(2) var<storage, read> particles: array<Particle>;
 
@@ -13,6 +13,10 @@ const CORNERS: array<vec2f, 6> = array<vec2f, 6>(
     vec2f(-1.0, 1.0), vec2f(1.0, -1.0), vec2f(1.0, 1.0),
 );
 const RADIUS: f32 = 1.6;
+// Éclat de chaque particule. La fusion est en max (lib.rs) : les zones denses ne dépassent pas cet éclat.
+const PARTICLE_BRIGHTNESS: f32 = 1.5;
+// Orange un peu plus profond que celui de la charte : moins agressif sur fond noir, sans virer au rouge.
+const PARTICLE_COLOR: vec3f = vec3f(0.95, 0.42, 0.12);
 
 @vertex
 fn vs_main(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance: u32) -> VertexOut {
@@ -37,7 +41,8 @@ fn vs_main(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance
     // Les particules capturées (page 404) forment le texte : plus lumineuses et plus chaudes.
     // Une traînée couvre plus de pixels : on l'atténue pour garder une énergie lumineuse comparable.
     let spread = sqrt(RADIUS / (RADIUS + stretch));
-    let brightness = (0.10 + 0.25 * speed + 0.55 * particle.captured) * fade * spread * (0.35 + 0.65 * globals.intensity);
+    let brightness = (0.10 + 0.25 * speed + 0.55 * particle.captured) * fade * spread * (0.35 + 0.65 * globals.intensity)
+        * PARTICLE_BRIGHTNESS;
 
     let pixel = particle.pos
         + direction * corner.x * (RADIUS + stretch)
@@ -46,7 +51,8 @@ fn vs_main(@builtin(vertex_index) vertex: u32, @builtin(instance_index) instance
     var out: VertexOut;
     out.position = vec4f(ndc, 0.0, 1.0);
     out.local = corner;
-    out.color = mix(ACCENT, ACCENT_HOT, max(speed, particle.captured)) * brightness;
+    // Rapides ou capturées (404) : réchauffées jusqu'à l'orange de la charte, pas jusqu'au jaune.
+    out.color = mix(PARTICLE_COLOR, ACCENT, max(speed, particle.captured)) * brightness;
     return out;
 }
 

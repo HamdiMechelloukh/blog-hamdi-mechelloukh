@@ -329,16 +329,18 @@ impl Renderer {
         // Scène et particules sont rendues en HDR ; le bloom compose ensuite dans le format du canvas.
         let scene_pipeline =
             render_pipeline(&device, &render_pipeline_layout, &scene_module, bloom::HDR_FORMAT, None);
-        let additive = wgpu::BlendState {
+        // Fusion max et non additive : une zone dense a la luminosité d'une seule particule. En additif, les
+        // superpositions saturaient au blanc et fatiguaient les yeux. WebGPU impose des facteurs One avec Max.
+        let brightest = wgpu::BlendState {
             color: wgpu::BlendComponent {
                 src_factor: wgpu::BlendFactor::One,
                 dst_factor: wgpu::BlendFactor::One,
-                operation: wgpu::BlendOperation::Add,
+                operation: wgpu::BlendOperation::Max,
             },
             alpha: wgpu::BlendComponent::OVER,
         };
         let particles_pipeline =
-            render_pipeline(&device, &render_pipeline_layout, &particles_module, bloom::HDR_FORMAT, Some(additive));
+            render_pipeline(&device, &render_pipeline_layout, &particles_module, bloom::HDR_FORMAT, Some(brightest));
         let bloom = bloom::Bloom::new(&device, format, config.width, config.height);
 
         let pointer = Rc::new(Cell::new(POINTER_AWAY));
