@@ -16,6 +16,17 @@ use feeds::WatchItem;
 use markdown::MarkdownRenderer;
 
 pub const BASE_URL: &str = "https://hamdimechelloukh.com";
+
+/// Icônes de la navigation et des titres : SVG au trait insérés tels quels dans le HTML (`|safe`),
+/// en `currentColor` pour suivre la couleur du lien (gris, orange quand la page est active).
+pub mod icons {
+    pub const HOME: &str = include_str!("../icons/home.svg");
+    pub const ABOUT: &str = include_str!("../icons/about.svg");
+    pub const PROJECTS: &str = include_str!("../icons/projects.svg");
+    pub const BLOG: &str = include_str!("../icons/blog.svg");
+    pub const WATCH: &str = include_str!("../icons/watch.svg");
+    pub const CONTACT: &str = include_str!("../icons/contact.svg");
+}
 const FORMSPREE_URL: &str = "https://formspree.io/f/xlgwydgk";
 
 pub struct BuildOptions {
@@ -65,12 +76,12 @@ impl Layout<'_> {
     pub fn nav_items(&self) -> Vec<NavItem> {
         let nav = &self.t.nav;
         [
-            ("home", "/", "/assets/home_icon.svg", &nav.home),
-            ("about", "/about", "/assets/about_icon.svg", &nav.about),
-            ("portfolio", "/portfolio", "/assets/portfolio_icon.svg", &nav.projects),
-            ("blog", "/blog", "/assets/blog_icon.svg", &nav.articles),
-            ("watch", "/veille", "/assets/blog_icon.svg", &nav.blog),
-            ("contact", "/contact", "/assets/contact_icon.svg", &nav.contact),
+            ("home", "/", icons::HOME, &nav.home),
+            ("about", "/about", icons::ABOUT, &nav.about),
+            ("portfolio", "/portfolio", icons::PROJECTS, &nav.projects),
+            ("blog", "/blog", icons::BLOG, &nav.articles),
+            ("watch", "/veille", icons::WATCH, &nav.blog),
+            ("contact", "/contact", icons::CONTACT, &nav.contact),
         ]
         .into_iter()
         .map(|(section, page, icon, label)| NavItem {

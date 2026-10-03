@@ -79,12 +79,16 @@ ul {
   gap: 0.6rem;
 }
 
-.section-title img,
-.nav-link img {
+.section-title svg,
+.nav-link svg {
   width: 24px;
   height: 24px;
-  /* Icônes SVG sombres -> gris clair. */
-  filter: invert(85%);
+  flex-shrink: 0;
+}
+
+/* Icônes en currentColor (crates/site/icons) : orange dans les titres, couleur du lien dans la navigation. */
+.section-title svg {
+  color: var(--primary);
 }
 
 .page-intro {
@@ -139,10 +143,9 @@ ul {
   color: var(--muted);
 }
 
-.nav-link img {
+.nav-link svg {
   width: 18px;
   height: 18px;
-  opacity: 0.7;
 }
 
 .nav-link:hover,
@@ -713,7 +716,7 @@ ul {
     padding: 0.4rem 0.5rem;
   }
 
-  .nav-link img {
+  .nav-link svg {
     width: 22px;
     height: 22px;
   }

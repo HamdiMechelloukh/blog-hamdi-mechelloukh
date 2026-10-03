@@ -57,7 +57,7 @@
           <div class="nav-links">
             {% for item in layout.nav_items() %}
             <a href="{{ item.href }}" class="nav-link{% if item.active %} active{% endif %}"{% if item.active %} aria-current="page"{% endif %}>
-              <img src="{{ item.icon }}" alt="" />
+              {{ item.icon|safe }}
               <span>{{ item.label }}</span>
             </a>
             {% endfor %}

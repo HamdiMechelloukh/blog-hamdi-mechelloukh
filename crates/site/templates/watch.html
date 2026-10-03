@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
   <section class="section">
-    <h1 class="section-title" data-gpu="title"><img src="/assets/blog_icon.svg" alt="" />{{ layout.t.blog.title }}</h1>
+    <h1 class="section-title" data-gpu="title">{{ crate::icons::WATCH|safe }}{{ layout.t.blog.title }}</h1>
     <p class="card-text page-intro" data-gpu="scrim">{{ layout.t.blog.description }}</p>
     <div class="card-grid">
       {% for item in items %}
