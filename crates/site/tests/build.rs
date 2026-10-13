@@ -73,8 +73,8 @@ fn sitemap_lists_every_page() {
         })
         .collect();
     fs::remove_dir_all(&out_dir).unwrap();
-    // 6 pages d'interface x 2 langues + 10 articles.
-    assert_eq!(pages.len(), 22);
+    // 7 pages d'interface x 2 langues + 10 articles.
+    assert_eq!(pages.len(), 24);
     for page in pages {
         let page = if page == "/" { page } else { page.trim_end_matches('/').to_string() };
         assert!(sitemap.contains(&format!("<loc>{BASE_URL}{page}</loc>")), "{page} absent du sitemap");

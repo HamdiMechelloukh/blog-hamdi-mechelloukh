@@ -1,6 +1,6 @@
 //! Chargement et validation du contenu : articles markdown, données TOML, traductions.
 
-use std::collections::HashSet;
+use std::collections::{BTreeMap, HashSet};
 use std::fs;
 use std::path::Path;
 
@@ -192,6 +192,7 @@ pub struct I18n {
     pub articles: ArticlesText,
     pub blog: WatchText,
     pub contact: ContactText,
+    pub game: GameText,
     pub footer: FooterText,
     pub meta: MetaText,
     pub not_found: NotFoundText,
@@ -205,6 +206,7 @@ pub struct NavText {
     pub projects: String,
     pub articles: String,
     pub blog: String,
+    pub game: String,
     pub contact: String,
 }
 
@@ -281,6 +283,21 @@ pub struct ContactText {
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub struct GameText {
+    pub title: String,
+    pub intro: String,
+    pub canvas_label: String,
+    pub program_title: String,
+    pub fight: String,
+    pub reward_title: String,
+    pub over_title: String,
+    pub restart: String,
+    /// Textes lus par le module WASM de l'arène (`#arena-i18n`).
+    pub labels: BTreeMap<String, String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct FooterText {
     pub rights: String,
 }
@@ -309,6 +326,8 @@ pub struct MetaText {
     pub watch_description: String,
     pub contact_title: String,
     pub contact_description: String,
+    pub game_title: String,
+    pub game_description: String,
 }
 
 pub struct Content {

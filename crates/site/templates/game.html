@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <section class="section arena">
+    <h1 class="section-title" data-gpu="title">{{ crate::icons::GAME|safe }}{{ layout.t.game.title }}</h1>
+    <p class="card-text page-intro" data-gpu="scrim">{{ layout.t.game.intro }}</p>
+    <div class="arena-stage" data-gpu="panel">
+      <canvas id="arena-canvas" class="arena-canvas" role="img" aria-label="{{ layout.t.game.canvas_label }}"></canvas>
+      <p id="arena-status" class="arena-status" aria-live="polite"></p>
+      <p id="arena-loadouts" class="arena-loadouts"></p>
+    </div>
+    <div id="arena-reward" class="arena-panel" data-gpu="panel" hidden>
+      <h2 class="arena-heading">{{ layout.t.game.reward_title }}</h2>
+      <div id="arena-bonuses" class="arena-bonuses"></div>
+    </div>
+    <div id="arena-over" class="arena-panel" data-gpu="panel" hidden>
+      <h2 class="arena-heading">{{ layout.t.game.over_title }}</h2>
+      <p id="arena-score"></p>
+      <button type="button" id="arena-restart" class="btn">{{ layout.t.game.restart }}</button>
+    </div>
+    <fieldset id="arena-workshop" class="arena-panel arena-workshop" data-gpu="panel">
+      <legend class="arena-heading">{{ layout.t.game.program_title }}</legend>
+      <ol id="arena-rules" class="arena-rules"></ol>
+      <button type="button" id="arena-fight" class="btn">{{ layout.t.game.fight }}</button>
+    </fieldset>
+  </section>
+</div>
+<script type="application/json" id="arena-i18n">{{ labels_json|safe }}</script>
+<script type="module">import init from "/arena/arena.js"; init();</script>
+{% endblock %}

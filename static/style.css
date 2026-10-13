@@ -712,8 +712,13 @@ ul {
     display: none;
   }
 
+  /* 7 entrées + logo + langue : tient dans 360 px sans réduire les icônes. */
+  .navbar-content {
+    padding: 0 1rem;
+  }
+
   .nav-link {
-    padding: 0.4rem 0.5rem;
+    padding: 0.4rem 0.3rem;
   }
 
   .nav-link svg {
@@ -844,4 +849,136 @@ html.gpu.game-complete .game-won {
   html.gpu .game-hint {
     display: none;
   }
+}
+
+/* Arène (/jeu) : canvas du module WASM arena, atelier de règles et bonus en HTML. */
+.arena-stage,
+.arena-panel {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--border-color);
+}
+
+html.gpu .arena-stage,
+html.gpu .arena-panel {
+  background: transparent;
+  border-color: transparent;
+}
+
+.arena-panel[hidden] {
+  display: none;
+}
+
+.arena-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 8 / 5;
+  border-radius: 8px;
+  background: var(--bg-color);
+}
+
+.arena-status {
+  min-height: 1.5em;
+  margin: 0.75rem 0 0.25rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.arena-loadouts {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* fieldset : sans min-width, les <select> l'empêcheraient de rétrécir sur mobile. */
+.arena-workshop {
+  min-width: 0;
+}
+
+.arena-workshop[disabled] .arena-rules {
+  opacity: 0.75;
+}
+
+/* Le legend redevient un titre ordinaire au lieu de chevaucher la bordure. */
+.arena-heading {
+  float: left;
+  width: 100%;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  font-size: 1.1rem;
+}
+
+.arena-rules {
+  clear: both;
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.arena-rule {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-raised);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+/* Règle exécutée en ce moment par le robot du joueur. */
+.arena-rule.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.35);
+}
+
+.arena-keyword {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+}
+
+.arena-rule select {
+  flex: 1 1 9rem;
+  min-width: 0;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font: inherit;
+}
+
+.arena-move {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.arena-move:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.arena-bonuses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.arena-bonus {
+  justify-content: flex-start;
+  text-align: left;
+  white-space: normal;
 }

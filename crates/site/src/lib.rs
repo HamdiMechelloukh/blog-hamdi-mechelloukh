@@ -25,6 +25,7 @@ pub mod icons {
     pub const PROJECTS: &str = include_str!("../icons/projects.svg");
     pub const BLOG: &str = include_str!("../icons/blog.svg");
     pub const WATCH: &str = include_str!("../icons/watch.svg");
+    pub const GAME: &str = include_str!("../icons/game.svg");
     pub const CONTACT: &str = include_str!("../icons/contact.svg");
 }
 const FORMSPREE_URL: &str = "https://formspree.io/f/xlgwydgk";
@@ -81,6 +82,7 @@ impl Layout<'_> {
             ("portfolio", "/portfolio", icons::PROJECTS, &nav.projects),
             ("blog", "/blog", icons::BLOG, &nav.articles),
             ("watch", "/veille", icons::WATCH, &nav.blog),
+            ("game", "/jeu", icons::GAME, &nav.game),
             ("contact", "/contact", icons::CONTACT, &nav.contact),
         ]
         .into_iter()
@@ -165,6 +167,15 @@ struct WatchPage<'a> {
 struct NotFoundPage<'a> {
     layout: Layout<'a>,
     year: i32,
+}
+
+/// Arène : le module WASM `arena` (chargé seulement ici) lit ses textes dans `labels_json`.
+#[derive(Template)]
+#[template(path = "game.html")]
+struct GamePage<'a> {
+    layout: Layout<'a>,
+    year: i32,
+    labels_json: String,
 }
 
 #[derive(Template)]
@@ -262,6 +273,16 @@ pub fn build(options: &BuildOptions) -> Result<()> {
                     layout: ui_layout("watch", "/veille", &meta.watch_title, &meta.watch_description),
                     year,
                     items: &watch_items,
+                }
+                .render()?,
+            ),
+            (
+                "/jeu",
+                GamePage {
+                    layout: ui_layout("game", "/jeu", &meta.game_title, &meta.game_description),
+                    year,
+                    // `</` fermerait la balise <script> qui contient le JSON.
+                    labels_json: serde_json::to_string(&t.game.labels)?.replace("</", "<\\/"),
                 }
                 .render()?,
             ),
