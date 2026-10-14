@@ -147,7 +147,8 @@ async fn run() -> Result<(), JsValue> {
     let handler = game.clone();
     on_click(&game.borrow().page.bonuses, move |event| {
         if let Some(choice) = closest(&event, "[data-bonus]").and_then(|button| button.get_attribute("data-bonus")) {
-            handler.borrow_mut().choose(usize::from(choice == "1"));
+            // "none" ne se lit pas comme un indice : le joueur refuse les deux bonus.
+            handler.borrow_mut().choose(choice.parse().ok());
         }
     })?;
 
@@ -242,6 +243,10 @@ impl Game {
                             self.bonus_label(*bonus)
                         )
                     })
+                    .chain(std::iter::once(format!(
+                        r#"<button type="button" class="btn btn-outline arena-bonus" data-bonus="none">{}</button>"#,
+                        self.labels.get("bonus.none")
+                    )))
                     .collect();
                 self.page.bonuses.set_inner_html(&buttons);
                 self.page.status.set_text_content(Some(&self.labels.get("won")));
@@ -257,11 +262,13 @@ impl Game {
         }
     }
 
-    fn choose(&mut self, choice: usize) {
+    fn choose(&mut self, choice: Option<usize>) {
         let Phase::Reward(offer) = self.phase else {
             return;
         };
-        self.loadout.apply(offer[choice]);
+        if let Some(bonus) = choice.and_then(|choice| offer.get(choice)) {
+            self.loadout.apply(*bonus);
+        }
         self.slots.resize(self.loadout.rule_slots, None);
         self.prepare_fight();
     }
