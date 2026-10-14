@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Installation Vercel : l'image de build fournit Rust (rustup sous $CARGO_HOME=/rust), il manque la cible
 # wasm32, wasm-bindgen, téléchargé précompilé à la version exacte de Cargo.lock (la glue JS doit
-# correspondre à la crate), et wasm-opt (binaryen) pour alléger le module de l'arène.
+# correspondre à la crate), et wasm-opt (binaryen) pour alléger les modules wasm.
 set -euo pipefail
 cd "$(dirname "$0")"
 
