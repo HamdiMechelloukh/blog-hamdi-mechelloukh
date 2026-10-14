@@ -754,6 +754,9 @@ ul {
   inset: 0;
   width: 100vw;
   height: 100vh;
+  /* Sur mobile, 100vh vaut la hauteur barre d'adresse masquée alors que le rendu suit innerHeight : l'image
+     s'étirait et les cadres glissaient sous leurs ancres pendant le défilement. dvh suit la barre. */
+  height: 100dvh;
   z-index: -1;
   pointer-events: none;
 }
