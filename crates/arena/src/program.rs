@@ -106,6 +106,11 @@ pub struct Perception {
 }
 
 impl Action {
+    /// Déplacement, par opposition à l'attaque (tir, bouclier) : un robot fait l'un et l'autre à la fois.
+    pub fn moves(self) -> bool {
+        matches!(self, Action::Advance | Action::Retreat | Action::Circle)
+    }
+
     fn possible(self, perception: &Perception) -> bool {
         match self {
             Action::Fire => perception.weapon_ready && perception.enemy_distance <= perception.weapon_range,
@@ -115,9 +120,20 @@ impl Action {
     }
 }
 
-/// Indice de la première règle applicable, aucun sinon.
-pub fn decide(rules: &[Rule], perception: &Perception) -> Option<usize> {
-    rules.iter().position(|rule| rule.condition.holds(perception) && rule.action.possible(perception))
+/// Indices des règles exécutées : la première applicable parmi les déplacements, et parmi les attaques.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Decision {
+    pub movement: Option<usize>,
+    pub attack: Option<usize>,
+}
+
+pub fn decide(rules: &[Rule], perception: &Perception) -> Decision {
+    let first = |moves: bool| {
+        rules.iter().position(|rule| {
+            rule.action.moves() == moves && rule.condition.holds(perception) && rule.action.possible(perception)
+        })
+    };
+    Decision { movement: first(true), attack: first(false) }
 }
 
 #[cfg(test)]
@@ -136,16 +152,29 @@ mod tests {
         }
     }
 
+    fn decision(movement: Option<usize>, attack: Option<usize>) -> Decision {
+        Decision { movement, attack }
+    }
+
     #[test]
-    fn first_true_rule_wins() {
+    fn first_true_rule_wins_in_each_category() {
         let rules = [
             Rule { condition: Condition::LowHealth, action: Action::Retreat },
             Rule { condition: Condition::EnemyInRange, action: Action::Fire },
             Rule { condition: Condition::Always, action: Action::Advance },
         ];
-        assert_eq!(decide(&rules, &perception(100.0, 0.3)), Some(0));
-        assert_eq!(decide(&rules, &perception(100.0, 0.9)), Some(1));
-        assert_eq!(decide(&rules, &perception(500.0, 0.9)), Some(2));
+        assert_eq!(decide(&rules, &perception(100.0, 0.3)), decision(Some(0), Some(1)));
+        assert_eq!(decide(&rules, &perception(100.0, 0.9)), decision(Some(2), Some(1)));
+        assert_eq!(decide(&rules, &perception(500.0, 0.9)), decision(Some(2), None));
+    }
+
+    #[test]
+    fn a_movement_above_does_not_block_the_attack() {
+        let rules = [
+            Rule { condition: Condition::Always, action: Action::Advance },
+            Rule { condition: Condition::Always, action: Action::Fire },
+        ];
+        assert_eq!(decide(&rules, &perception(100.0, 1.0)), decision(Some(0), Some(1)));
     }
 
     #[test]
@@ -155,8 +184,9 @@ mod tests {
             Rule { condition: Condition::EnemyInRange, action: Action::Fire },
             Rule { condition: Condition::Always, action: Action::Retreat },
         ];
+        assert_eq!(decide(&rules, &perception(100.0, 0.3)), decision(Some(2), Some(1)));
         let reloading = Perception { weapon_ready: false, ..perception(100.0, 0.3) };
-        assert_eq!(decide(&rules, &reloading), Some(2));
+        assert_eq!(decide(&rules, &reloading), decision(Some(2), None));
     }
 
     #[test]
@@ -172,6 +202,6 @@ mod tests {
     #[test]
     fn no_matching_rule_means_no_action() {
         let rules = [Rule { condition: Condition::EnemyInRange, action: Action::Fire }];
-        assert_eq!(decide(&rules, &perception(500.0, 1.0)), None);
+        assert_eq!(decide(&rules, &perception(500.0, 1.0)), Decision::default());
     }
 }

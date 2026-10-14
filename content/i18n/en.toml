@@ -87,7 +87,7 @@ home = "Back to home"
 
 [game]
 title = "Arena"
-intro = "Program your robot with \"if… then…\" rules, then watch it fight the AI. The first applicable rule, from top to bottom, drives every move. Each win earns a bonus; one loss ends the run."
+intro = "Program your robot with \"if… then…\" rules, then watch it fight the AI. At every moment, it runs the first applicable movement rule and the first applicable attack rule, reading from top to bottom. Each win earns a bonus; one loss ends the run."
 canvas_label = "Combat arena: your orange robot against the AI's blue robot."
 program_title = "Program"
 fight = "Fight"

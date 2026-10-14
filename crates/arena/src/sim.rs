@@ -1,7 +1,7 @@
 //! Combat déterministe à pas fixe : mêmes robots, mêmes programmes, même graine → même combat.
 
 use crate::loadout::{Loadout, Weapon};
-use crate::program::{Action, Perception, Rule, decide};
+use crate::program::{Action, Decision, Perception, Rule, decide};
 use crate::rng::Rng;
 use crate::vec2::Vec2;
 
@@ -40,8 +40,8 @@ pub struct Robot {
     /// Le robot fait toujours face à son ennemi.
     pub heading: f32,
     pub health: f32,
-    /// Règle exécutée au dernier pas, pour la surligner dans l'atelier.
-    pub active_rule: Option<usize>,
+    /// Règles exécutées au dernier pas, pour les surligner dans l'atelier.
+    pub active_rules: Decision,
     /// Temps restant de bouclier actif.
     pub shield_time: f32,
     reload: f32,
@@ -51,7 +51,7 @@ pub struct Robot {
 impl Robot {
     fn new(loadout: Loadout, rules: Vec<Rule>, position: Vec2) -> Self {
         let health = loadout.max_health();
-        Self { loadout, rules, position, heading: 0.0, health, active_rule: None, shield_time: 0.0, reload: 0.0, shield_reload: 0.0 }
+        Self { loadout, rules, position, heading: 0.0, health, active_rules: Decision::default(), shield_time: 0.0, reload: 0.0, shield_reload: 0.0 }
     }
 
     pub fn health_ratio(&self) -> f32 {
@@ -75,7 +75,8 @@ pub struct Projectile {
 
 /// Décision d'un robot et géométrie sur laquelle il l'a prise.
 struct Plan {
-    action: Option<Action>,
+    movement: Option<Action>,
+    attack: Option<Action>,
     direction: Vec2,
     distance: f32,
 }
@@ -165,20 +166,17 @@ impl Fight {
             weapon_ready: robot.reload == 0.0,
             shield_ready: robot.loadout.shield && robot.shield_reload == 0.0,
         };
-        robot.active_rule = decide(&robot.rules, &perception);
+        robot.active_rules = decide(&robot.rules, &perception);
         robot.heading = direction.angle();
-        Plan { action: robot.active_rule.map(|index| robot.rules[index].action), direction, distance }
+        let action = |index: Option<usize>| index.map(|index| robot.rules[index].action);
+        Plan { movement: action(robot.active_rules.movement), attack: action(robot.active_rules.attack), direction, distance }
     }
 
-    fn act(&mut self, index: usize, Plan { action, direction, distance }: Plan) {
+    fn act(&mut self, index: usize, Plan { movement, attack, direction, distance }: Plan) {
         let [first, second] = &mut self.robots;
         let (robot, enemy) = if index == PLAYER { (first, second) } else { (second, first) };
         let weapon = robot.loadout.weapon.stats();
-        let movement = match action {
-            // S'arrête au contact plutôt que de traverser l'ennemi.
-            Some(Action::Advance) if distance > 2.0 * ROBOT_RADIUS + 4.0 => direction,
-            Some(Action::Retreat) => -direction,
-            Some(Action::Circle) => direction.perpendicular(),
+        match attack {
             Some(Action::Fire) => {
                 robot.reload = weapon.cooldown;
                 match weapon.projectile_speed {
@@ -199,14 +197,19 @@ impl Fight {
                         self.events.push(Event::Shot { owner: index, position: muzzle });
                     }
                 }
-                Vec2::ZERO
             }
             Some(Action::Shield) => {
                 robot.shield_time = SHIELD_DURATION;
                 robot.shield_reload = SHIELD_COOLDOWN;
-                Vec2::ZERO
             }
-            Some(Action::Advance) | None => Vec2::ZERO,
+            _ => {}
+        }
+        let movement = match movement {
+            // S'arrête au contact plutôt que de traverser l'ennemi.
+            Some(Action::Advance) if distance > 2.0 * ROBOT_RADIUS + 4.0 => direction,
+            Some(Action::Retreat) => -direction,
+            Some(Action::Circle) => direction.perpendicular(),
+            _ => Vec2::ZERO,
         };
         let position = robot.position + movement * (robot.loadout.speed() * STEP);
         robot.position = Vec2::new(

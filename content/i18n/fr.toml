@@ -87,7 +87,7 @@ home = "Retour à l'accueil"
 
 [game]
 title = "Arène"
-intro = "Programme ton robot avec des règles « si… alors… », puis regarde-le combattre l'IA. La première règle applicable, de haut en bas, décide de chaque geste. Chaque victoire rapporte un bonus ; une défaite met fin à la partie."
+intro = "Programme ton robot avec des règles « si… alors… », puis regarde-le combattre l'IA. À chaque instant, il exécute la première règle de déplacement applicable et la première règle d'attaque applicable, en lisant de haut en bas. Chaque victoire rapporte un bonus ; une défaite met fin à la partie."
 canvas_label = "Arène de combat : ton robot orange contre le robot bleu de l'IA."
 program_title = "Programme"
 fight = "Combattre"

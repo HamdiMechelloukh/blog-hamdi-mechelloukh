@@ -10,7 +10,7 @@ use web_sys::{Document, Element, HtmlCanvasElement, HtmlSelectElement};
 
 use crate::ai::opponent;
 use crate::loadout::{Bonus, Loadout, Weapon};
-use crate::program::{Action, Condition, Rule};
+use crate::program::{Action, Condition, Decision, Rule};
 use crate::render::Renderer;
 use crate::rng::Rng;
 use crate::sim::{Fight, Outcome, PLAYER, STEP};
@@ -70,7 +70,7 @@ struct Game {
     slots: Vec<Option<Rule>>,
     /// Emplacement de chaque règle du programme en combat : sert à surligner la règle active.
     slot_of_rule: Vec<usize>,
-    highlighted: Option<usize>,
+    highlighted: Vec<usize>,
     opponent: (Loadout, Vec<Rule>),
     fight: Fight,
     phase: Phase,
@@ -122,7 +122,7 @@ async fn run() -> Result<(), JsValue> {
         loadout: Loadout::starter(),
         slots: Vec::new(),
         slot_of_rule: Vec::new(),
-        highlighted: None,
+        highlighted: Vec::new(),
         opponent,
         phase: Phase::Workshop,
         accumulator: 0.0,
@@ -179,7 +179,7 @@ impl Game {
         self.opponent = opponent(self.wins, &mut self.rng);
         self.fight = Fight::new((self.loadout.clone(), self.program()), self.opponent.clone(), self.rng.next_u64());
         self.phase = Phase::Workshop;
-        self.highlight(None);
+        self.highlight(Vec::new());
         self.render_rules();
         let describe_robots = format!(
             "{}<br>{}",
@@ -217,7 +217,8 @@ impl Game {
                 self.accumulator -= STEP;
                 steps += 1;
             }
-            let active = self.fight.robots[PLAYER].active_rule.map(|rule| self.slot_of_rule[rule]);
+            let Decision { movement, attack } = self.fight.robots[PLAYER].active_rules;
+            let active = [movement, attack].into_iter().flatten().map(|rule| self.slot_of_rule[rule]).collect();
             self.highlight(active);
             if let Some(outcome) = self.fight.outcome() {
                 self.finish(outcome);
@@ -227,7 +228,7 @@ impl Game {
     }
 
     fn finish(&mut self, outcome: Outcome) {
-        self.highlight(None);
+        self.highlight(Vec::new());
         match outcome {
             Outcome::Won => {
                 self.wins += 1;
@@ -350,19 +351,19 @@ impl Game {
         self.page.rules.set_inner_html(&rows);
     }
 
-    fn highlight(&mut self, slot: Option<usize>) {
-        if slot == self.highlighted {
+    fn highlight(&mut self, slots: Vec<usize>) {
+        if slots == self.highlighted {
             return;
         }
         let Ok(rows) = self.page.rules.query_selector_all("li") else {
             return;
         };
-        for (index, active) in [(self.highlighted, false), (slot, true)] {
-            if let Some(row) = index.and_then(|index| rows.item(index as u32)?.dyn_into::<Element>().ok()) {
-                let _ = row.class_list().toggle_with_force("active", active);
+        for index in 0..rows.length() {
+            if let Some(row) = rows.item(index).and_then(|row| row.dyn_into::<Element>().ok()) {
+                let _ = row.class_list().toggle_with_force("active", slots.contains(&(index as usize)));
             }
         }
-        self.highlighted = slot;
+        self.highlighted = slots;
     }
 
     fn describe(&self, loadout: &Loadout) -> String {
