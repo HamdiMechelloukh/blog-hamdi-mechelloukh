@@ -902,13 +902,17 @@ html.gpu .arena-panel {
   opacity: 0.75;
 }
 
-/* Le legend redevient un titre ordinaire au lieu de chevaucher la bordure. */
 .arena-heading {
-  float: left;
-  width: 100%;
   margin: 0 0 0.75rem;
   padding: 0;
   font-size: 1.1rem;
+}
+
+/* Le legend redevient un titre ordinaire au lieu de chevaucher la bordure. Seulement lui : la grille des bonus
+   se rangerait à côté d'un titre flottant, hors du panneau. */
+legend.arena-heading {
+  float: left;
+  width: 100%;
 }
 
 .arena-rules {
