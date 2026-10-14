@@ -992,9 +992,17 @@ legend.arena-heading {
 
 /* Téléphone : moins de marges empilées, et chaque règle sur deux lignes alignées (SI condition / ALORS action ↑ ↓). */
 @media (max-width: 768px) {
-  .arena-stage,
-  .arena-panel {
+  /* L'arène garde presque toute la largeur ; les textes et l'atelier gardent de l'air. */
+  .arena-stage {
     padding: 0.75rem 0.25rem;
+  }
+
+  .arena-stage > p {
+    padding: 0 0.5rem;
+  }
+
+  .arena-panel {
+    padding: 1rem 0.75rem;
   }
 
   .arena-rule {
