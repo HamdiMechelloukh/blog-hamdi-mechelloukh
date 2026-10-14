@@ -1,5 +1,5 @@
 // Arène : chaque forme est une instance (quad) dessinée par sa fonction de distance signée,
-// en contour lumineux avec halo, mélangée en additif. Compatible WebGL2 : ni storage buffer ni dérivées.
+// en contour lumineux avec halo, mélangée en additif.
 
 struct Globals {
     arena: vec2f,

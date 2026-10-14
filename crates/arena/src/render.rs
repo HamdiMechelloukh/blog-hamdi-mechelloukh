@@ -1,4 +1,4 @@
-//! Rendu wgpu de l'arène (WebGPU, sinon WebGL2) : formes lumineuses instanciées et particules d'impact.
+//! Rendu WebGPU de l'arène : formes lumineuses instanciées et particules d'impact.
 
 use bytemuck::{Pod, Zeroable};
 use web_sys::HtmlCanvasElement;
@@ -92,12 +92,15 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(canvas: HtmlCanvasElement, seed: u64) -> Result<Self, String> {
-        // WebGPU si le navigateur l'a vraiment (Chrome Linux expose `navigator.gpu` sans adaptateur), WebGL2 sinon.
-        let instance = wgpu::util::new_instance_with_webgpu_detection(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::BROWSER_WEBGPU | wgpu::Backends::GL,
+        // WebGPU seul : le repli WebGL2 multipliait le module par 16 (1 Mo gzip contre 67 Ko).
+        let window = web_sys::window().ok_or("pas de window")?;
+        if !js_sys::Reflect::has(&window.navigator(), &"gpu".into()).unwrap_or(false) {
+            return Err("WebGPU indisponible".into());
+        }
+        let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
+            backends: wgpu::Backends::BROWSER_WEBGPU,
             ..wgpu::InstanceDescriptor::new_without_display_handle()
-        })
-        .await;
+        });
         let surface =
             instance.create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone())).map_err(|error| error.to_string())?;
         let adapter = instance
@@ -105,10 +108,7 @@ impl Renderer {
             .await
             .map_err(|error| error.to_string())?;
         let (device, queue) = adapter
-            .request_device(&wgpu::DeviceDescriptor {
-                required_limits: wgpu::Limits::downlevel_webgl2_defaults().using_resolution(adapter.limits()),
-                ..Default::default()
-            })
+            .request_device(&wgpu::DeviceDescriptor::default())
             .await
             .map_err(|error| error.to_string())?;
 
