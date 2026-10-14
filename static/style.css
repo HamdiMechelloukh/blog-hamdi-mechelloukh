@@ -982,3 +982,21 @@ html.gpu .arena-panel {
   text-align: left;
   white-space: normal;
 }
+
+/* Téléphone : moins de marges empilées, et chaque règle sur deux lignes alignées (SI condition / ALORS action ↑ ↓). */
+@media (max-width: 768px) {
+  .arena-stage,
+  .arena-panel {
+    padding: 0.75rem 0.25rem;
+  }
+
+  .arena-rule {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    padding: 0.5rem;
+  }
+
+  .arena-condition {
+    grid-column: 2 / -1;
+  }
+}
