@@ -9,7 +9,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::{Document, Element, HtmlCanvasElement, HtmlSelectElement};
 
 use crate::ai::opponent;
-use crate::loadout::{Bonus, Loadout};
+use crate::loadout::{Bonus, Loadout, Weapon};
 use crate::program::{Action, Condition, Rule};
 use crate::render::Renderer;
 use crate::rng::Rng;
@@ -366,7 +366,11 @@ impl Game {
     }
 
     fn describe(&self, loadout: &Loadout) -> String {
-        let mut parts = vec![self.labels.get(&format!("weapon.{}", loadout.weapon.id()))];
+        let range = match loadout.weapon {
+            Weapon::Blade => self.labels.get("range.melee"),
+            weapon => self.labels.fill("range", &weapon.stats().range.to_string()),
+        };
+        let mut parts = vec![format!("{} ({range})", self.labels.get(&format!("weapon.{}", loadout.weapon.id())))];
         if loadout.shield {
             parts.push(self.labels.get("module.shield"));
         }

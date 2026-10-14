@@ -24,6 +24,8 @@ const SHAPE_RING: f32 = 2.0;
 const SHAPE_BOX: f32 = 3.0;
 
 const SHIELD_RADIUS: f32 = 27.0;
+/// Cercle de portée de l'arme : assez discret pour ne pas masquer le combat.
+const RANGE_ALPHA: f32 = 0.18;
 const HEALTH_BAR_HALF_WIDTH: f32 = 22.0;
 const HEALTH_BAR_OFFSET: f32 = 34.0;
 const PARTICLE_DRAG: f32 = 3.0;
@@ -310,6 +312,8 @@ impl Renderer {
                 continue;
             }
             let color = robot_color(index);
+            // L'ennemi est à portée quand son centre est dans ce cercle.
+            instances.push(Instance::ring(robot.position, robot.loadout.weapon.stats().range, 0.6, color, RANGE_ALPHA));
             let heading = Vec2::from_angle(robot.heading);
             let body = ROBOT_RADIUS - 4.0;
             instances.push(Instance::rect(robot.position, [body, body], robot.heading, 5.0, 0.12, color));
