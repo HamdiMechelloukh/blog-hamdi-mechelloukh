@@ -331,6 +331,19 @@ ul {
   margin-bottom: 1.25rem;
 }
 
+.about-prose h2 {
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.about-prose h2:first-child {
+  margin-top: 0;
+}
+
+.about-prose p {
+  margin-bottom: 1rem;
+}
+
 .hero-description {
   max-width: 720px;
   margin: 0 auto 2rem;

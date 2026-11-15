@@ -17,22 +17,16 @@
   </section>
 
   <section class="section">
-    <h2 class="section-title" data-gpu="title">{{ layout.t.about.interests_title }}</h2>
-    <div class="narrow">
-      <div class="card-grid">
-        <div data-gpu="card" class="card card-compact card-centered">
-          <h3>{{ layout.t.about.interest_karate_title }}</h3>
-          <p class="card-text">{{ layout.t.about.interest_karate_text }}</p>
-        </div>
-        <div data-gpu="card" class="card card-compact card-centered">
-          <h3>{{ layout.t.about.interest_gaming_title }}</h3>
-          <p class="card-text">{{ layout.t.about.interest_gaming_text }}</p>
-        </div>
-        <div data-gpu="card" class="card card-compact card-centered">
-          <h3>{{ layout.t.about.interest_pop_title }}</h3>
-          <p class="card-text">{{ layout.t.about.interest_pop_text }}</p>
-        </div>
-      </div>
+    <div class="narrow about-prose" data-gpu="scrim">
+      <h2>{{ layout.t.about.craft_title }}</h2>
+      <p class="card-text">{{ layout.t.about.craft_p1 }}</p>
+      <p class="card-text">{{ layout.t.about.craft_p2 }}</p>
+      <h2>{{ layout.t.about.quality_title }}</h2>
+      <p class="card-text">{{ layout.t.about.quality_p1 }}</p>
+      <p class="card-text">{{ layout.t.about.quality_p2 }}</p>
+      <h2>{{ layout.t.about.reliability_title }}</h2>
+      <p class="card-text">{{ layout.t.about.reliability_p1 }}</p>
+      <p class="card-text">{{ layout.t.about.reliability_p2 }}</p>
     </div>
   </section>
 
@@ -77,6 +71,25 @@
         {% endif %}
       </div>
       {% endfor %}
+    </div>
+  </section>
+  <section class="section">
+    <h2 class="section-title" data-gpu="title">{{ layout.t.about.interests_title }}</h2>
+    <div class="narrow">
+      <div class="card-grid">
+        <div data-gpu="card" class="card card-compact card-centered">
+          <h3>{{ layout.t.about.interest_karate_title }}</h3>
+          <p class="card-text">{{ layout.t.about.interest_karate_text }}</p>
+        </div>
+        <div data-gpu="card" class="card card-compact card-centered">
+          <h3>{{ layout.t.about.interest_gaming_title }}</h3>
+          <p class="card-text">{{ layout.t.about.interest_gaming_text }}</p>
+        </div>
+        <div data-gpu="card" class="card card-compact card-centered">
+          <h3>{{ layout.t.about.interest_pop_title }}</h3>
+          <p class="card-text">{{ layout.t.about.interest_pop_text }}</p>
+        </div>
+      </div>
     </div>
   </section>
 </div>
