@@ -8,7 +8,7 @@ game = "Jeu"
 contact = "Contact"
 
 [home]
-subtitle = "Data Engineer & Backend @ Decathlon Digital · Lille"
+subtitle = "Data Engineer & Backend · Lille"
 availability = "Disponible pour échanger · Lille / remote"
 description = "Data Engineer et développeur backend basé à Lille, 8 ans d'expérience. Je conçois des pipelines de données à grande échelle pour transformer des données brutes en décisions stratégiques — Spark, Scala, Databricks, AWS, Kafka."
 cta_projects = "Voir mes projets"
