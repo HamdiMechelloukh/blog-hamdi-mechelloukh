@@ -9,7 +9,6 @@ contact = "Contact"
 
 [home]
 subtitle = "Data & Backend Engineer · Lille"
-availability = "Open to a conversation · Lille / remote"
 description = "Data Engineer and backend developer based in Lille, France, with 8 years of experience. I build large-scale data pipelines that turn raw data into strategic decisions — Spark, Scala, Databricks, AWS, Kafka."
 cta_projects = "View my projects"
 cta_contact = "Contact me"

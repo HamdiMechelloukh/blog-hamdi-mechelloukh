@@ -214,7 +214,6 @@ pub struct NavText {
 #[serde(deny_unknown_fields)]
 pub struct HomeText {
     pub subtitle: String,
-    pub availability: String,
     pub description: String,
     pub cta_projects: String,
     pub cta_contact: String,

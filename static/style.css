@@ -331,30 +331,6 @@ ul {
   margin-bottom: 1.25rem;
 }
 
-/* Signal de disponibilite : volontairement neutre, ni "en recherche" ni "ouvert aux offres". */
-.hero-availability {
-  display: flex;
-  width: fit-content;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 auto 1.25rem;
-  padding: 0.3rem 0.85rem;
-  border: 1px solid rgba(52, 211, 153, 0.35);
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #6ee7b7;
-}
-
-.hero-availability::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18);
-}
-
 .hero-description {
   max-width: 720px;
   margin: 0 auto 2rem;
