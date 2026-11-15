@@ -3,7 +3,7 @@ title: "Lessons from 2 years as Production Manager at Decathlon Digital"
 published: false
 description: "What I learned stepping away from code to manage sales data production — alerting, postmortems, crisis communication, and why I went back to engineering."
 tags: dataengineering, production, devops, career
-canonical_url: https://www.hamdimechelloukh.com/blog/production-manager-lessons-learned
+canonical_url: https://hamdimechelloukh.com/blog/production-manager-lessons-learned
 ---
 
 For two and a half years, I stepped away from code to manage data production for sales at Decathlon Digital. A role I discovered upon arrival: the job title said "Production Expert", and I quickly realized it was going to be a full-time commitment.

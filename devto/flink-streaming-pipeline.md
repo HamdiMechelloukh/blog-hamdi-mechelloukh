@@ -3,7 +3,7 @@ title: "Real-time streaming pipeline with Apache Flink 2.0, Kafka and Iceberg"
 published: false
 description: "How I built an end-to-end streaming pipeline on the Olist dataset: CEP anomaly detection, event-time watermarks, Iceberg integration and the integration issues I didn't anticipate."
 tags: java, dataengineering, kafka, opensource
-canonical_url: https://www.hamdimechelloukh.com/blog/flink-kafka-iceberg-streaming-pipeline
+canonical_url: https://hamdimechelloukh.com/blog/flink-kafka-iceberg-streaming-pipeline
 ---
 
 It's 2:03 PM. A flash sale just started.

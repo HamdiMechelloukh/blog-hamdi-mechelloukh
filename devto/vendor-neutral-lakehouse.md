@@ -3,7 +3,7 @@ title: "Building an open-source vendor-neutral lakehouse"
 published: false
 description: "Why and how I designed a lakehouse with no vendor lock-in: Kafka, Spark, Iceberg, MinIO, Great Expectations and Terraform."
 tags: dataengineering, opensource, kafka, spark
-canonical_url: https://www.hamdimechelloukh.com/blog/open-source-vendor-neutral-lakehouse
+canonical_url: https://hamdimechelloukh.com/blog/open-source-vendor-neutral-lakehouse
 ---
 
 When you work in data, you always end up asking the same question: **what happens if we need to switch platforms tomorrow?**

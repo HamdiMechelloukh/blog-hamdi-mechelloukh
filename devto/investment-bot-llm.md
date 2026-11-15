@@ -3,7 +3,7 @@ title: "Two months building an investment bot. What it taught me about LLMs"
 published: false
 description: "How a portfolio-monitoring bot taught me how LLMs really work: zero-temperature non-determinism, determinism in the data, and Condorcet-style ensemble voting."
 tags: llm, ai, python
-canonical_url: https://www.hamdimechelloukh.com/blog/investment-bot-what-llms-taught-me
+canonical_url: https://hamdimechelloukh.com/blog/investment-bot-what-llms-taught-me
 ---
 
 For two months, I tinkered together a small system that watches my portfolio and sends me, once a month, what it thinks I should do: buy, add, lighten, sell.
