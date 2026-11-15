@@ -8,8 +8,9 @@ game = "Jeu"
 contact = "Contact"
 
 [home]
-subtitle = "Data Engineer @ Decathlon Digital"
-description = "Data Engineer avec 8 ans d'expérience, je conçois des pipelines de données à grande échelle pour transformer des données brutes en décisions stratégiques — Spark, AWS, Databricks."
+subtitle = "Data Engineer & Backend @ Decathlon Digital · Lille"
+availability = "Disponible pour échanger · Lille / remote"
+description = "Data Engineer et développeur backend basé à Lille, 8 ans d'expérience. Je conçois des pipelines de données à grande échelle pour transformer des données brutes en décisions stratégiques — Spark, Scala, Databricks, AWS, Kafka."
 cta_projects = "Voir mes projets"
 cta_contact = "Me contacter"
 skills_title = "Compétences"
@@ -64,8 +65,8 @@ send = "Envoyer"
 rights = "Tous droits réservés."
 
 [meta]
-home_title = "Hamdi Mechelloukh – Data Engineer"
-home_description = "Portfolio de Hamdi Mechelloukh, Data Engineer avec 8 ans d'expérience. Spécialisé en Apache Spark, AWS, Databricks et pipelines de données à grande échelle."
+home_title = "Hamdi Mechelloukh – Data Engineer & Backend – Lille"
+home_description = "Hamdi Mechelloukh, Data Engineer et développeur backend à Lille (Hauts-de-France), 8 ans d'expérience. Apache Spark, Scala, Databricks, AWS, Kafka, Java/Spring Boot."
 about_title = "À propos – Hamdi Mechelloukh"
 about_description = "Parcours, expériences et centres d'intérêt de Hamdi Mechelloukh, Data Engineer chez Decathlon Digital à Lille."
 portfolio_title = "Portfolio – Hamdi Mechelloukh"
