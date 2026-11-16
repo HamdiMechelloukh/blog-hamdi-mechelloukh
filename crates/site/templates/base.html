@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ layout.title }}</title>
     <meta name="description" content="{{ layout.description }}" />
-    <meta name="robots" content="{% if layout.section == "404" %}noindex{% else %}index, follow{% endif %}" />
+    <meta name="robots" content="{% if layout.noindex() %}noindex, follow{% else %}index, follow{% endif %}" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="{{ crate::BASE_URL }}{{ layout.path }}" />
     {% for alternate in layout.alternates %}

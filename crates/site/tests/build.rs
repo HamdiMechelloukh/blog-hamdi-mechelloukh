@@ -3,7 +3,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use site::{BASE_URL, BuildOptions, build};
+use site::{BASE_URL, BuildOptions, NOINDEX_PAGES, build};
 
 fn build_site(name: &str) -> PathBuf {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..");
@@ -69,16 +69,26 @@ fn sitemap_lists_every_page() {
         .filter(|file| file.ends_with("index.html"))
         .map(|file| {
             let dir = file.parent().unwrap().strip_prefix(&out_dir).unwrap();
-            format!("/{}", dir.display())
+            format!("/{}", dir.display()).replace('\\', "/")
         })
         .collect();
+    let read = |page: &str| fs::read_to_string(out_dir.join(page.trim_start_matches('/')).join("index.html")).unwrap();
+    let noindex_html: Vec<String> = ["/jeu", "/en/jeu", "/veille", "/en/veille"].iter().map(|page| read(page)).collect();
+    let indexed_html = read("/about");
     fs::remove_dir_all(&out_dir).unwrap();
     // 7 pages d'interface x 2 langues + 10 articles.
     assert_eq!(pages.len(), 24);
     for page in pages {
         let page = if page == "/" { page } else { page.trim_end_matches('/').to_string() };
-        assert!(sitemap.contains(&format!("<loc>{BASE_URL}{page}</loc>")), "{page} absent du sitemap");
+        let listed = sitemap.contains(&format!("<loc>{BASE_URL}{page}</loc>"));
+        // Jeu et veille sont en noindex : hors sitemap, toutes langues confondues.
+        let noindex = NOINDEX_PAGES.iter().any(|p| page == *p || page == format!("/en{p}"));
+        assert_eq!(listed, !noindex, "{page} : présence dans le sitemap incorrecte");
     }
+    for html in &noindex_html {
+        assert!(html.contains(r#"<meta name="robots" content="noindex, follow" />"#));
+    }
+    assert!(indexed_html.contains(r#"<meta name="robots" content="index, follow" />"#));
 }
 
 #[test]

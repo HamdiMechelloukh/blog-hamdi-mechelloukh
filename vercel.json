@@ -10,6 +10,8 @@
       "status": 308,
       "headers": { "Location": "https://hamdimechelloukh.com/$1" }
     },
+    { "src": "/(?:(.*)/)?index\\.html", "status": 308, "headers": { "Location": "/$1" } },
+    { "src": "/(.+)/", "status": 308, "headers": { "Location": "/$1" } },
     { "handle": "filesystem" },
     { "src": "/en(/.*)?", "status": 404, "dest": "/en/404.html" },
     { "src": "/.*", "status": 404, "dest": "/404.html" }

@@ -30,6 +30,10 @@ pub mod icons {
 }
 const FORMSPREE_URL: &str = "https://formspree.io/f/xlgwydgk";
 
+/// Pages d'interface hors index : contenu trop mince (jeu) ou agrégé d'autres sites (veille).
+/// Google les explorait sans les indexer ; elles restent accessibles et suivies (`noindex, follow`).
+pub const NOINDEX_PAGES: [&str; 2] = ["/veille", "/jeu"];
+
 pub struct BuildOptions {
     pub root: PathBuf,
     pub out_dir: PathBuf,
@@ -69,6 +73,11 @@ pub struct Layout<'a> {
 }
 
 impl Layout<'_> {
+    /// `<meta name="robots">` à noindex : 404, et pages de NOINDEX_PAGES (absentes du sitemap).
+    pub fn noindex(&self) -> bool {
+        self.section == "404" || NOINDEX_PAGES.iter().any(|page| localized(self.lang, page) == self.path)
+    }
+
     /// Chemin d'une page de l'interface dans la langue courante ("/about" -> "/en/about").
     pub fn href(&self, page: &str) -> String {
         localized(self.lang, page)
@@ -297,6 +306,9 @@ pub fn build(options: &BuildOptions) -> Result<()> {
         ];
         for (page, html) in pages {
             write_page(out, &localized(lang, page), &html)?;
+            if NOINDEX_PAGES.contains(&page) {
+                continue;
+            }
             sitemap.push(SitemapEntry {
                 path: localized(lang, page),
                 alternates: alternates(localized(Lang::Fr, page), localized(Lang::En, page)),
