@@ -127,6 +127,10 @@ fn alternates(fr_path: String, en_path: String) -> Vec<Alternate> {
 struct HomePage<'a> {
     layout: Layout<'a>,
     year: i32,
+    /// Les plus récents d'abord (Content::load trie par date).
+    articles: Vec<&'a Article>,
+    /// Les premiers projets du portfolio, dans l'ordre de projects.toml.
+    projects: &'a [Project],
 }
 
 #[derive(Template)]
@@ -247,7 +251,16 @@ pub fn build(options: &BuildOptions) -> Result<()> {
         };
 
         let pages: Vec<(&str, String)> = vec![
-            ("/", HomePage { layout: ui_layout("home", "/", &meta.home_title, &meta.home_description), year }.render()?),
+            (
+                "/",
+                HomePage {
+                    layout: ui_layout("home", "/", &meta.home_title, &meta.home_description),
+                    year,
+                    articles: content.articles_in(lang).take(3).collect(),
+                    projects: &content.projects[..content.projects.len().min(3)],
+                }
+                .render()?,
+            ),
             (
                 "/about",
                 AboutPage {

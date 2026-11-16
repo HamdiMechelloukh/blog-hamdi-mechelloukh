@@ -7,30 +7,46 @@
     <p class="hero-subtitle" data-gpu="scrim">{{ layout.t.home.subtitle }}</p>
     <p class="hero-description" data-gpu="scrim">{{ layout.t.home.description }}</p>
     <div class="hero-actions">
-      <a href="{{ layout.href("/portfolio") }}" class="btn">{{ layout.t.home.cta_projects }}</a>
+      <a href="{{ layout.href("/about") }}" class="btn">{{ layout.t.home.cta_about }}</a>
       <a href="{{ layout.href("/contact") }}" class="btn btn-outline">{{ layout.t.home.cta_contact }}</a>
+    </div>
+    <p class="hero-aside"><a href="{{ layout.href("/jeu") }}">{{ layout.t.home.game_teaser }} →</a></p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title" data-gpu="title">{{ layout.t.home.projects_title }}</h2>
+    <div class="card-grid">
+      {% for project in projects %}
+      <a href="{{ layout.href("/portfolio") }}" class="card-link">
+        <article data-gpu="card" class="card card-full card-body">
+          <h3 class="card-title">{{ project.title(layout.lang) }}</h3>
+          <p class="card-text">{{ project.description(layout.lang) }}</p>
+        </article>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="section-more">
+      <a href="{{ layout.href("/portfolio") }}" class="btn btn-outline">{{ layout.t.home.all_projects }}</a>
     </div>
   </section>
 
   <section class="section">
-    <h2 class="section-title" data-gpu="title">{{ layout.t.home.skills_title }}</h2>
-    <div class="card-grid skills-grid">
-      <div data-gpu="card" class="card card-padded card-centered">
-        <h3>{{ layout.t.home.skill_data }}</h3>
-        <p class="card-text">Python, Scala, Apache Spark, Databricks, AWS, Azure, Hadoop, Hive</p>
-      </div>
-      <div data-gpu="card" class="card card-padded card-centered">
-        <h3>{{ layout.t.home.skill_backend }}</h3>
-        <p class="card-text">Java, Spring Boot, Node.js, TypeScript, Apache Kafka, REST APIs</p>
-      </div>
-      <div data-gpu="card" class="card card-padded card-centered">
-        <h3>{{ layout.t.home.skill_db }}</h3>
-        <p class="card-text">MongoDB, PostgreSQL, MySQL, Apache Hive, BigQuery</p>
-      </div>
-      <div data-gpu="card" class="card card-padded card-centered">
-        <h3>{{ layout.t.home.skill_cloud }}</h3>
-        <p class="card-text">AWS, Azure, GCP, Docker, Git, Jenkins</p>
-      </div>
+    <h2 class="section-title" data-gpu="title">{{ layout.t.home.latest_title }}</h2>
+    <div class="card-grid">
+      {% for article in articles %}
+      <a href="{{ article.path() }}" class="card-link">
+        <article data-gpu="card" class="card card-full">
+          <div class="card-body">
+            <span class="card-meta">{{ layout.lang.long_date(article.date) }} · {{ article.reading_time_minutes }} {{ layout.t.articles.reading_time }}</span>
+            <h3 class="card-title">{{ article.title }}</h3>
+            <p class="card-text">{{ article.summary }}</p>
+          </div>
+        </article>
+      </a>
+      {% endfor %}
+    </div>
+    <div class="section-more">
+      <a href="{{ layout.href("/blog") }}" class="btn btn-outline">{{ layout.t.home.all_articles }}</a>
     </div>
   </section>
 </div>

@@ -356,6 +356,23 @@ ul {
   justify-content: center;
 }
 
+/* Lien discret sous les boutons de l'accueil (mini-jeu). */
+.hero-aside {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.hero-aside a {
+  color: var(--primary);
+}
+
+/* Lien de fin de section ("Tous les articles"), détaché de la grille au-dessus. */
+.section-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
 .skills-grid {
   max-width: 900px;
   margin: 0 auto;

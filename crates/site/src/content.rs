@@ -215,13 +215,13 @@ pub struct NavText {
 pub struct HomeText {
     pub subtitle: String,
     pub description: String,
-    pub cta_projects: String,
+    pub cta_about: String,
     pub cta_contact: String,
-    pub skills_title: String,
-    pub skill_data: String,
-    pub skill_backend: String,
-    pub skill_db: String,
-    pub skill_cloud: String,
+    pub game_teaser: String,
+    pub projects_title: String,
+    pub all_projects: String,
+    pub latest_title: String,
+    pub all_articles: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -241,6 +241,11 @@ pub struct AboutText {
     pub reliability_title: String,
     pub reliability_p1: String,
     pub reliability_p2: String,
+    pub skills_title: String,
+    pub skill_data: String,
+    pub skill_backend: String,
+    pub skill_db: String,
+    pub skill_cloud: String,
     pub interests_title: String,
     pub interest_karate_title: String,
     pub interest_karate_text: String,
